@@ -1,2 +1,3 @@
 ./build/RunTests
-./build/CaretakerControl
+echo "Launching app with arguments: ${@:1}"
+./build/CaretakerControl ${@:1}

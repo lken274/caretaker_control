@@ -1,5 +1,7 @@
 #pragma once
-#include <guilite.h>
-class GUI {
-
+#include <nuklear.h>
+#include "iinterface.hpp"
+class GUI : public IInterface{
+public:
+    GUI();
 };
