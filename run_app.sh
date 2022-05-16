@@ -1,0 +1,2 @@
+./build/RunTests
+./build/CaretakerControl
