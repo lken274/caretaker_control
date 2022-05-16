@@ -1,0 +1,5 @@
+add_library(guilib INTERFACE)
+target_include_directories(guilib INTERFACE .)
+if(MSVC)
+    target_compile_definitions(guilib INTERFACE -D_CRT_SECURE_NO_WARNINGS)
+endif()
