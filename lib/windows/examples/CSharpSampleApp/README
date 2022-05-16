@@ -1,0 +1,42 @@
+This sample application is a C# application illustrating use of libcaretaker_clr to monitor the
+Caretaker device. This application illustrates using the Caretaker.DeviceObserver asynchronous
+interface for monitoring.
+ 
+1. Setup
+---------
+Setup Bluetooth on a Windows 10 PC that will run the sample application. Plug TI CC2540 dongle or
+similar dongle into a USB port on the PC then install the necessary drivers. After successful setup,
+the dongle will appear as a virtual COM port that the application will use to communicate with the
+Caretaker device. Note the library automatically detects the dongle, so after setup you only need
+to plug it into the PC then run the sample application.
+ 
+Additionally, download and install the following programs on the PC to build the application.
+ 
+	* Visual Studio 2017 or later
+	* .NET Framework 4.0 or later
+	* Common Language Runtime (CLR) 4.0
+ 
+ 
+2. Building the sample application
+----------------------------------
+Start Visual Studio 2017 and open CaretakerCSharpSampleApp.sln. Set the active solution to x64
+then click Build->Rebuild Solution in the tool bar to build the sample App.
+ 
+ 
+3. Running the sample application
+---------------------------------
+Plug the BLE dongle into the PC.
+ 
+Next, start the sample application from the Visual Studio IDE using the Local Windows Debugger play
+button, or by double-clicking the CaretakerCSharpSampleApp.exe located in the bin directory.
+ 
+Next, enter the Caretaker serial number into the connect text box located in the status bar, then
+press the Connect button to start connecting. The status bar changes to blue after the connection
+is established.
+ 
+Note you must press the Caretaker device button for the device to connect to the App. The device
+displays an orange BLE icon when it is advertising for a connection, and the icon turns blue after
+the connection is established.
+ 
+Next, attach the finger cuff then press the App Start button to start a calibration and then take
+measurements.

@@ -1,0 +1,4 @@
+// the configured options and settings for Mercury
+#define CaretakerApp_VERSION_MAJOR @CaretakerApp_VERSION_MAJOR@
+#define CaretakerApp_VERSION_MINOR @CaretakerApp_VERSION_MINOR@
+

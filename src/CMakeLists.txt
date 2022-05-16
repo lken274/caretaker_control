@@ -1,0 +1,16 @@
+
+set(SOURCE main.cpp)
+
+add_executable(${PROJECT_NAME} ${SOURCE})
+
+# include_directories(
+#                      .
+#                      )
+
+# target_link_libraries(  ${CMAKE_PROJECT_NAME} 
+#                         cxxoptslib
+#                         enkilib)
+
+# configure_file(appConfig.h.in appConfig.h)
+
+
