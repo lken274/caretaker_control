@@ -5,6 +5,15 @@
 #include "cli.hpp"
 #include <cxxopts.hpp>
 
+enum PROGRAM_STATE {
+    IDLE,
+    CONNECTING,
+    CONNECTED,
+    RUNNING,
+    QUIT
+};
+
+
 int main(int argc, char **argv)
 {
     //program argument handling
@@ -23,8 +32,43 @@ int main(int argc, char **argv)
         std::cout << "Starting app in graphical mode" << std::endl;
     }
 
-    //start Caretaker link
     CaretakerHandler cth;
+    PROGRAM_STATE state = IDLE;
+    bool quit = false;
+
+    while(state != QUIT){
+        PROGRAM_STATE next_state = state;
+        switch(state) {
+            case IDLE:
+                if (io.get_connect_pressed()) {
+                    next_state = CONNECTING;
+                    //start Caretaker link
+                    cth.connect_to_single_device();
+                }
+                break;
+            case CONNECTING:
+                //await connection
+                if (!cth.isConnected){
+                    next_state = CONNECTED;
+                    cth.start_device_readings();
+                }
+                break;
+            case CONNECTED:
+                if(io.get_start_pressed()) {
+                    next_state = RUNNING;
+                }
+                break;
+            case RUNNING:
+                break;
+        }
+        state = next_state;
+    }
+    
+
+    
+
+
+
 
     return 0;
 }
