@@ -1,2 +1,2 @@
 add_library(glewlib INTERFACE)
-target_include_directories(glewlib INTERFACE ./include)
+target_include_directories(glewlib INTERFACE ./include ./bin)

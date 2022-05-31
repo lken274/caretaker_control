@@ -1,2 +1,2 @@
 add_library(glfwlib INTERFACE)
-target_include_directories(glfwlib INTERFACE "." "include/" "include/GLFW/")
+target_include_directories(glfwlib INTERFACE "." "include/")

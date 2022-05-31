@@ -36,38 +36,38 @@ int main(int argc, char **argv)
     PROGRAM_STATE state = IDLE;
     bool quit = false;
 
-    io->run();
-    while(state != QUIT){
-        PROGRAM_STATE next_state = state;
-        switch(state) {
-            case IDLE:
-                if (io->get_connect_pressed()) {
-                    next_state = CONNECTING;
-                    //start Caretaker link
-                    cth.connect_to_single_device();
-                }
-                break;
-            case CONNECTING:
-                //await connection
-                if (!cth.isConnected){
-                    next_state = CONNECTED;
-                    cth.start_device_readings();
-                }
-                break;
-            case CONNECTED:
-                if(io->get_start_pressed()) {
-                    next_state = RUNNING;
-                }
-                break;
-            case RUNNING:
-                if(io->get_stop_pressed()) {
-                    cth.stop_device_readings();
-                    next_state = IDLE;
-                }
-                break;
-        }
-        state = next_state;
-    }
+    while(true);
+    // while(state != QUIT){
+    //     PROGRAM_STATE next_state = state;
+    //     switch(state) {
+    //         case IDLE:
+    //             if (io->get_connect_pressed()) {
+    //                 next_state = CONNECTING;
+    //                 //start Caretaker link
+    //                 cth.connect_to_single_device();
+    //             }
+    //             break;
+    //         case CONNECTING:
+    //             //await connection
+    //             if (!cth.isConnected){
+    //                 next_state = CONNECTED;
+    //                 cth.start_device_readings();
+    //             }
+    //             break;
+    //         case CONNECTED:
+    //             if(io->get_start_pressed()) {
+    //                 next_state = RUNNING;
+    //             }
+    //             break;
+    //         case RUNNING:
+    //             if(io->get_stop_pressed()) {
+    //                 cth.stop_device_readings();
+    //                 next_state = IDLE;
+    //             }
+    //             break;
+    //     }
+    //     state = next_state;
+    // }
 
     return 0;
 }
