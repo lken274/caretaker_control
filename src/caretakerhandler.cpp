@@ -1,7 +1,7 @@
 #include "caretakerhandler.hpp"
 #include <iostream>
 #include <map>
-#define DISCOVER_TIMEOUT 10000
+#define DISCOVER_TIMEOUT 1000
 
 void LIBCTAPI cb_on_device_discovered(libct_context_t* context, libct_device_t* device);
 void LIBCTAPI cb_on_discovery_timedout(libct_context_t* context);
@@ -34,10 +34,10 @@ void CaretakerHandler::connect_to_single_device() {
 }
 
 void LIBCTAPI cb_on_device_discovered(libct_context_t* context, libct_device_t* device){
-    std::cout << "Successfully detected a caretaker device: " << device->get_name() << std::endl;
+    std::cout << "Successfully detected a caretaker device: " << device->get_name(device) << std::endl;
     std::cout << "Attempting to connect..." << std::endl;
     libct_stop_discovery(context);
-    libct_connect(connect, device);
+    libct_connect(context, device);
 }
 
 void LIBCTAPI cb_on_discovery_timedout(libct_context_t* context){
@@ -49,5 +49,5 @@ void LIBCTAPI cb_on_discovery_failed(libct_context_t* context, int error){
 }
 
 void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_device_t* device){
-    std::cout << "Successfully connected to caretaker device! " << device->get_name() << std::endl;
+    std::cout << "Successfully connected to caretaker device! " << device->get_name(device) << std::endl;
 }

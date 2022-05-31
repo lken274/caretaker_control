@@ -13,6 +13,8 @@ class CaretakerHandler {
 public:
     CaretakerHandler();
     void connect_to_single_device();
+    void start_device_readings(){};
+    void stop_device_readings(){};
     bool isConnected = false;
 private:
     HandlerData hd;
