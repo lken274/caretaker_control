@@ -20,9 +20,9 @@
 static void error_callback(int e, const char *d)
 {printf("Error %d: %s\n", e, d);}
 
+
 GUI::GUI(){
     renderthread = std::make_shared<std::thread>([this]{run_app();});
-
 }
 int win_height = 600;
 int win_width = 800;
@@ -75,19 +75,9 @@ void GUI::run_app(){
         }
         nk_end(ctx);
         
-        if (nk_begin(ctx, "Copy/Paste is fun", nk_rect(300, 20, 200, 300), NK_WINDOW_TITLE))
-        {
-            nk_layout_row_dynamic(ctx, 120, 1);
-            nk_label(ctx, "Hello world!", NK_TEXT_CENTERED);
-            
-            nk_layout_row_dynamic(ctx, 50, 1);
-            nk_label(ctx, "Hello world!", NK_TEXT_LEFT);
-            
-            nk_layout_row_static(ctx, 30, 80, 1);
-            if (nk_button_label(ctx, "AnyButton"))
-                fprintf(stdout, "button pressed\n");
-        }
-        nk_end(ctx);
+        if(ctx->input.mouse.buttons[NK_BUTTON_LEFT].down &&
+	        ctx->input.mouse.buttons[NK_BUTTON_LEFT].clicked)
+            std::cout << "Mouse clicked!" << std::endl;
 
         /* Draw */
         glViewport(0, 0, win_width, win_height);
@@ -95,5 +85,8 @@ void GUI::run_app(){
         nk_glfw3_render(&glfw, NK_ANTI_ALIASING_ON, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
         glfwSwapBuffers(win);
      }
-
+    nk_glfw3_shutdown(&glfw);
+    glfwTerminate();
+    std::cout << "Window closed" << std::endl;
+    running = false;
 }
