@@ -5,12 +5,15 @@
 #include <mutex>
 #include <ctime>
 #include <iomanip>
+#include "program_state.hpp"
+
 class IInterface{
 public:
     virtual bool get_connect_pressed() = 0;
     virtual bool get_start_pressed() = 0;
     virtual bool get_stop_pressed() = 0;
     virtual std::string get_com_port() = 0;
+    virtual bool get_trigger_pressed() = 0;
     virtual void run_app() = 0;
     virtual unsigned char get_trigger_value() = 0;
     void log(std::string str) {

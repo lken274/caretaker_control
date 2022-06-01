@@ -1,3 +1,5 @@
+#pragma warning( disable : 4244 )
+#pragma warning( disable : 4267 )
 #include "gui.hpp"
 #include <stdlib.h> 
 #define NK_GLFW_GL3_IMPLEMENTATION
@@ -57,7 +59,7 @@ void GUI::run_app(){
     nk_glfw3_font_stash_begin(&glfw, &atlas);
     nk_glfw3_font_stash_end(&glfw);}
     //fixed params
-    char com_input[64] = "COM4";
+   
     int com_size = strlen(com_input);
     char baud_input[64] = "192000";
     static const char* trigger_options[] = {"1","2","3","4","5","6","7","8","9","10"};
@@ -79,27 +81,22 @@ void GUI::run_app(){
 
         if (nk_begin(ctx, "Control", nk_rect(0, 0, control_panel_width, control_panel_height), NK_WINDOW_BORDER | NK_WINDOW_TITLE))
         {
-            // nk_layout_row_dynamic(ctx, 120, 1);
-            // nk_label(ctx, "Hello world!", NK_TEXT_CENTERED);
-            
-            // nk_layout_row_dynamic(ctx, 50, 1);
-            // nk_label(ctx, "Hello world!", NK_TEXT_LEFT);
             
             nk_layout_row_static(ctx, control_panel_height / 10, control_panel_width - 40, 1);
 
             if (nk_button_label(ctx, "Connect"))
-                log("button pressed");
+                conn_but_flag = true;
             if (nk_button_label(ctx, "Start"))
-                log("button pressed");
+                start_but_flag = true;
 
             nk_spacer(ctx);
             if (nk_button_label(ctx, "Trigger"))
-                log("button pressed");
+                trigger_flag.first = true;
             nk_spacer(ctx);
             nk_spacer(ctx);
             nk_spacer(ctx);
             if (nk_button_label(ctx, "Stop"))
-                log("button pressed");
+                stop_but_flag = true;
         }
         nk_end(ctx);
         int values_panel_width = win_width - control_panel_width;
@@ -115,9 +112,10 @@ void GUI::run_app(){
             nk_layout_row_dynamic(ctx, 24, 2);
             nk_label(ctx, "BrainProducts Trigger:", NK_TEXT_LEFT);
             trigger_sel = nk_combo(ctx, trigger_options,NK_LEN(trigger_options),trigger_sel, 24, nk_vec2(200,200));
-             nk_spacer(ctx);
             nk_spacer(ctx);
-            nk_label(ctx, "Program Status:", NK_TEXT_LEFT);
+            nk_spacer(ctx);
+            nk_label(ctx, "Program State:", NK_TEXT_LEFT);
+            nk_label(ctx, get_name(get_state()).c_str(), NK_TEXT_LEFT);
         }
         nk_end(ctx);
 
@@ -139,10 +137,6 @@ void GUI::run_app(){
             stdcap.BeginCapture();
         }
         nk_end(ctx);
-
-        if(ctx->input.mouse.buttons[NK_BUTTON_LEFT].down &&
-	        ctx->input.mouse.buttons[NK_BUTTON_LEFT].clicked)
-            log("Mouse clicked!");
 
         /* Draw */
         glViewport(0, 0, win_width, win_height);

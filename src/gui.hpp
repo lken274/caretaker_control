@@ -6,14 +6,25 @@
 class GUI : public IInterface{
 public:
     GUI();
-    bool get_connect_pressed() {return true;};
-    bool get_start_pressed() {return true;};
-    bool get_stop_pressed() {return false;};
-    std::string get_com_port() {return "COM1";};
-    unsigned char get_trigger_value() override {return 1;};
+    void reset_flags() {
+        conn_but_flag = false;
+        start_but_flag = false;
+        stop_but_flag = false;
+        trigger_flag.first = false;
+    }
+    bool get_connect_pressed() {if (conn_but_flag) {reset_flags(); return true;} return false;};
+    bool get_start_pressed() {if (start_but_flag) {reset_flags(); return true;} return false;};
+    bool get_stop_pressed() {if (stop_but_flag) {reset_flags(); return true;} return false;};
+    std::string get_com_port() {return com_input;};
+    bool get_trigger_pressed() {if (trigger_flag.first) {reset_flags(); return true;} return false;};
+    unsigned char get_trigger_value() override {return trigger_flag.second;};
     void run_app();
 private:
-
+    bool conn_but_flag = false;
+    bool start_but_flag = false;
+    bool stop_but_flag = false;
+    std::pair<bool, unsigned char> trigger_flag = {false,1};
+    char com_input[64] = "COM4";
     const static int MAX_MEMORY = 4096;
     std::shared_ptr<std::thread> renderthread;
     StdCapture stdcap;

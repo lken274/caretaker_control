@@ -34,6 +34,10 @@ public:
         asio::read(serial,asio::buffer(&c,1));
         return c;
     }
+
+    void closePort(){
+        serial.close();
+    }
 private:
     asio::io_service io;
     asio::serial_port serial;
@@ -43,12 +47,20 @@ class TriggerBox {
     public:
         TriggerBox() {
         }
-        void connectToCom(std::string port) {
-            ser.reset(new SimpleSerialOutput(port, 19200));
+        bool connectToCom(std::string port) {
+            try{
+                ser.reset(new SimpleSerialOutput(port, 19200));
+                return true;
+            } catch (const std::exception& e) {
+                return false;
+            }
         }
         void sendTrigger(u_char trigger) {
             ser->writeByte(trigger);
             ser->writeByte(0);
+        }
+        void endComConnection(){
+            ser->closePort();
         }
     private:
     std::unique_ptr<SimpleSerialOutput> ser;

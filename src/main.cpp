@@ -6,27 +6,8 @@
 #include "caretakerhandler.hpp"
 #include "gui.hpp"
 #include <cxxopts.hpp>
-#define BLE_ENABLED 0
-
-enum PROGRAM_STATE {
-    IDLE,
-    CONNECTING_CARETAKER,
-    CONNECTED,
-    RUNNING,
-    QUIT
-};
-std::string get_name(PROGRAM_STATE state){
-    switch(state){
-        case IDLE: return "IDLE";break;
-        case CONNECTING_CARETAKER: return "CONNECTING_CARETAKER";break;
-        case CONNECTED: return "CONNECTED";break;
-        case RUNNING: return "RUNNING";break;
-        case QUIT: return "QUIT";break;
-        default:
-            return "UNKNOWN";
-    }
-}
-
+#include "program_state.hpp"
+#define BLE_ENABLED 1
 
 int main(int argc, char **argv)
 {
@@ -44,31 +25,29 @@ int main(int argc, char **argv)
     std::cout << "Starting app in graphical mode" << std::endl;
 
     CaretakerHandler cth(io);
-    PROGRAM_STATE state = IDLE;
     bool quit = false;
+    set_state(IDLE);
     
-    while(state != QUIT){
+    while(get_state() != QUIT){
         
-        PROGRAM_STATE next_state = state;
-        switch(state) {
+        PROGRAM_STATE next_state = get_state();
+        switch(get_state()) {
             case IDLE:
                 if (io->get_connect_pressed()) {
-                    next_state = CONNECTING_CARETAKER;
+                    bool didConnectEEG = tb.connectToCom(io->get_com_port());
+                    if (!didConnectEEG) {
+                        io->log("Failed to connect to COM port " + io->get_com_port());
+                        break;
+                    }
+                
                     //start Caretaker link
                     if(BLE_ENABLED) cth.connect_to_single_device();
+                    next_state = CONNECTING_CARETAKER;
                 }
                 break;
             case CONNECTING_CARETAKER:
                 //await connection
-                try {
-                    tb.connectToCom(io->get_com_port());
-                } catch (const std::exception& ex) {
-                    io->log("Failed to connect to COM port " + std::string(io->get_com_port()));
-                    std::cout << ex.what() << std::endl;
-                    state = QUIT;
-                    break;
-                }
-                if (!cth.isConnected){
+                if (cth.isConnected){
                     next_state = CONNECTED;
                 }
                 break;
@@ -78,21 +57,27 @@ int main(int argc, char **argv)
                     tb.sendTrigger(io->get_trigger_value());
                     next_state = RUNNING;
                 }
+                if(io->get_stop_pressed()) {
+                    if(BLE_ENABLED) cth.start_device_readings();
+                    tb.endComConnection();
+                    next_state = IDLE;
+                }
                 break;
             case RUNNING:
                 if(io->get_stop_pressed()) {
                     if(BLE_ENABLED) cth.stop_device_readings();
+                    tb.endComConnection();
                     next_state = IDLE;
                 }
                 break;
         }
-        if(state != next_state) {
-           io->log("Moving state " + get_name(state) + " to " + get_name(next_state));
+        if(get_state() != next_state) {
+           io->log("Moving state " + get_name(get_state()) + " to " + get_name(next_state));
         }
-        state = next_state;
+        set_state(next_state);
         
         if(io->running == false) {
-            state = QUIT;
+            set_state(QUIT);
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(20)); //prevent cpu spinning
     }
