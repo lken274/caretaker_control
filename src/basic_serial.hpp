@@ -1,5 +1,6 @@
 #pragma once
 #include <asio.hpp>
+#include <iostream>
 #include <string>
 class SimpleSerialOutput {
 public:
@@ -58,6 +59,7 @@ class TriggerBox {
         void sendTrigger(u_char trigger) {
             ser->writeByte(trigger);
             ser->writeByte(0);
+            std::cout << "Send trigger value: " << std::to_string((uint8_t)trigger) << std::endl;
         }
         void endComConnection(){
             ser->closePort();

@@ -125,7 +125,7 @@ void GUI::run_app(){
         if (nk_begin(ctx, "Console", nk_rect(control_panel_width, values_panel_height, console_panel_width, console_panel_height), NK_WINDOW_BORDER | NK_WINDOW_TITLE))
         {
             printLogQueue();
-            stdcap.EndCapture();
+            
             std::string new_capture = stdcap.GetCapture();
             if (console_outputs.size() + new_capture.size() > max_console_size){
                 console_outputs.erase(0, new_capture.size());
@@ -134,6 +134,7 @@ void GUI::run_app(){
             int console_size = console_outputs.length();
             nk_layout_row_dynamic(ctx, 1000, 1);
             nk_edit_string(ctx, status_flags, (char*)console_outputs.c_str(), &console_size, max_console_size, nk_filter_default);
+            stdcap.EndCapture();
             stdcap.BeginCapture();
         }
         nk_end(ctx);
