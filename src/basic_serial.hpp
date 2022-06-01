@@ -58,6 +58,8 @@ class TriggerBox {
         }
         void sendTrigger(u_char trigger) {
             ser->writeByte(trigger);
+            std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
+            ser->writeByte(0x00);
         }
         void endComConnection(){
             ser->closePort();

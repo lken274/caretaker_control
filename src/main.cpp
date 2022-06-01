@@ -55,7 +55,7 @@ int main(int argc, char **argv)
                 if(io->get_start_pressed()) {
                     if(BLE_ENABLED) cth.start_device_readings();
                     tb.sendTrigger(io->get_trigger_value());
-                    tb.sendTrigger(0x00);
+                    io->log("Send trigger " + std::to_string((int)io->get_trigger_value()));
                     next_state = RUNNING;
                 }
                 if(io->get_stop_pressed()) {
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
             case RUNNING:
                 if(io->get_trigger_pressed()) {
                     tb.sendTrigger(io->get_trigger_value());
-                    tb.sendTrigger(0x00);
+                    io->log("Send trigger " + std::to_string((int)io->get_trigger_value()));
                 }
                 if(io->get_stop_pressed()) {
                     if(BLE_ENABLED) cth.stop_device_readings();
