@@ -2,7 +2,7 @@
 #include <iostream>
 #include <map>
 
-#define DISCOVER_TIMEOUT 1000
+#define DISCOVER_TIMEOUT 10000
 
 void LIBCTAPI cb_on_device_discovered(libct_context_t* context, libct_device_t* device);
 void LIBCTAPI cb_on_discovery_timedout(libct_context_t* context);
@@ -82,5 +82,5 @@ void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_devic
 }
 
 void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *device, libct_stream_data_t *data) {
-    
+
 }
