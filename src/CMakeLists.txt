@@ -1,5 +1,5 @@
 
-set(SOURCE main.cpp gui.cpp cli.cpp caretakerhandler.cpp)
+set(SOURCE main.cpp gui.cpp caretakerhandler.cpp stdcapture.cpp)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 set(BUILD_SHARED_LIBS TRUE)
 

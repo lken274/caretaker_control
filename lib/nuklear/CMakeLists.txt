@@ -1,3 +1,5 @@
 add_library(guilib INTERFACE)
 target_link_libraries(guilib INTERFACE glfwlib glewlib freeglutlib)
 target_include_directories(guilib INTERFACE .)
+add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)

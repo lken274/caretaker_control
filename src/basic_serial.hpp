@@ -1,6 +1,6 @@
 #pragma once
 #include <asio.hpp>
-
+#include <string>
 class SimpleSerialOutput {
 public:
     SimpleSerialOutput(std::string port, uint32_t baud_rate) : io(), serial(io,port) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <caretaker_static.h>
+#include "iinterface.hpp"
 
 struct HandlerData{
     libct_init_data_t init_data;
@@ -11,11 +12,12 @@ struct HandlerData{
 
 class CaretakerHandler {
 public:
-    CaretakerHandler();
+    CaretakerHandler(std::shared_ptr<IInterface> io);
     void connect_to_single_device();
     void start_device_readings(){};
     void stop_device_readings(){};
     bool isConnected = false;
 private:
     HandlerData hd;
+    std::shared_ptr<IInterface> io;
 };

@@ -1,6 +1,7 @@
 #include "caretakerhandler.hpp"
 #include <iostream>
 #include <map>
+
 #define DISCOVER_TIMEOUT 1000
 
 void LIBCTAPI cb_on_device_discovered(libct_context_t* context, libct_device_t* device);
@@ -10,8 +11,8 @@ void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_devic
 
 static std::map<libct_context_t*, CaretakerHandler*> context2handler;
 
-CaretakerHandler::CaretakerHandler() {
-    std::cout << "Initialising Caretaker Library..." << std::endl;
+CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io) {
+    io->log("Initialising Caretaker Library...");
     memset(&hd.init_data, 0, sizeof(hd.init_data));
     hd.init_data.device_class = LIBCT_DEVICE_CLASS_BLE_CARETAKER4;
     hd.callbacks.on_device_discovered = cb_on_device_discovered;/*, cb_on_device_connected_ready, cb_on_device_disconneted, cb_on_data_received*/
@@ -22,10 +23,10 @@ CaretakerHandler::CaretakerHandler() {
     hd.status = libct_init(&hd.context, &hd.init_data, &hd.callbacks);
     context2handler[hd.context] = this;
     if ( LIBCT_FAILED(hd.status) ) {
-        std::cout << "Caretaker Library failed to initialise! Exiting..." << std::endl;
+        io->log("Caretaker Library failed to initialise! Exiting...");
         exit(1);
     } else
-    std::cout << "Caretaker Library Initialised Successfully" << std::endl;
+    io->log("Caretaker Library Initialised Successfully");
 
 }
 
