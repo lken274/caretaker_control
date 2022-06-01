@@ -7,7 +7,7 @@
 #include "gui.hpp"
 #include <cxxopts.hpp>
 #include "program_state.hpp"
-#define BLE_ENABLED 1
+#define BLE_ENABLED 0
 
 int main(int argc, char **argv)
 {
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
                 break;
             case CONNECTING_CARETAKER:
                 //await connection
-                if (cth.isConnected){
+                if (cth.isConnected || BLE_ENABLED == 0){
                     next_state = CONNECTED;
                 }
                 break;
@@ -55,6 +55,7 @@ int main(int argc, char **argv)
                 if(io->get_start_pressed()) {
                     if(BLE_ENABLED) cth.start_device_readings();
                     tb.sendTrigger(io->get_trigger_value());
+                    io->log("Sent COM Trigger " + std::to_string(io->get_trigger_value()));
                     next_state = RUNNING;
                 }
                 if(io->get_stop_pressed()) {
