@@ -18,6 +18,7 @@ target_link_libraries(  ${CMAKE_PROJECT_NAME}
                         glewlib
                         glfwlib
                         setupapi.lib
+                        asiolib
                         "${CMAKE_SOURCE_DIR}/lib/caretakerlib/Win64/libcaretaker_static.lib"
                         "${CMAKE_SOURCE_DIR}/lib/glew_lib/lib/Release/x64/glew32.lib"
                         "${CMAKE_SOURCE_DIR}/lib/glfw_lib/lib-vc2017/glfw3.lib"

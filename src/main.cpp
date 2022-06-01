@@ -1,4 +1,6 @@
+#define _WIN32_WINNT 0x0601
 #include <iostream>
+#include "basic_serial.hpp"
 #include "iinterface.hpp"
 #include "caretakerhandler.hpp"
 #include "gui.hpp"
@@ -73,7 +75,7 @@ int main(int argc, char **argv)
         }
         if(io->running == false) {
             std::cout << "Window close detected" << std::endl;
-            break;
+            state = QUIT;
         }
     }
 
