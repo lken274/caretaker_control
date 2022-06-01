@@ -17,7 +17,7 @@ public:
     bool get_stop_pressed() {if (stop_but_flag) {reset_flags(); return true;} return false;};
     std::string get_com_port() {return com_input;};
     bool get_trigger_pressed() {if (trigger_flag.first) {reset_flags(); return true;} return false;};
-    unsigned char get_trigger_value() override {return trigger_flag.second;};
+    unsigned char get_trigger_value() override {return trigger_flag.second+1;};
     void run_app();
 private:
     bool conn_but_flag = false;

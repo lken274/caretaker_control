@@ -9,7 +9,7 @@ public:
     }
 
     void writeByte(u_char byte) {
-        asio::write(serial, asio::buffer(&byte, sizeof(u_char)));
+        serial.write_some(asio::buffer(&byte, 1));
     }
 
     std::string readLine() {
@@ -58,8 +58,6 @@ class TriggerBox {
         }
         void sendTrigger(u_char trigger) {
             ser->writeByte(trigger);
-            ser->writeByte(0);
-            std::cout << "Send trigger value: " << std::to_string((uint8_t)trigger) << std::endl;
         }
         void endComConnection(){
             ser->closePort();
