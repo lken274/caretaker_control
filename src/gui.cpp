@@ -111,7 +111,7 @@ void GUI::run_app(){
             nk_edit_string(ctx, NK_EDIT_FIELD, baud_input, &baud_size, 64, nk_filter_default);
             nk_layout_row_dynamic(ctx, 24, 2);
             nk_label(ctx, "BrainProducts Trigger:", NK_TEXT_LEFT);
-            trigger_sel = nk_combo(ctx, trigger_options,NK_LEN(trigger_options),trigger_sel, 24, nk_vec2(200,200));
+            trigger_flag.second = nk_combo(ctx, trigger_options,NK_LEN(trigger_options),trigger_flag.second, 24, nk_vec2(200,200));
             nk_spacer(ctx);
             nk_spacer(ctx);
             nk_label(ctx, "Program State:", NK_TEXT_LEFT);
