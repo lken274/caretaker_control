@@ -23,7 +23,7 @@ private:
     bool conn_but_flag = false;
     bool start_but_flag = false;
     bool stop_but_flag = false;
-    std::pair<bool, unsigned char> trigger_flag = {false,1};
+    std::pair<bool, unsigned char> trigger_flag = {false,0};
     char com_input[64] = "COM4";
     const static int MAX_MEMORY = 4096;
     std::shared_ptr<std::thread> renderthread;

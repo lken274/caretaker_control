@@ -6,6 +6,7 @@
 #include <ctime>
 #include <iomanip>
 #include "program_state.hpp"
+#include <sstream>
 
 class IInterface{
 public:
@@ -39,7 +40,9 @@ protected:
     {
         auto t = std::time(nullptr);
         auto tm = *std::localtime(&t);
-        std::cout << "Software Started: " << std::put_time(&tm, "%Y-%m-%d %H:%M:%S\n%z %Z") << std::endl;;
+        std::stringstream ss;
+        ss << "Software Started: " << std::put_time(&tm, "%Y-%m-%d %H:%M:%S\n%z %Z");
+        log(ss.str());
     }
     std::mutex q_mutex;
     std::queue<std::string> log_queue;

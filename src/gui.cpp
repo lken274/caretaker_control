@@ -19,9 +19,11 @@
 #include <nuklear_glfw_gl3.h>
 #include <GL/glut.h>
 #include <iostream>
+#include <sstream>
+#include <numeric>
+
 static void error_callback(int e, const char *d)
 {printf("Error %d: %s\n", e, d);}
-
 
 GUI::GUI(){
     renderthread = std::make_shared<std::thread>([this]{run_app();});
@@ -54,7 +56,6 @@ void GUI::run_app(){
     }
     /* create context */
     struct nk_context *ctx = nk_glfw3_init(&glfw, win, NK_GLFW3_INSTALL_CALLBACKS);
-
     {struct nk_font_atlas *atlas;
     nk_glfw3_font_stash_begin(&glfw, &atlas);
     nk_glfw3_font_stash_end(&glfw);}
@@ -67,9 +68,14 @@ void GUI::run_app(){
     int baud_size = strlen(baud_input);
     int control_panel_width = win_width / 4;
     int control_panel_height = win_height;
-    std::string console_outputs = "";
-    int max_console_size = 512 * 512; //512 lines of up to 512 chars
-    stdcap.BeginCapture();
+
+    static const int num_console_lines = 512;
+    static const int max_text_width = 68;
+    std::vector<std::string> consoleOutput;
+    consoleOutput.reserve(num_console_lines);
+    static const int max_console_size = num_console_lines*128;
+    std::string consoleBuff;
+    
     printDate();
     gui_ready = true;
      while (!glfwWindowShouldClose(win))
@@ -82,7 +88,7 @@ void GUI::run_app(){
         if (nk_begin(ctx, "Control", nk_rect(0, 0, control_panel_width, control_panel_height), NK_WINDOW_BORDER | NK_WINDOW_TITLE))
         {
             
-            nk_layout_row_static(ctx, control_panel_height / 10, control_panel_width - 40, 1);
+            nk_layout_row_dynamic(ctx, control_panel_height / 10, 1);
 
             if (nk_button_label(ctx, "Connect"))
                 conn_but_flag = true;
@@ -121,24 +127,41 @@ void GUI::run_app(){
 
         int console_panel_width = values_panel_width;
         int console_panel_height = win_height - values_panel_height;
-        static const nk_flags status_flags = nk_edit_types::NK_EDIT_BOX | NK_EDIT_READ_ONLY | NK_EDIT_GOTO_END_ON_ACTIVATE;
-        if (nk_begin(ctx, "Console", nk_rect(control_panel_width, values_panel_height, console_panel_width, console_panel_height), NK_WINDOW_BORDER | NK_WINDOW_TITLE))
+        static const nk_flags status_flags = nk_edit_types::NK_EDIT_EDITOR | NK_EDIT_SELECTABLE | NK_EDIT_MULTILINE;
+        struct nk_vec2 orig_padding = ctx->style.window.padding;
+        ctx->style.window.padding = nk_vec2(0, 0);
+        if (nk_begin(ctx, "Console", nk_rect(control_panel_width, values_panel_height, console_panel_width, console_panel_height)
+            , NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_NO_SCROLLBAR))
         {
+            stdcap.BeginCapture();
             printLogQueue();
+            stdcap.EndCapture();
             
             std::string new_capture = stdcap.GetCapture();
-            if (console_outputs.size() + new_capture.size() > max_console_size){
-                console_outputs.erase(0, new_capture.size());
+            std::vector<std::string> splitVals;
+            auto ss = std::stringstream{new_capture};
+            for (std::string line; std::getline(ss, line, '\n');) {
+
+                while (line.size() > max_text_width) {
+                    splitVals.push_back(line.substr(0,max_text_width) + "\n");
+                    line = line.substr(max_text_width, line.size());
+                }
+                splitVals.push_back(line + "\n");
             }
-            console_outputs += stdcap.GetCapture();
-            int console_size = console_outputs.length();
-            nk_layout_row_dynamic(ctx, 1000, 1);
-            nk_edit_string(ctx, status_flags, (char*)console_outputs.c_str(), &console_size, max_console_size, nk_filter_default);
-            stdcap.EndCapture();
-            stdcap.BeginCapture();
+            int new_size = consoleOutput.size() + splitVals.size();
+            if (new_size > num_console_lines) {
+                consoleOutput.erase(consoleOutput.begin(), consoleOutput.begin() + (new_size-num_console_lines)+1);
+            }
+            consoleOutput.insert( consoleOutput.end(), splitVals.begin(), splitVals.end() );
+            
+            consoleBuff = std::accumulate(consoleOutput.begin(), consoleOutput.end(), std::string(""));
+            int console_size = consoleBuff.length();
+            nk_layout_row_dynamic(ctx, console_panel_height-25, 1);
+            nk_edit_focus(ctx,0);
+            nk_edit_string(ctx, status_flags, (char*)(consoleBuff.c_str()), &console_size, max_console_size, nk_filter_default);
         }
         nk_end(ctx);
-
+        ctx->style.window.padding = orig_padding;
         /* Draw */
         glViewport(0, 0, win_width, win_height);
         glClear(GL_COLOR_BUFFER_BIT);

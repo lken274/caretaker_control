@@ -7,7 +7,7 @@
 #include "gui.hpp"
 #include <cxxopts.hpp>
 #include "program_state.hpp"
-#define BLE_ENABLED 0
+#define BLE_ENABLED 1
 
 int main(int argc, char **argv)
 {
