@@ -24,16 +24,18 @@ public:
     };
     volatile bool running;
 protected:
-    void printLogQueue(){
+    std::string getLogQueue(){
         q_mutex.lock();
+        std::stringstream ss;
         while(log_queue.size() > 0)
         {
             auto t = std::time(nullptr);
             auto tm = *std::localtime(&t);
-            std::cout << std::put_time(&tm, "%H:%M:%S: ") << log_queue.front() << std::endl;
+            ss << std::put_time(&tm, "%H:%M:%S: ") << log_queue.front() << std::endl;
             log_queue.pop();
         }
         q_mutex.unlock();
+        return ss.str();
     }
 
     void printDate()

@@ -62,7 +62,8 @@ class TriggerBox {
             ser->writeByte(0x00);
         }
         void endComConnection(){
-            ser->closePort();
+            if(ser)
+                ser->closePort();
         }
     private:
     std::unique_ptr<SimpleSerialOutput> ser;

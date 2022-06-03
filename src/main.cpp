@@ -41,7 +41,14 @@ int main(int argc, char **argv)
                     }
                 
                     //start Caretaker link
-                    if(BLE_ENABLED) cth.connect_to_single_device();
+                    if(BLE_ENABLED) {
+                        bool discovery_started = cth.connect_to_single_device();
+                        if(!discovery_started) {
+                            io->log("Failed to begin Caretaker discovery (is your bluetooth enabled?)");
+                            tb.endComConnection();
+                            break;
+                        }
+                    }
                     next_state = CONNECTING_CARETAKER;
                 }
                 break;
@@ -69,13 +76,17 @@ int main(int argc, char **argv)
                     tb.sendTrigger(io->get_trigger_value());
                     io->log("Send trigger " + std::to_string((int)io->get_trigger_value()));
                 }
-                if(io->get_stop_pressed()) {
-                    if(BLE_ENABLED) cth.stop_device_readings();
-                    tb.endComConnection();
-                    next_state = IDLE;
-                }
+                
                 break;
         }
+        //common logic
+        //
+        if(io->get_stop_pressed()) {
+            if(BLE_ENABLED) cth.stop_device_readings();
+            tb.endComConnection();
+            next_state = IDLE;
+        }
+        /////////////////////////////
         if(get_state() != next_state) {
            io->log("Moving state " + get_name(get_state()) + " to " + get_name(next_state));
         }

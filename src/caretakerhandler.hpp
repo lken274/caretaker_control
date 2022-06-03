@@ -13,7 +13,7 @@ struct HandlerData{
 class CaretakerHandler {
 public:
     CaretakerHandler(std::shared_ptr<IInterface> io);
-    void connect_to_single_device();
+    bool connect_to_single_device();
     void start_device_readings();
     void stop_device_readings();
     bool isConnected = false;

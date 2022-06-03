@@ -60,12 +60,8 @@ void GUI::run_app(){
     nk_glfw3_font_stash_begin(&glfw, &atlas);
     nk_glfw3_font_stash_end(&glfw);}
     //fixed params
-   
-    int com_size = strlen(com_input);
-    char baud_input[64] = "192000";
     static const char* trigger_options[] = {"1","2","3","4","5","6","7","8","9","10"};
     int trigger_sel = 0;
-    int baud_size = strlen(baud_input);
     int control_panel_width = win_width / 4;
     int control_panel_height = win_height;
 
@@ -75,7 +71,7 @@ void GUI::run_app(){
     consoleOutput.reserve(num_console_lines);
     static const int max_console_size = num_console_lines*128;
     std::string consoleBuff;
-    
+
     printDate();
     gui_ready = true;
      while (!glfwWindowShouldClose(win))
@@ -113,6 +109,7 @@ void GUI::run_app(){
             nk_label(ctx, "COM Port:", NK_TEXT_LEFT);
             nk_label(ctx, "BAUD:", NK_TEXT_LEFT);
             nk_layout_row_dynamic(ctx, 32, 2);   
+
             nk_edit_string(ctx, NK_EDIT_FIELD, com_input, &com_size, 64, nk_filter_default);
             nk_edit_string(ctx, NK_EDIT_FIELD, baud_input, &baud_size, 64, nk_filter_default);
             nk_layout_row_dynamic(ctx, 24, 2);
@@ -133,13 +130,10 @@ void GUI::run_app(){
         if (nk_begin(ctx, "Console", nk_rect(control_panel_width, values_panel_height, console_panel_width, console_panel_height)
             , NK_WINDOW_BORDER | NK_WINDOW_TITLE | NK_WINDOW_NO_SCROLLBAR))
         {
-            stdcap.BeginCapture();
-            printLogQueue();
-            stdcap.EndCapture();
+            std::string log = getLogQueue();
             
-            std::string new_capture = stdcap.GetCapture();
             std::vector<std::string> splitVals;
-            auto ss = std::stringstream{new_capture};
+            auto ss = std::stringstream{log};
             for (std::string line; std::getline(ss, line, '\n');) {
 
                 while (line.size() > max_text_width) {

@@ -34,8 +34,11 @@ CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io) {
 
 }
 
-void CaretakerHandler::connect_to_single_device() {
-    libct_start_discovery(hd.context, DISCOVER_TIMEOUT);
+bool CaretakerHandler::connect_to_single_device() {
+    int err = libct_start_discovery(hd.context, DISCOVER_TIMEOUT);
+    if (err == LIBCT_COMMON_STATUS_ERROR) {
+        return false;
+    } return true;
 }
 
 void CaretakerHandler::start_device_readings() {
