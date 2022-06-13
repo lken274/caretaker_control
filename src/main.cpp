@@ -7,7 +7,7 @@
 #include "gui.hpp"
 #include <cxxopts.hpp>
 #include "program_state.hpp"
-#define BLE_ENABLED 1
+#define BLE_ENABLED 0
 
 int main(int argc, char **argv)
 {
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
                     next_state = RUNNING;
                 }
                 if(io->get_stop_pressed()) {
-                    if(BLE_ENABLED) cth.start_device_readings();
+                    if(BLE_ENABLED) cth.stop_device_readings();
                     tb.endComConnection();
                     next_state = IDLE;
                 }
@@ -74,7 +74,8 @@ int main(int argc, char **argv)
             case RUNNING:
                 if(io->get_trigger_pressed()) {
                     tb.sendTrigger(io->get_trigger_value());
-                    io->log("Send trigger " + std::to_string((int)io->get_trigger_value()));
+                    io->log("Sent trigger " + std::to_string((int)io->get_trigger_value()));
+                    cth.recordLastTimestamp(io->get_trigger_value());
                 }
                 
                 break;

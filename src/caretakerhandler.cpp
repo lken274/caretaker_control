@@ -13,7 +13,7 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
 
 static std::map<libct_context_t*, CaretakerHandler*> context2handler;
 
-CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io) {
+CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fileOut(3) /*trigger, timestamp, values*/ {
     io->log("Initialising Caretaker Library...");
     memset(&hd.init_data, 0, sizeof(hd.init_data));
     hd.init_data.device_class = LIBCT_DEVICE_CLASS_BLE_CARETAKER4;
@@ -48,13 +48,24 @@ void CaretakerHandler::start_device_readings() {
     libct_start_measuring(hd.context, &cal);
 }
 
-void LIBCTAPI cb_on_start_measuring(libct_context_t *context, libct_device_t *device, int status) {
-    std::cout << "Measurements started!" << std::endl;
-}
+
 
 void CaretakerHandler::stop_device_readings() {
     libct_stop_measuring(hd.context);
+    libct_stop_monitoring(hd.context);
     std::cout << "Measurements stopped!" << std::endl;
+}
+
+void CaretakerHandler::recordLastTimestamp(int triggerNum) {
+    for (auto& datatype : hd.recentData) {
+        fileOut << triggerNum << datatype.first << datatype.second.timestamp;
+    }
+    fileOut.writeToFile("testfile.csv");
+}
+///CALLBACKS///
+
+void LIBCTAPI cb_on_start_measuring(libct_context_t *context, libct_device_t *device, int status) {
+    std::cout << "Measurements started!" << std::endl;
 }
 
 void LIBCTAPI cb_on_device_discovered(libct_context_t* context, libct_device_t* device){
@@ -85,5 +96,7 @@ void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_devic
 }
 
 void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *device, libct_stream_data_t *data) {
+    std::cout << "Data received!" << std::endl;
+    context2handler[context]->hd.recentData["vitals"].timestamp = data->vitals.datapoints[data->vitals.count-1].timestamp;
 
 }
