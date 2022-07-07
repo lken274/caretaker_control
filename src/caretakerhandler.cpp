@@ -111,7 +111,6 @@ void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_devic
     CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
     handler->io->log("Successfully connected to caretaker device! " + std::string(device->get_name(device)));
     handler->isConnected = true;
-    std::cout << "here connected" << std::endl;
 }
 
 void cb_on_start_monitoring(libct_context_t *context, libct_device_t *device, int status) {
@@ -123,9 +122,8 @@ void cb_on_start_monitoring(libct_context_t *context, libct_device_t *device, in
 }
 
 void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *device, libct_stream_data_t *data) {
-    std::cout << "here data" << std::endl;
-    //CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
-    //libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
-    //handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
-    //handler->hd.recentData["device_status"].timestamp = data->device_status.timestamp;
+    CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
+    libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
+    handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
+    handler->hd.recentData["device_status"].timestamp = data->device_status.timestamp;
 }

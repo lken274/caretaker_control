@@ -58,17 +58,13 @@ int main(int argc, char **argv)
                 }
                 break;
             case CONNECTED:
-                 std::cout << "here Connected" << std::endl;
                 if(io->get_start_pressed()) {
-                    std::cout << "starting 1" << std::endl;
                     if(USB_ENABLED) cth.start_device_readings();
-                    std::cout << "starting 2" << std::endl;
                     //tb.sendTrigger(io->get_trigger_value());
                     //io->log("Send trigger " + std::to_string((int)io->get_trigger_value()));
                     next_state = RUNNING;
                 }
                 if(io->get_stop_pressed()) {
-                    std::cout << "stopping 1" << std::endl;
                     if(USB_ENABLED) cth.stop_device_readings();
                     tb.endComConnection();
                     next_state = IDLE;
@@ -80,29 +76,24 @@ int main(int argc, char **argv)
                     io->log("Sent trigger " + std::to_string((int)io->get_trigger_value()));
                     cth.recordLastTimestamp(io->get_trigger_value());
                 }
-                
                 break;
         }
         //common logic
         //
-        std::cout << "here1" << std::endl;
         if(io->get_stop_pressed()) {
             if(USB_ENABLED) cth.stop_device_readings();
             tb.endComConnection();
             next_state = IDLE;
         }
-        std::cout << "here2" << std::endl;
         /////////////////////////////
         if(get_state() != next_state) {
            io->log("Moving state " + get_name(get_state()) + " to " + get_name(next_state));
         }
         set_state(next_state);
-         std::cout << "here3" << std::endl;
         if(io->running == false) {
             set_state(QUIT);
         }
-        std::cout << "here4" << std::endl;
-        //std::this_thread::sleep_for(std::chrono::milliseconds(20)); //prevent cpu spinning
+        std::this_thread::sleep_for(std::chrono::milliseconds(20)); //prevent cpu spinning
     }
 
     return 0;
