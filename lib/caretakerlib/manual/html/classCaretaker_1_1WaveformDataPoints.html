@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: Caretaker::WaveformDataPoints Class Reference</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: Caretaker::WaveformDataPoints Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -50,35 +50,56 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Pulse waveform data points Each data point is of format (t,v), where t is a monotonically incrementing counter representing time-stamp, and v is the pulse sample at time t.  
+<p>Real-time waveform samples.  
  <a href="classCaretaker_1_1WaveformDataPoints.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac3fe708b09857a0ff91ff32b8ee5287f"><td class="memItemLeft" align="right" valign="top"><a id="ac3fe708b09857a0ff91ff32b8ee5287f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>WaveformDataPoints</b> (array&lt; Int32 &gt; ^ <a class="el" href="classCaretaker_1_1WaveformDataPoints.html#ad3e4586d59dbd7b694e5cd3e7f477b17">values</a>, array&lt; Int32 &gt; ^ <a class="el" href="classCaretaker_1_1WaveformDataPoints.html#a5e39a8fc7c47fe256f61fe2c5faf49f4">timestamps</a>)</td></tr>
-<tr class="separator:ac3fe708b09857a0ff91ff32b8ee5287f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10ebfded21bf5acb068217bc7f2a2a98"><td class="memItemLeft" align="right" valign="top"><a id="a10ebfded21bf5acb068217bc7f2a2a98"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>WaveformDataPoints</b> (array&lt; Int32 &gt; ^ <a class="el" href="classCaretaker_1_1WaveformDataPoints.html#a6901affad197fb7b501f9c76f5faeb00">samples</a>, array&lt; Int64 &gt;^ <a class="el" href="classCaretaker_1_1WaveformDataPoints.html#ab46b4055ea41951a45020913c5a55c88">timestamps</a>, Boolean <a class="el" href="classCaretaker_1_1WaveformDataPoints.html#a336167ab5d2c0103427a2e4f24c06955">nonrealtime</a>)</td></tr>
+<tr class="separator:a10ebfded21bf5acb068217bc7f2a2a98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ad3e4586d59dbd7b694e5cd3e7f477b17"><td class="memItemLeft" align="right" valign="top"><a id="ad3e4586d59dbd7b694e5cd3e7f477b17"></a>
-array&lt; Int32 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1WaveformDataPoints.html#ad3e4586d59dbd7b694e5cd3e7f477b17">values</a></td></tr>
-<tr class="memdesc:ad3e4586d59dbd7b694e5cd3e7f477b17"><td class="mdescLeft">&#160;</td><td class="mdescRight">The waveform v values. <br /></td></tr>
-<tr class="separator:ad3e4586d59dbd7b694e5cd3e7f477b17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e39a8fc7c47fe256f61fe2c5faf49f4"><td class="memItemLeft" align="right" valign="top"><a id="a5e39a8fc7c47fe256f61fe2c5faf49f4"></a>
-array&lt; Int32 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1WaveformDataPoints.html#a5e39a8fc7c47fe256f61fe2c5faf49f4">timestamps</a></td></tr>
-<tr class="memdesc:a5e39a8fc7c47fe256f61fe2c5faf49f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The waveform t values. <br /></td></tr>
-<tr class="separator:a5e39a8fc7c47fe256f61fe2c5faf49f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6901affad197fb7b501f9c76f5faeb00"><td class="memItemLeft" align="right" valign="top"><a id="a6901affad197fb7b501f9c76f5faeb00"></a>
+array&lt; Int32 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1WaveformDataPoints.html#a6901affad197fb7b501f9c76f5faeb00">samples</a></td></tr>
+<tr class="memdesc:a6901affad197fb7b501f9c76f5faeb00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waveform samples. <br /></td></tr>
+<tr class="separator:a6901affad197fb7b501f9c76f5faeb00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab46b4055ea41951a45020913c5a55c88"><td class="memItemLeft" align="right" valign="top"><a id="ab46b4055ea41951a45020913c5a55c88"></a>
+array&lt; Int64 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1WaveformDataPoints.html#ab46b4055ea41951a45020913c5a55c88">timestamps</a></td></tr>
+<tr class="memdesc:ab46b4055ea41951a45020913c5a55c88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waveform samples timestamps. <br /></td></tr>
+<tr class="separator:ab46b4055ea41951a45020913c5a55c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a336167ab5d2c0103427a2e4f24c06955"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1WaveformDataPoints.html#a336167ab5d2c0103427a2e4f24c06955">nonrealtime</a></td></tr>
+<tr class="memdesc:a336167ab5d2c0103427a2e4f24c06955"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating realtime vs.  <a href="#a336167ab5d2c0103427a2e4f24c06955">More...</a><br /></td></tr>
+<tr class="separator:a336167ab5d2c0103427a2e4f24c06955"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Pulse waveform data points Each data point is of format (t,v), where t is a monotonically incrementing counter representing time-stamp, and v is the pulse sample at time t. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+<div class="textblock"><p>Real-time waveform samples. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a id="a336167ab5d2c0103427a2e4f24c06955"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a336167ab5d2c0103427a2e4f24c06955">&#9670;&nbsp;</a></span>nonrealtime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Boolean Caretaker::WaveformDataPoints::nonrealtime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag indicating realtime vs. </p>
+<p>nonrealtime samples. True if the device is forwarding stored (nonrealtime) samples, and false if the samples are realtime. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="CaretakerDevice_8h_source.html">CaretakerDevice.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:19 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

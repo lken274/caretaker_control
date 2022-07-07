@@ -61,7 +61,24 @@ namespace CaretakerCSharpSampleApp
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            window.Status.Content = "Scan error. Plug or unplug then replug BLE dongle then retry.";
+                            switch(device.GetDeviceClass())
+                            {
+                                case Caretaker.DeviceClass.DEVICE_CLASS_BLE:
+                                    window.Status.Content = "Scan error. Unplug then replug BLE dongle then retry.";
+                                    break;
+
+                                case Caretaker.DeviceClass.DEVICE_CLASS_TCP:
+                                    window.Status.Content = "Scan error. The Caretaker and PC must both be on same Wi-Fi network.";
+                                    break;
+
+                                case Caretaker.DeviceClass.DEVICE_CLASS_USB:
+                                    window.Status.Content = "Scan error. Plug then replug Caretaker USB cable then retry.";
+                                    break;
+
+                                default:
+                                    break;
+                            }
+
                             window.Status.Background = window.mErrorStatusBackground;
                             window.Status.Foreground = window.mErrorStatusForeground;
                             window.SerialNumberTextBox.IsEnabled = true;
@@ -133,6 +150,7 @@ namespace CaretakerCSharpSampleApp
 
                 case Caretaker.ConnectionStatus.CONNECTED:
                     window.Connecting = false;
+                    device.ClearStatus();
                     Application.Current.Dispatcher.BeginInvoke(new Action(() => {
                         window.Status.Content = "Connected. Press start to calibrate.";
                         window.Status.Background = window.mConnectedStatusBackground;
@@ -144,7 +162,6 @@ namespace CaretakerCSharpSampleApp
                             b.IsEnabled = true;
                         }
                         window.PulsePressureWaveform.Clear();
-                        window.PulseRateWaveform.Clear();
                     }));
                     break;
 
@@ -163,7 +180,25 @@ namespace CaretakerCSharpSampleApp
                         window.MAP.Foreground = Brushes.Gray;
                         window.BpDividerLine.Stroke = Brushes.Gray;
                         window.Respiration.Foreground = Brushes.Gray;
-                        window.Status.Content = "Enter Caretaker serial number then press connect to begin.";
+
+                        switch (device.GetDeviceClass())
+                        {
+                            case Caretaker.DeviceClass.DEVICE_CLASS_BLE:
+                                window.Status.Content = "Plug BLE dongle then enter Caretaker serial number to connect.";
+                                break;
+
+                            case Caretaker.DeviceClass.DEVICE_CLASS_TCP:
+                                window.Status.Content = "Enter Caretaker serial number or IP address to connect.";
+                                break;
+
+                            case Caretaker.DeviceClass.DEVICE_CLASS_USB:
+                                window.Status.Content = "Plug Caretaker into USB port then press connect.";
+                                break;
+
+                            default:
+                                break;
+                        }
+
                         window.Status.Background = window.mDefaultStatusBackground;
                         window.Status.Foreground = window.mDefaultStatusForeground;
                         window.SerialNumberTextBox.IsEnabled = true;
@@ -462,35 +497,22 @@ namespace CaretakerCSharpSampleApp
 
         /**************************************************************************************************************
          */
-        public override void OnPulseRateWaveformDataPoints(Caretaker.Device device, Caretaker.WaveformDataPoints datapoints)
-        {
-            // Do nothing if the application exited
-            if (Application.Current == null)
-            {
-                return;
-            }
-
-            window.PulseRateWaveform.AddPoints(datapoints.values, datapoints.timestamps);
-        }
-
-        /**************************************************************************************************************
-         */
         public override void OnPulsePressureWaveformDataPoints(Caretaker.Device device, Caretaker.WaveformDataPoints datapoints)
         {
-            // Do nothing if the application exited
-            if (Application.Current == null)
+            // Do nothing if the application exited or the measurements are not real-time
+            if (Application.Current == null || datapoints.nonrealtime)
             {
                 return;
             }
 
-            window.PulsePressureWaveform.AddPoints(datapoints.values, datapoints.timestamps);
+            window.PulsePressureWaveform.AddPoints(datapoints.samples, datapoints.timestamps);
         }
 
         /**************************************************************************************************************
          */
         public override void OnParameterizedPulse(
             Caretaker.Device device,
-             Caretaker.WaveformDataPoints datapoints,
+             Caretaker.ParamPulseSnapshot snapshot,
             Int16 t0,
             Int16 t1,
             Int16 t2,
@@ -538,25 +560,28 @@ namespace CaretakerCSharpSampleApp
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 // display most recent vitals
                 Caretaker.PrimaryVitals vitals = vitalsArray[vitalsArray.Length - 1];
-                if (vitals.heartRate > 0)
-                    window.HeartRate.Content = "" + vitals.heartRate;
+                if (!vitals.nonrealtime)
+                {
+                    if (vitals.heartRate > 0)
+                        window.HeartRate.Content = "" + vitals.heartRate;
 
-                window.Systolic.Content = "" + vitals.systolic;
-                window.Diastolic.Content = "" + vitals.diastolic;
+                    window.Systolic.Content = "" + vitals.systolic;
+                    window.Diastolic.Content = "" + vitals.diastolic;
 
-                window.MAP.Content = "(" + vitals.map + ")";
-                if (vitals.respiration > 0 )
-                    window.Respiration.Content = "" + vitals.respiration;
+                    window.MAP.Content = vitals.map;
+                    if (vitals.respiration > 0)
+                        window.Respiration.Content = "" + vitals.respiration;
 
-                int sqe = Math.Min(100, (int)vitals.signalQualityEstimate/100);
-                window.SignalQaulity.Content = "" + Math.Max(0,sqe) + "%";
+                    int sqe = Math.Min(100, (int)vitals.signalQualityEstimate / 100);
+                    window.SignalQaulity.Content = "" + Math.Max(0, sqe) + "%";
 
-                window.HeartRate.Foreground = Brushes.Green;
-                window.Systolic.Foreground = Brushes.Red;
-                window.Diastolic.Foreground = Brushes.Red;
-                window.MAP.Foreground = Brushes.Red;
-                window.BpDividerLine.Stroke = Brushes.Red;
-                window.Respiration.Foreground = Brushes.Yellow;
+                    window.HeartRate.Foreground = Brushes.Green;
+                    window.Systolic.Foreground = Brushes.Red;
+                    window.Diastolic.Foreground = Brushes.Red;
+                    window.MAP.Foreground = Brushes.Red;
+                    window.BpDividerLine.Stroke = Brushes.Red;
+                    window.Respiration.Foreground = Brushes.Yellow;
+                }
             }));
         }
 
@@ -579,14 +604,17 @@ namespace CaretakerCSharpSampleApp
              * file, in the Action passed as argument to Dispatcher.Invoke() to prevent application freeze.
              */
             Caretaker.SecondaryVitals vitals = vitalsArray[vitalsArray.Length - 1];
-            Console.WriteLine("*** SECONDARY VITALS ***");
-            Console.WriteLine("Blood Volume: {0}", vitals.bloodVolume);
-            Console.WriteLine("Cardiac Output: {0}", vitals.cardiacOutput);
-            Console.WriteLine("HR Comp: {0}", vitals.hrComp);
-            Console.WriteLine("IBI: {0}", vitals.interbeatInterval);
-            Console.WriteLine("LVET: {0}", vitals.lvet);
-            Console.WriteLine("P2P1 Ratio: {0}", vitals.p2p1Ratio);
-            Console.WriteLine("PR: {0}", vitals.pr);
+            if (!vitals.nonrealtime)
+            {
+                Console.WriteLine("*** SECONDARY VITALS ***");
+                Console.WriteLine("Blood Volume: {0}", vitals.bloodVolume);
+                Console.WriteLine("Cardiac Output: {0}", vitals.cardiacOutput);
+                Console.WriteLine("IBI: {0}", vitals.interbeatInterval);
+                Console.WriteLine("LVET: {0}", vitals.lvet);
+                Console.WriteLine("P2P1 Ratio: {0}", vitals.p2p1Ratio);
+                Console.WriteLine("PR: {0}", vitals.pr);
+                Console.WriteLine("SV: {0}", vitals.strokeVolume);
+            }
         }
 
         public override void OnReadDisplayState(Caretaker.Device device, Boolean status, Boolean state)
@@ -633,8 +661,8 @@ namespace CaretakerCSharpSampleApp
                 Console.WriteLine("Interval: {0}", interval);
             }
         }
-
-        public override void OnReadVitalsFilterSetting(Caretaker.Device device, Boolean status, Byte value)
+        /*
+        public override void OnReadMedianFilterSetting(Caretaker.Device device, Boolean status, Byte value)
         {
             // Do nothing if the application exited
             if (Application.Current == null)
@@ -648,7 +676,7 @@ namespace CaretakerCSharpSampleApp
                 Console.WriteLine("Value: {0}", value);
             }
         }
-
+        */
         public override void OnReadMotionTolerance(Caretaker.Device device, Boolean status, int timeout)
         {
             // Do nothing if the application exited
@@ -702,11 +730,10 @@ namespace CaretakerCSharpSampleApp
         // Caretaker device proxy
         CaretakerObserver mCaretakerObserver;
         Caretaker.Device mCaretaker;
-        String mSerialNumber = "";
+        String mUserInput = "";
 
         // Caretaker data
         volatile Waveform mPulsePressureWaveform;
-        volatile Waveform mPulseRateWaveform;
 
         // Timers
         System.Threading.Timer mUpdateTimer;
@@ -722,11 +749,16 @@ namespace CaretakerCSharpSampleApp
         public SolidColorBrush mErrorStatusBackground = Brushes.Crimson;
         public SolidColorBrush mErrorStatusForeground = Brushes.White;
 
-        // Calibration menu indexes
+        // Connection menu
+        public const int BLE = 0;
+        public const int WIFI = 1;
+        public const int USB = 2;
+
+        // Calibration menu
         public const int MANUAL_CAL = 0;
         public const int AUTO_CAL = 1;
 
-        // Posture menu indexes
+        // Posture menu
         public const int POSTURE_SITTING = 0;
         public const int POSTURE_STANDING = 1;
 
@@ -789,14 +821,6 @@ namespace CaretakerCSharpSampleApp
             }
         }
 
-        public Waveform PulseRateWaveform
-        {
-            get
-            {
-                return mPulseRateWaveform;
-            }
-        }
-
         /**************************************************************************************************************
          */
         public MainWindow()
@@ -807,16 +831,9 @@ namespace CaretakerCSharpSampleApp
             {
                 // Redirect library logging
                 Caretaker.Device.SetLibraryLogLevel(0);
-                Caretaker.Device.RedirectLibraryLogs();
-
-                // Create device instance passing Observer to receive notifications
-                mCaretakerObserver = new CaretakerObserver(this);
-                mCaretaker = new Caretaker.Device(mCaretakerObserver, true);
-
-            } catch(Exception e)
-            {
-                Console.WriteLine("Failed to create Caretaker.Device instance!\nException: {0}", e.ToString());
-                return;
+                //Caretaker.Device.RedirectLibraryLogs();
+            } catch (Exception e) {
+                Console.WriteLine("Library logging not redirected!\nException: {0}", e.ToString());
             }
 
             // use white text on blue background for connected status
@@ -830,27 +847,149 @@ namespace CaretakerCSharpSampleApp
             mAlertStatusBackground.Color = Color.FromRgb(212, 97, 18);
             mAlertStatusForeground = mConnectedStatusForeground;
 
-            // set default status
-            mStatus.Content = "Enter Caretaker serial number then press connect to begin.";
             mStatus.Background = mDefaultStatusBackground;
             mStatus.Foreground = mDefaultStatusForeground;
 
-            mPulsePressureWaveform = new Waveform(mPulsePressureCanvas);
-            PulsePressureWaveform.PlotStroke = Brushes.Red;
+            CreateCaretakerInstance();
+        }
 
-            mPulseRateWaveform = new Waveform(mPulseRateCanvas);
-            PulseRateWaveform.PlotStroke = Brushes.Green;
+        /**************************************************************************************************************
+         */
+        void CreateCaretakerInstance()
+        {
+            try
+            {
+                mCaretakerObserver = new CaretakerObserver(this);
 
-            // disable operational buttons initially
-            foreach(Button b in this.OperationButons)
+                // Create device instance.
+                switch (ConnectionComboBox.SelectedIndex)
+                {
+                    // Note only Caretaker 5 supports USB connection
+                    case USB:
+                        mCaretaker = new Caretaker.Device(mCaretakerObserver, true, Caretaker.DeviceClass.DEVICE_CLASS_USB);
+                        break;
+                    // Note only Caretaker 5 supports WiFi connection
+                    case WIFI:
+                        mCaretaker = new Caretaker.Device(mCaretakerObserver, true, Caretaker.DeviceClass.DEVICE_CLASS_TCP);
+                        break;
+                    // Both Caretaker 4 and 5 support BLE connection
+                    default:
+                        mCaretaker = new Caretaker.Device(mCaretakerObserver, true, Caretaker.DeviceClass.DEVICE_CLASS_BLE);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to create Caretaker.Device instance!\nException: {0}", e.ToString());
+                return;
+            }
+
+            // Disable buttons initially
+            foreach (Button b in this.OperationButons)
             {
                 b.IsEnabled = false;
             }
-            ConnectButton.IsEnabled = false;
 
-            // default settings
+            // Waveforms
+            mPulsePressureWaveform = new Waveform(mPulsePressureCanvas);
+            PulsePressureWaveform.PlotStroke = Brushes.Green;
+
+            StartRefreshingWaveform();
+
+            // Default settings
+            switch (mCaretaker.GetDeviceClass())
+            {
+                case Caretaker.DeviceClass.DEVICE_CLASS_BLE:
+                    Status.Content = "Plug BLE dongle then enter Caretaker serial number to connect.";
+                    SerialNumberTextBox.Visibility = System.Windows.Visibility.Visible;
+                    ConnectButton.IsEnabled = false;
+
+                    mPulsePressureWaveform.InputRate = 31.25; // 31.25 Hz data
+                    mPulsePressureWaveform.InputRateDivder = 1; // no scaling
+                    break;
+
+                case Caretaker.DeviceClass.DEVICE_CLASS_TCP:
+                    Status.Content = "Enter Caretaker5 serial number or IP address to connect.";
+                    SerialNumberTextBox.Visibility = System.Windows.Visibility.Visible;
+                    ConnectButton.IsEnabled = false;
+
+                    mPulsePressureWaveform.InputRate = 500; // 500 Hz data
+                    mPulsePressureWaveform.InputRateDivder = 10; // scale to 50 Hz
+                    break;
+
+                case Caretaker.DeviceClass.DEVICE_CLASS_USB:
+                    Status.Content = "Plug Caretaker5 into USB port then press connect.";
+                    SerialNumberTextBox.Visibility = System.Windows.Visibility.Hidden;
+                    ConnectButton.IsEnabled = true;
+
+                    mPulsePressureWaveform.InputRate = 500; // 500 Hz data
+                    mPulsePressureWaveform.InputRateDivder = 10; // scale to 50 Hz
+                    break;
+
+                default:
+                    break;
+            }
+
+            mStatus.Background = mDefaultStatusBackground;
+            mStatus.Foreground = mDefaultStatusForeground;
+
             CalibrationModeComboBox.SelectedIndex = MANUAL_CAL;
             PostureComboBox.SelectedIndex = POSTURE_SITTING;
+
+            SerialNumberTextBox.IsEnabled = true;
+            ConnectButton.IsEnabled = true;
+            ConnectButton.Content = "Connect";
+
+            HeartRate.Foreground = Brushes.Green;
+            Systolic.Foreground = Brushes.Red;
+            Diastolic.Foreground = Brushes.Red;
+            MAP.Foreground = Brushes.Red;
+            BpDividerLine.Stroke = Brushes.Red;
+            Respiration.Foreground = Brushes.Yellow;
+
+            HeartRate.Content = "?";
+            Systolic.Content = "  ?";
+            Diastolic.Content = " ?";
+            MAP.Content = "?";
+            Respiration.Content = "?";
+
+            TargetPressure.Content = "";
+            ActualPressure.Content = "";
+            BatteryVoltage.Content = "";
+            SignalQaulity.Content = "";
+            SignalNoiseRatio.Content = "";
+        }
+
+        /**************************************************************************************************************
+        */
+        void StartRefreshingWaveform()
+        {
+            // Update the waveforms 10 times per second
+            if (mUpdateTimer == null)
+            {
+                int refreshPeriod = 100;
+                mPulsePressureWaveform.RefreshRate = 1000.0 / refreshPeriod;
+                mUpdateTimer = new System.Threading.Timer(OnUpdateWaveforms, null, 1000, refreshPeriod);
+            }
+        }
+
+        /**************************************************************************************************************
+        */
+        void StopRefreshingWaveform()
+        {
+            try
+            {
+                if (mUpdateTimer != null)
+                {
+                    mUpdateTimer.Dispose();
+                    mUpdateTimer = null;
+                }
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine("Timer dispose exception! {0}", exp.ToString());
+            }
+
         }
 
         /**************************************************************************************************************
@@ -873,6 +1012,25 @@ namespace CaretakerCSharpSampleApp
 
         /**************************************************************************************************************
         */
+        void StopTimeout()
+        {
+            try
+            {
+                if (mTimeoutTimer != null)
+                {
+                    mTimeoutTimer.Dispose();
+                    mTimeoutTimer = null;
+                }
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine("Timer dispose exception! {0}", exp.ToString());
+            }
+
+        }
+
+        /**************************************************************************************************************
+        */
         private void OnUpdateWaveforms(Object stateInfo)
         {
             if (Application.Current == null)
@@ -882,7 +1040,6 @@ namespace CaretakerCSharpSampleApp
 
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                PulseRateWaveform.Update();
                 PulsePressureWaveform.Update();
             }));
         }
@@ -906,22 +1063,8 @@ namespace CaretakerCSharpSampleApp
         */
         protected override void OnClosing(CancelEventArgs e)
         {
-            try
-            {
-                if (mTimeoutTimer != null)
-                {
-                    mTimeoutTimer.Dispose();
-                }
-
-                if (mUpdateTimer != null)
-                {
-                    mUpdateTimer.Dispose();
-                }
-            }
-            catch (Exception exp)
-            {
-                Console.WriteLine("Timer dispose exception! {0}", exp.ToString());
-            }
+            StopTimeout();
+            StopRefreshingWaveform();
 
             // IMPORTANT: Destroy resources allocated for the device instance in Create()
             mStatus.Content = "Closing...";
@@ -937,12 +1080,13 @@ namespace CaretakerCSharpSampleApp
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             PulsePressureWaveform.Clear();
-            mPulseRateWaveform.Clear();
 
             Status.Background = mConnectedStatusBackground;
             Status.Foreground = mConnectedStatusForeground;
 
-            /* start manual or auto calibration according to UI settings */
+            mCaretaker.WriteSnrMinimum(100);
+
+            // start manual or auto calibration according to UI settings
             if (CalibrationModeComboBox.SelectedIndex == MANUAL_CAL)
             {
                 int systolic = 0, diastolic = 0;
@@ -971,12 +1115,6 @@ namespace CaretakerCSharpSampleApp
                 mStatus.Content = "Starting auto calibration...";
                 Starting = mCaretaker.StartAutoCal(posture);
             }
-
-            // Update the waveforms 10 times per second
-            if (Starting)
-            {
-                mUpdateTimer = new System.Threading.Timer(OnUpdateWaveforms, null, 1000, 100);
-            }
         }
 
         /**************************************************************************************************************
@@ -985,15 +1123,6 @@ namespace CaretakerCSharpSampleApp
         {
             mStatus.Content = "Stopping...";
             mCaretaker.Stop();
-
-            try
-            {
-                mUpdateTimer.Dispose();
-            }
-            catch (Exception exp)
-            {
-                Console.WriteLine("Timer dispose exception! {0}", exp.ToString());
-            }
         }
 
         /**************************************************************************************************************
@@ -1003,13 +1132,42 @@ namespace CaretakerCSharpSampleApp
             
             if (ConnectButton.Content.Equals("Connect"))
             {
-                Connecting = true;
-                mStatus.Content = "Connecting to " + mSerialNumber + "... Press button on device to connect.";
                 mStatus.Background = mDefaultStatusBackground;
                 mStatus.Foreground = mDefaultStatusForeground;
 
-                if ( mCaretaker.ConnectToSerialNumber(mSerialNumber, 60000))
+                Boolean connectingStatus = false;
+                switch (mCaretaker.GetDeviceClass())
                 {
+                    // Connect to the Caretaker 4 or 5 with the specified serial number. 
+                    case Caretaker.DeviceClass.DEVICE_CLASS_BLE:
+                        mStatus.Content = "Connecting to " + mUserInput + "... Press button on device to connect.";
+                        connectingStatus = mCaretaker.ConnectToSerialNumber(mUserInput, 60000);
+                        break;
+
+                    // Connect to the Caretaker5 with the specified serial number or IP address. 
+                    case Caretaker.DeviceClass.DEVICE_CLASS_TCP:
+                        if (mUserInput.Contains('.')) {
+                            mStatus.Content = "Connecting to IP address " + mUserInput;
+                            connectingStatus = mCaretaker.ConnectToAddress(mUserInput, 60000);
+                        } else {
+                            mStatus.Content = "Connecting to serial number " + mUserInput;
+                            connectingStatus = mCaretaker.ConnectToSerialNumber(mUserInput, 60000);
+                        }
+                        break;
+
+                    // Connect to the Caretaker5 that is plugged into a PC USB port.
+                    case Caretaker.DeviceClass.DEVICE_CLASS_USB:
+                        mStatus.Content = "Connecting to device...";
+                        connectingStatus = mCaretaker.ConnectToAny(60000);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                if (connectingStatus)
+                {
+                    Connecting = true;
                     ConnectButton.IsEnabled = false;
                     ConnectButton.Content = "Abort";
                     SerialNumberTextBox.IsEnabled = false;
@@ -1095,8 +1253,8 @@ namespace CaretakerCSharpSampleApp
                 return;
             }
 
-            mSerialNumber = mSerialNumberTextBox.Text;
-            bool serilaNumberValid = !mSerialNumber.Equals("Enter serial number");
+            mUserInput = mSerialNumberTextBox.Text;
+            bool serilaNumberValid = !mUserInput.Equals("Enter serial number");
             if (serilaNumberValid && ConnectButton != null)
             {
                 ConnectButton.IsEnabled = true;
@@ -1116,7 +1274,7 @@ namespace CaretakerCSharpSampleApp
         {
             
             mSerialNumberTextBox.Foreground = Brushes.Black;
-            if (mSerialNumber.Equals("Enter serial number"))
+            if (mUserInput.Equals("Enter serial number"))
             {
                 mSerialNumberTextBox.Clear();
             }
@@ -1132,6 +1290,37 @@ namespace CaretakerCSharpSampleApp
 
         private void SerialNumberTextBox_MouseDown(object sender, MouseButtonEventArgs e)
         {
+        }
+
+        private void ConnectionMode_SelectionChanged(object sender, SelectionChangedEventArgs ev)
+        {
+            try
+            {
+                if( mCaretaker == null )
+                {
+                    return;
+				}
+                if (mCaretaker.IsConnected())
+                {
+                    mSerialNumberTextBox.Text = mCaretaker.GetSerialNumber();
+                    mCaretaker.Disconnect();
+                }
+                mCaretaker.ReleaseResources();
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("Disconnect error: {0}", err.ToString());
+            }
+
+            try
+            {
+
+                CreateCaretakerInstance();
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("Create Caretaker error: {0}", err.ToString());
+            }
         }
 
         private void CalibrationMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1167,7 +1356,29 @@ namespace CaretakerCSharpSampleApp
                 messageBoxCS.AppendLine();
                 messageBoxCS.AppendFormat("Serial Number:      {0}\n", mCaretaker.GetSerialNumber());
                 messageBoxCS.AppendLine();
-                messageBoxCS.AppendFormat("MAC Address:        {0}\n", mCaretaker.GetMacAddress());
+
+                switch (mCaretaker.GetDeviceClass())
+                {
+                    case Caretaker.DeviceClass.DEVICE_CLASS_BLE:
+                        messageBoxCS.AppendFormat("Connection type:    BLE\n");
+                        messageBoxCS.AppendLine();
+                        messageBoxCS.AppendFormat("BLE Address:        {0}\n", mCaretaker.GetAddress());
+                        break;
+
+                    case Caretaker.DeviceClass.DEVICE_CLASS_TCP:
+                        messageBoxCS.AppendFormat("Connection type:    Wi-Fi\n");
+                        messageBoxCS.AppendLine();
+                        messageBoxCS.AppendFormat("IP Address:         {0}\n", mCaretaker.GetAddress());
+                        break;
+
+                    case Caretaker.DeviceClass.DEVICE_CLASS_USB:
+                        messageBoxCS.AppendFormat("Connection type:    USB\n");
+                        break;
+
+                    default:
+                        break;
+                }
+
                 messageBoxCS.AppendLine();
                 messageBoxCS.AppendFormat("Hardware Version:   {0}\n", mCaretaker.GetHardwareVersion());
                 messageBoxCS.AppendLine();

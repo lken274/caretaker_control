@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: Library Integration</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: Library Integration</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -51,6 +51,8 @@ The archive bundle contains the following components.</p>
 <tr>
 <th>Component </th><th>Description </th></tr>
 <tr>
+<td>drivers </td><td>Optional drivers for integrating the Caretaker with applications running on Windows 8.1 or earlier. </td></tr>
+<tr>
 <td>examples </td><td>Examples illustrating library usage. </td></tr>
 <tr>
 <td>manual </td><td>The library API documentation. Documentation is available in pdf and html formats. The pdf version is supplied for completeness though the formatting is optimized for viewing in html format. Open <em>html/index.html to view the html version main page.</em>. </td></tr>
@@ -67,7 +69,7 @@ The archive bundle contains the following components.</p>
 <tr>
 <td>libcaretaker_dynamic.dll </td><td>The unmanaged C/C++ library image to use for dynamic linking with native applications. </td></tr>
 <tr>
-<td>libcaretaker_clr.dll </td><td>Managed CLR library image to use for linking with .NET framework 4.0 or later applications. </td></tr>
+<td>libcaretaker_clr.dll </td><td>Managed CLR library image to use for linking with .NET Framework 4.0+, .Net Core 3.0+, or .Net 5.0+ applications. </td></tr>
 </table>
 <h2>Supported Platforms</h2>
 <p>This library version tested successfully with applications designed for the following configurations.</p>
@@ -87,46 +89,54 @@ Win64 (x64) </li>
 </ul>
 <p>Build Tools </p><ul>
 <li>
-Visual Studio 2015 </li>
-<li>
 Visual Studio 2017 </li>
+<li>
+Visual Studio 2019 </li>
 </ul>
-<h2>Software Configuration</h2>
-<p>Windows 7 Version 6.1. 7601 SP1 or later installed for Windows 7 application linked with the library.</p>
-<p>Windows 8.1, Update 1 Version 6.3.9600 or later for Windows 8.1 application linked with the library.</p>
-<p>Windows 10 Version 1709, Build 16299 or later for Windows 10 application linked with the library.</p>
-<h2>Hardware Configuration</h2>
-<p>Bluetooth Low Energy (BLE) will need to be setup on Windows prior to connecting the application to the Caretaker device. Note that native Windows BLE is not supported in this release of the Caretaker library so an external BLE dongle is required. The supported dongles are TI CC2540 dongles. Note Bluegiga BLE112 dongles also work but have shorter range. Plug the dongle into a USB port on the PC and install the necessary drivers. After successful setup, the dongle will appear as a virtual COM port in Windows Device Manager. The library will detect the dongle automatically when it is plugged into the PC thereafter.</p>
+<h2>Supported Communication Protocols</h2>
+<p>The Caretaker4 supports only Bluetooth Low Energy (BLE) communication. However, the Careataker5 supports BLE, Wi-FI, and USB communication.</p>
+<h3>BLE Communication</h3>
+<p>For BLE connectivity, some BLE setup is required on the PC prior to connecting the application to the Caretaker device. Native Windows BLE is not supported in this release of the Caretaker library so an external BLE dongle is required. The supported dongles are TI CC2540 dongles. (Note Bluegiga BLE112 dongles also work but have shorter range.) Plug the dongle into a USB port on the PC and install the necessary drivers. You can find more information about the TI CC2540 driver here <em><a href="https://www.ti.com/tool/BLE-STACK-ARCHIVE">https://www.ti.com/tool/BLE-STACK-ARCHIVE</a></em>.</p>
+<p>After successful setup, the dongle will appear as <em>TI CC2540 USB CDC Serial Port (COMxx)</em> in the Device Manager <em>Ports (COM &amp; LPT)</em>. The library will detect the dongle automatically when it is plugged into the PC thereafter.</p>
+<h3>Wi-Fi Communication</h3>
+<p>For Wi-Fi connectivity to Caretaker, the Linux computer and the Caretaker must be configured to join the same network. Note the Caretaker supports peer-to-peer Wi-Fi connectivity via a private network that can be enabled from the Caretaker settings menu. If enabled, the PC must also be configured to join the private peer-to-peer network for connectivity with the Caretaker.</p>
+<h3>USB Communication</h3>
+<p>For USB connectivity, plug the Caretaker into the PC using a standard USB-C to USB-A cable. For Windows 10 and later versions, a generic USB serial driver is installed automatically when the Caretaker is first plugged into the PC. The device will appear as <em>USB Serial Device (COMX)</em> under the Device Manager <em>Ports (COM &amp; LPT)</em>.</p>
+<p>However, for Windows 8.1 and earlier versions, the USB serial driver must be installed manually. After plugging the Caretaker into the PC, open the Device Manager and identify the Caretaker. Next right-click to install the provided USB serial driver <em>ctm_usb_cdc.inf</em>. The device will then appear as <em>Vitalstream USB Serial (COMX)</em> under the Device Manager <em>Ports (COM &amp; LPT)</em>.</p>
+<p>After the USB serial driver is installed, the library will detect the Caretaker automatically when it is plugged into the PC.</p>
+<h2>Software Dependencies</h2>
+<p>Install <em>Microsoft Visual Studio 2015</em> or later, or <em>Microsoft Visual C++ 2015 Redistributable</em> or later to install the runtime environment required to load and run applications linked with the Caretaker library. Note the application will fail to start if the required runtime environment is not installed.</p>
 <h2>Linking with the Managed Library</h2>
-<p>The Common Language Runtime (CLR) wrapper library (libcaretaker_clr.dll) is available to integrate .NET 4.0 or later applications with the Caretaker device. To use it, copy libcaretaker_clr.dll (the managed library) and libcaretaker_dynamic.dll (the unmanaged library) to the application project directory then add a reference to libcareteker_clr.dll. For Visual Studio projects, the reference can be added by right-clicking the application project then selecting Add Reference and then browsing to libcaretaker_clr.dll and selecting it.</p>
-<p>Note both DLLs will be loaded at runtime when the application is executed and are expected to be located with the application executable (.exe) file. So they must be copied also to the target directory where the application executable file is saved. The copy can be done manually after building the application, or the build can be configured to copy them to the target directory with the executable. For Visual Studio, this can be done by right-clicking the project then selecting Properties and then Build Events and adding the following Post-build event command line.</p>
+<p>Use the Common Language Runtime (CLR) wrapper library (libcaretaker_clr.dll) to integrate .NET Framework 4.0+, .Net Core 3.0+, or .Net 5.0+ applications with the Caretaker device. Copy both libcaretaker_clr.dll (managed library) and libcaretaker_dynamic.dll (unmanaged library) to the application project directory then add a reference to libcareteker_clr.dll. For Visual Studio projects, the reference can be added by right-clicking the application project then selecting Add Reference and then browsing to libcaretaker_clr.dll and selecting it.</p>
+<p>Note both DLLs will be loaded at runtime when the application is executed and are expected to be located with the application executable (.exe) file. So they must be copied to the directory where the executable file is saved. The copy can be done manually after building the application, or the build can be configured to copy them automatically. For Visual Studio, this can be done by right-clicking the project, then selecting Properties, then Build Events, and add the following Post-build event command line.</p>
 <div class="fragment"><div class="line">copy /B /Y <span class="stringliteral">&quot;$(ProjectDir)libcaretaker_dynamic.dll&quot;</span> <span class="stringliteral">&quot;$(TargetDir)&quot;</span></div></div><!-- fragment --><h2>Linking with the Unmanaged Library</h2>
-<p>Native Win32 applications can link the with the unmanaged library using either implicit or explicit linking.</p>
+<p>Native Windows applications can link with the unmanaged library using either implicit or explicit linking. The Win64 library binary must be used when linking with Win64 applications, and the Win32 library binary must be used when linking with Win32 applications.</p>
 <h3>Implicit Linking</h3>
-<p>Add the following files to the application project to link implicitly with the library. </p><ul>
+<p>Add the following files to the application project for static linking with the library. </p><ul>
 <li>
 caretaker_static.h </li>
 <li>
 libcaretaker_static.lib </li>
 </ul>
-<h4>caretaker_static.h</h4>
-<p>This header file contains the exported library functions that are callable from within the application. Add it to the application source (or include) folder and then include it in each source file that will call library functions.</p>
-<h4>libcaretaker_static.lib</h4>
-<p>Add libcaretaker_static.lib to the application source (or lib) directory and include it in the library path where the linker can find it. If using an external makefile, add libcaretaker_static.lib where the object files (.obj) and other libraries are listed. If Visual Studio, add it to the project Linker Input configuration where the other libraries are listed.</p>
-<p>Additionally, the following Windows system libraries must be added to the project to resolve libcaretaker dependencies. </p><ul>
-<li>
-Setupapi.lib (available in the Windows SDK) </li>
-</ul>
+<p>The caretaker_static.h file contains the exported library functions that are callable from within the application. Add it to the application source (or include) folder and then include it in each source file that will call library functions. </p>
+<p>Add the libcaretaker_static.lib file to the application source (or lib) directory and include it in the library path where the linker can find it. If using an external makefile, add libcaretaker_static.lib where the object files (.obj) and other libraries are listed. If Visual Studio, add it to the project Linker Input configuration where the other libraries are listed.</p>
 <h3>Explicit Linking</h3>
-<p>For explicit linking with the library, the application must explicitly load and unload libcaretaker_dynamic.dll. </p><ul>
+<p>Add the following files to the application project for dynamic linking with the library. </p><ul>
 <li>
-Call LoadLibrary (or a similar function) to load the DLL and obtain a module handle. </li>
+caretaker_dynamic.h </li>
 <li>
-Call GetProcAddress to obtain a function pointer to each exported function that the application will call. </li>
-<li>
-Call FreeLibrary when done with the DLL. </li>
+libcaretaker_dynamic.dll </li>
 </ul>
-<p>Sample code illustrating explicit linking is available in the <a class="el" href="group__explicit__linking.html">Unmanaged Explicit Linking Example</a> section.</p>
+<p>The caretaker_dynamic.h file contains the exported library functions that are callable from within the application. Add it to the application source (or include) folder and then include it in each source file that will call library functions. </p>
+<p>Additionally, the application must explicitly load and unload the <em>libcaretaker_dynamic.dll</em> at runtime. </p><ul>
+<li>
+Call Windows LoadLibrary() to load the DLL and obtain a module handle. </li>
+<li>
+Call Windows GetProcAddress() to obtain a function pointer to each exported function that the application will call. </li>
+<li>
+Call Windows FreeLibrary() when done with the DLL. </li>
+</ul>
+<p>See the native C++ sample application for illustration.</p>
 <h2>Debugging</h2>
 <p>The library supports generating log messages with the following levels of verbosity.</p>
 <table class="doxtable">
@@ -156,10 +166,12 @@ W/ &ndash;&gt; Warning </li>
 <li>
 E/ &ndash;&gt; Error </li>
 </ul>
+<h2>Sample Applications</h2>
+<p>Sample applications are available in the examples directory for illustration purposes. A README file is located in each example subdirectory providing detailed information about the example. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:18 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

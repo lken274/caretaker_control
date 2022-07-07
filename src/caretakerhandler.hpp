@@ -6,8 +6,8 @@
 #include <map>
 
 struct DataRecord {
-    uint32_t timestamp;
-    std::string data;
+    unsigned long long timestamp;
+    std::string data; //unused
 };
 struct HandlerData{
     libct_init_data_t init_data;
@@ -26,8 +26,8 @@ public:
     void recordLastTimestamp(int triggerNum);
     bool isConnected = false;
     HandlerData hd;
+    std::shared_ptr<IInterface> io;
 private:
     CSVWriter fileOut;
-    std::shared_ptr<IInterface> io;
-    
+    std::string filename;
 };

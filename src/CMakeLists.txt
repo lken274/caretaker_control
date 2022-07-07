@@ -31,7 +31,8 @@ add_custom_command(
     ${PROJECT_SOURCE_DIR}/lib/glew_lib/bin/Release/x64/glew32.dll
     ${PROJECT_SOURCE_DIR}/lib/freeglut_lib/bin/x64/freeglut.dll
     $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>)
-
+    
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 configure_file(appConfig.h.in appConfig.h)
 
 

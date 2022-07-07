@@ -3,17 +3,23 @@
  * Header file defining libcaretaker API to monitor Caretaker devices.
  * This is the main header file to include in your application to use libcaretaker.
  *
- * Version: 1.6.5
- * Build Date: Thu 10/11/2018 10:50:12.11
+ * Version: 2.1.8
+ * Build Date: Wed 06/29/2022 16:03:01.17
  *
  * Change History
  * --------------
  *
  * Date         Version     Comment
  * ----------   -------     -----------------------------------------------------------------------
- * 05-01-2-18   1.5.2       Initial release.
- * 07-26-2-18   1.5.3       Added Windows library bug fixes.
- * 08-02-2-18   1.6.1       Added Windows library support for TI CC2540 BLE dongles.
+ * 05-01-2018   1.5.2       Initial release.
+ * 07-26-2018   1.5.3       Added Windows library bug fixes.
+ * 08-02-2018   1.6.5       Added Windows library support for TI CC2540 BLE (long-range) dongles.
+ * 20-09-2018   1.6.5       Updated to print library logs in local time instead of UTC.
+ * 10-01-2018   1.6.8       Added new Windows API to allow Apps to select the data to monitor.
+ * 12-20-2018   1.6.9       Upgraded to Bluez 5.50 to improve Linux Apps connectivity.
+ * 06-21-2019   1.6.16      Addressed Linux Apps connectivity issues when using CSR8510 A10 BLE dongle. 
+ * 06-21-2019   1.6.16      Increased BLE request timeouts to improve Windows 7 Apps connectivity.
+ * 04-20-2021   2.0.3       Updated to support CT5 (BLE, USB, WiFi) connectivity
  */
 #ifndef LIBCT_CARETAKER_H
 #define LIBCT_CARETAKER_H
@@ -34,51 +40,41 @@ extern "C" {
  * The group of auxiliary functions and macros available to parse, read and write additional Caretaker
  * device data.
  */
+ /**
+  * The library calling convention.
+  * Some platforms, such as Windows, support many calling conventions which specify the order that
+  * function arguments are pushed onto and popped from the call stack, and how values are returned
+  * from the called functions. The stack can be corrupted if the library and application do not use
+  * the same calling convention. As such, LIBCTAPI is defined to abstract the underlying OS calling
+  * convention, and it must be specified in the declarations and definitions of library functions and
+  * callbacks exposed to the application to ensure the function caller (the application) and function
+  * callee (libcaretaker) agree on the same calling convention to avoid corrupting the stack.
+  */
 #ifndef LIBCTAPI
-#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MSYS__)
+#if defined(_WIN32) || defined(_WIN64) ||  defined(__CYGWIN__) || defined(__MSYS__)
 #include <windows.h>
-/** 
- * The library calling convention.
- * Some platforms, such as Windows, support many calling conventions which specify the order that
- * function arguments are pushed onto and popped from the call stack, and how values are returned
- * from the called functions. The stack can be corrupted if the library and application do not use
- * the same calling convention. As such, LIBCTAPI is defined to abstract the underlying OS calling
- * convention, and it must be specified in the declarations and definitions of library functions and
- * callbacks exposed to the application to ensure the function caller (the application) and function
- * callee (libcaretaker) agree on the same calling convention to avoid corrupting the stack.
- */
 #define LIBCTAPI WINAPI
-/**
- * Static or dynamic linking on Windows
- * This macro is updated by the Windows build scripts to set it for static or dynamic linking
- * as follows.
- *
- * Dynamic Linking
- * \code
- * #define LIBCTEXPORT extern _declspec(dllimport) _declspec(dllimport)
- * \endcode
- *
- * Static Linking
- * \code
- * #define LIBCTEXPORT extern _declspec(dllimport)
- * \endcode
- */
+#else
+#define LIBCTAPI
+#endif
+#endif
+ /**
+* Static or dynamic linking on Windows
+* This macro is updated by the Windows build scripts to set it for static or dynamic linking
+* as follows.
+*
+* Dynamic Linking
+* \code
+* #define LIBCTEXPORT extern _declspec(dllimport) _declspec(dllimport)
+* \endcode
+*
+* Static Linking
+* \code
+* #define LIBCTEXPORT extern _declspec(dllimport)
+* \endcode
+*/
 #ifndef LIBCTEXPORT
 #define LIBCTEXPORT extern _declspec(dllimport)
-#endif
-#else
-/** 
- * The library calling convention.
- * Some platforms, such as Windows, support many calling conventions which specify the order that
- * function arguments are pushed onto and popped from the call stack, and how values are returned
- * from the called functions. The stack can be corrupted if the library and application do not use
- * the same calling convention. As such, LIBCTAPI is defined to abstract the underlying OS calling
- * convention, and it must be specified in the declarations and definitions of library functions and
- * callbacks exposed to the application to ensure the function caller (the application) and function
- * callee (libcaretaker) agree on the same calling convention to avoid corrupting the stack. */
-#define LIBCTAPI
-#define LIBCTEXPORT extern _declspec(dllimport)
-#endif
 #endif
 /**
  * \class libct_status_t
@@ -116,6 +112,8 @@ enum libct_status_t {
     LIBCT_STATUS_READ_ERROR = -105,
     /** Function return status indicating error writing data to the device. */
     LIBCT_STATUS_WRITE_ERROR = -106,
+    /** Function return status indicating the operation timed out. */
+    LIBCT_STATUS_TIMEOUT = -107,
 };
 /**
  * Checks a function return status for failure.
@@ -177,8 +175,84 @@ enum libct_device_class_t {
      *       initializing a context.
      */
     LIBCT_DEVICE_CLASS_UNKOWN=0,
-    /** Device class specifying a Bluetooth Low Energy (BLE) CareTaker4 device. */
-    LIBCT_DEVICE_CLASS_BLE_CARETAKER4 =1,
+    /** Device class specifying the CareTaker4 or CareTaker5 BLE interface. */
+    LIBCT_DEVICE_CLASS_BLE,
+    /** Device class specifying the CareTaker5 USB interface. Note the Caretaker4 does not support the USB interface.*/
+    LIBCT_DEVICE_CLASS_USB,
+    /** Device class specifying the CareTaker5 Wi-Fi interface. Note the Caretaker4 does not support the Wi-Fi interface.*/
+    LIBCT_DEVICE_CLASS_TCP,
+};
+/**
+ * \class libct_device_config_idx_t
+ * The readable/writeable Caretaker configuration indices.
+ * These indices must be used with \ref libct_rd_config "libct_rd_config()"
+ * and \ref libct_wrt_config "libct_wrt_config()".
+ */
+enum libct_device_config_idx_t {
+    /**
+     * Systolic blood pressure measurement notification settings.
+     */
+    LIBCT_DEVICE_CONFIG_ALERT_BP_SYS_IDX = 1,
+    /**
+     * Diastolic blood pressure measurement notification settings.
+     */
+    LIBCT_DEVICE_CONFIG_ALERT_BP_DIA_IDX,
+    /**
+     * Heart rate notification measurement settings.
+     */
+    LIBCT_DEVICE_CONFIG_ALERT_HR_IDX,
+    /**
+     * SPO2 notification measurement settings.
+     */
+    LIBCT_DEVICE_CONFIG_ALERT_SPO2_IDX,
+    /**
+     * Body temperature measurement notification settings.
+     */
+    LIBCT_DEVICE_CONFIG_ALERT_BODY_TEMP_IDX,
+    /**
+     * Measurements notification effects.
+     */
+    LIBCT_DEVICE_CONFIG_ALERT_EFFECTS_IDX,
+    /**
+     * Caretaker display settings.
+     */
+    LIBCT_DEVICE_CONFIG_DISPLAY_IDX,
+    /**
+     * HL7 data forwarding display settings.
+     */
+    LIBCT_DEVICE_CONFIG_HL7_IDX,
+    /**
+     * Web portal data forwarding settings.
+     */
+    LIBCT_DEVICE_CONFIG_PORTAL_IDX,
+    /**
+     * Web server data forwarding settings.
+     */
+    LIBCT_DEVICE_CONFIG_SERVER_IDX,
+    /**
+     * Bluetooth settings.
+     */
+    LIBCT_DEVICE_CONFIG_BLE_IDX,
+    /**
+     * WiFi settings.
+     */
+    LIBCT_DEVICE_CONFIG_WIFI_IDX,
+    /**
+     * USB settings.
+     */
+    LIBCT_DEVICE_CONFIG_USB_IDX,
+    /**
+     * PDA settings.
+     */
+    LIBCT_DEVICE_CONFIG_PDA_IDX,
+    /**
+     * LOG settings.
+     */
+    LIBCT_DEVICE_CONFIG_LOGS_IDX,
+    /**
+     * Sound settings.
+     */
+    LIBCT_DEVICE_CONFIG_SOUND_IDX,
 };
 /**
  * \class libct_cal_type_t
@@ -217,16 +291,6 @@ enum libct_monitor_flags_t {
      */
     LIBCT_MONITOR_INT_PULSE = (1<<0),
     /**
-     * Set this flag in the flags passed to libct_start_monitoring() to stream the pulse rate (raw pulse)
-     * waveform from the device. Note the pulse pressure (integrated pulse) waveform will be derived locally 
-     * from the pulse rate waveform and the application will receive both the \ref libct_stream_data_t.raw_pulse
-     * "raw pulse" and \ref libct_stream_data_t.int_pulse "integrated pulse" waveform data in
-     * \ref libct_stream_data_t "stream data" packets delivered to the application
-     * \ref libct_app_callbacks_t.on_data_received "on_data_received()" callback function when this
-     * flag is set.
-     */
-    LIBCT_MONITOR_RAW_PULSE = (1<<1),
-    /**
      * Set this flag in the flags passed to libct_start_monitoring() to stream parameterize waveform
      * from the device. The application will receive \ref libct_stream_data_t.param_pulse
      * "parameterize pulse" waveform data in \ref libct_stream_data_t "stream data" packets delivered
@@ -252,26 +316,6 @@ enum libct_monitor_flags_t {
      * @note The secondary vitals are for internal use or research only.
      */
     LIBCT_MONITOR_VITALS2 = (1<<4),
-    /**
-     * Set this flag in the flags passed to libct_start_monitoring() to stream pulse oximetry data
-     * from the device. The application will receive \ref libct_stream_data_t.pulse_ox
-     * "pulse ox" data in \ref libct_stream_data_t "stream data" packets delivered to the application
-     * \ref libct_app_callbacks_t.on_data_received "on_data_received()" callback function when this
-     * flag is set.
-     * @note The caretaker does not report pulse oximetry data today but may in the future.
-     * @note Reserved for future use.
-     */
-    LIBCT_MONITOR_PULSE_OX = (1<<5),
-    /**
-     * Set this flag in the flags passed to libct_start_monitoring() to stream temperature data from
-     * the device. The application will receive \ref libct_stream_data_t.temperature "temperature"
-     * data in \ref libct_stream_data_t "stream data" packets delivered to the application
-     * \ref libct_app_callbacks_t.on_data_received "on_data_received()" callback function when this
-     * flag is set.
-     * @note the caretaker does not report temperature data today but may in the future.
-     * @note Reserved for future use.
-     */
-    LIBCT_MONITOR_TEMPERATURE = (1<<6),
     /**
      * Set this flag in the flags passed to libct_start_monitoring() to stream cuff pressure
      * data from the device. The application will receive \ref libct_stream_data_t.cuff_pressure
@@ -366,7 +410,7 @@ typedef struct libct_bp_settings_t {
  * \class libct_device_status_t
  * Device status data point within the libct_stream_data_t packet.
  */
-// MUST match CTAppDeviceStatus defined in libct.h exactly.
+// MUST match AppDeviceStatus defined in libct.h exactly.
 typedef struct libct_device_status_t {
     /**
      * The other fields are valid when this field is non-zero (true) and invalid otherwise.
@@ -377,6 +421,8 @@ typedef struct libct_device_status_t {
      * essentially is the raw value from the device.
      */
     long long value;
+    /** Device timestamp */
+    long long timestamp;
     /** An indicator of whether the system PDA measurement system is enabled */
     bool pda_enabled;
     /** An indicator of whether the system is in simulation mode. */
@@ -396,16 +442,16 @@ typedef struct libct_device_status_t {
     bool critical_temperature;
     /** The pump has violated an overrun condition. */
     bool pump_overrun;
-    /** The BLE Temperature Sensor is paired and actively communicating with CareTaker. */
-    bool ble_temperature_sensor_paired;
-    /** The a BLE hand-held device is paired and actively communicating with CareTaker */
-    bool ble_handheld_paired;
-    /** TThe current stream control status bit of the BLE stream. */
-    bool ble_stream_control;
-    /** The current stream control status bit of the cellular stream */
-    bool cellular_control;
-    /** The current stream control status bit of the serial stream */
-    bool serial_stream_control;
+    /** External temperature senosr connnected. */
+    bool body_temp_connected;
+    /** External spo2 connected */
+    bool spo2_connected;
+    /** Was stream control status bit of the BLE stream. */
+    bool reserved4;
+    /** Was stream control status bit of the cellular stream */
+    bool reserved5;
+    /** Indicates that the user pressed stop on the UI */
+    bool stop_button_pressed;
     /** The system has been started and running in auto-calibration mode */
     bool auto_cal_mode;
     /** The system has been started and running in manual calibration mode. */
@@ -464,47 +510,56 @@ typedef struct libct_device_status_t {
     /** The device is charging */
     bool charging;
     /** Charging complete */
-    bool chargeComplete;
+    bool charge_complete;
     /** Posture */
     short posture;
 	/** Invalid input received in the last command. */
 	bool invalid_data_entry;
+    /** 
+     * Recalibration Recommended
+     * Enabled when the signal is not sufficient to have high confidence in the readings.
+     */
+	bool recal_recommended;
+	/* enables display of CO/SV/LVET in gui */
+	bool hemodynamics_enabled;
+	 /* indicates whether user has calibrated cardiac output for the current session */
+    bool cardiac_output_calibrated;
 } libct_device_status_t;
 /**
  * \class libct_temperature_t
  * Temperature data point within the libct_stream_data_t packet.
  * @note Reserved for future use.
  */
-// MUST match CTAppTempData structure defined in libct.h exactly.
+// MUST match AppTempData structure defined in libct.h exactly.
 typedef struct libct_temperature_t {
     /**
      * The other fields are valid when this field is non-zero (true) and invalid otherwise.
      */
     bool valid;
     /** The temperature value. */
-    int value;
+    float value;
     /** Time stamp from the device associated with the data. */
-    unsigned int timestamp;
+    unsigned long long timestamp;
 } libct_temperature_t;
 /**
  * \class libct_battery_info_t
  * Battery info data point within the libct_stream_data_t packet.
  */
-// MUST match CTAppBatteryData defined in libct.h exactly.
+// MUST match AppBatteryData defined in libct.h exactly.
 typedef struct libct_battery_info_t {
     /** The other fields are valid when this field is non-zero (true) and invalid otherwise */
     bool valid;
     /** The battery voltage in millivolts. */
     int voltage;
     /** Time stamp from the device associated with the data. */
-    unsigned int timestamp;
+    unsigned long long timestamp;
 } libct_battery_info_t;
 /**
  * \class libct_pulse_ox_t
  * Pulse oximetry data point within the libct_stream_data_t packet.
  * @note Reserved for future use.
  */
-// PulseOximetry MUST match CTAppPulseOxiData byte format defined in libct.h exactly.
+// MUST match AppPulseOxData byte format defined in libct.h exactly.
 typedef struct libct_pulse_ox_t {
     /**
      * The other fields are valid when this field is non-zero (true) and invalid otherwise.
@@ -515,22 +570,32 @@ typedef struct libct_pulse_ox_t {
     /** Pulse rate in beats per minute (30-200BPM). */
     int pulse_rate;
     /** Time stamp from the device associated with the data. */
-    unsigned int timestamp;
+    unsigned long long timestamp;
 } libct_pulse_ox_t;
 /**
  * \class libct_vitals2_t
  * Secondary Vitals data point within the libct_stream_data_t packet.
  * @note The secondary vitals are for internal use or research only.
  */
-// Secondary Vitals MUST match CTAppVitals2Data byte format defined in libct.h exactly.
+// MUST match AppSecondaryVitals byte format defined in libct.h exactly.
 typedef struct libct_vitals2_t  {
     /**
      * The other fields are valid when this field is non-zero (true) and invalid otherwise.
      */
     bool valid;
+    /**
+     * Local flag indicating measurements realtime status.
+     * True if the device is forwarding stored (nonrealtime) measurements,
+     * and false if the measurements are realtime.
+     */
+    bool nonrealtime;
     /** Blood volume in mS. */
     unsigned short blood_volume;
-    /** Cardiac output in L/min */
+    /**
+     * Cardiac output (CO) in liters per minute (l/min).
+     * Divide by 10 to calculate the CO measurement.
+     * CO = cardiac_output / 10.0
+     */
     unsigned char cardiac_output;
     /** Inter-beat Interval in mS */
     unsigned short ibi;
@@ -538,39 +603,26 @@ typedef struct libct_vitals2_t  {
     unsigned short lvet;
     /** P ratio */
     float p2p1;
-    /** hrComp */
-    float hrComp;
+    /** Reserved for future use */
+    float reservedFloat0;
     /** pr */
     float pr;
     /** Reserved for future use */
-    int reserved[7];
-ECHO is off.
+    float reservedFloat;
+    /** Stroke Volume in ml */
+    unsigned char strokeVolume;
+    /** Reserved for future use */
+    char reservedByte[2];
     /** Time stamp from the device associated with the data. */
-    unsigned int timestamp;
-ECHO is off.
+    unsigned long long timestamp;
 } libct_vitals2_t;
-/**
- * \class libct_pulse_t
- * Raw or integrated pulse data point within the libct_stream_data_t packet.
- */
-// PulseDatapoint MUST match CTAppPulseDatapoint byte format defined in libct.h exactly.
-typedef struct libct_pulse_t {
-    /**
-     * The other fields are valid when this field is non-zero (true) and invalid otherwise.
-     */
-    bool valid;
-    /** Pulse value */
-    short value;
-    /** Counter value associated with the pulse value. */
-    unsigned int timestamp;
-} libct_pulse_t;
 /**
  * \class libct_param_pulse_t
  * Parametrized pulse data within the libct_stream_data_t packet.
  * The parametrized pulse data is an aggregate of the pulse parameters and pulse snapshot waveform data.
  */
 /* CAUTION:
- * The parameter fields MUST match CTAppParamPulseWaveform byte format defined in libct.h exactly,
+ * The parameter fields MUST match AppParamPulseWaveform byte format defined in libct.h exactly,
  * but the waveform fields differ slightly. libct_param_pulse_t adds an extra waveform_len field
  * to pass the length of the waveform data to the application. So libct_param_pulse_t and CTAppParamPulseWaveform
  * are not strictly byte equivalent.
@@ -604,8 +656,8 @@ typedef struct libct_param_pulse_t {
     short sqe;
     /** The most recent raw ADC cuff pressure. */
     short pressure;
-    /** Relative system time of occurrence. */
-    unsigned int time;
+    /** Milliseconds time-stamp of measurement. */
+    unsigned long long timestamp;
     /** The number of signed int8 snapshot data points. */
    int waveform_len;
     /* suppress nonstandard extension used: zero-sized array in struct/union warning below */
@@ -623,10 +675,16 @@ typedef struct libct_param_pulse_t {
  * \class libct_vitals_t
  * Vitals data point within the libct_stream_data_t packet.
  */
-// MUST match CTAppVitalSignsData byte format defined in libct.h exactly.
+// MUST match AppPrimaryVitals byte format defined in libct.h exactly.
 typedef struct libct_vitals_t {
     /** The other fields are valid when this field is non-zero (true) and invalid otherwise. */
     bool valid;
+    /**
+     * Local flag indicating measurements realtime status.
+     * True if the device is forwarding stored (nonrealtime) measurements,
+     * and false if the measurements are realtime.
+     */
+    bool nonrealtime;
     /**
      * An indicator if a valid blood pressure was found or if the algorithm failed.
      * True indicates pulse information is valid.
@@ -691,31 +749,31 @@ typedef struct libct_vitals_t {
      * a percentage by dividing by 10, .i.e. sqe/10 %.*/
     short sqe;
     /** Time stamp from the device associated with the data. */
-    unsigned int timestamp;
+    unsigned long long timestamp;
 } libct_vitals_t;
 /**
  * \class libct_cuff_pressure_t
  * Cuff pressure data point within the libct_stream_data_t packet.
  */
-// MUST match CTAppCuffPressureData byte format defined in libct.h exactly.
+// MUST match AppCuffPressureData byte format defined in libct.h exactly.
 typedef struct libct_cuff_pressure_t {
     /** The other fields are valid when this field is non-zero (true) and invalid otherwise. */
     bool valid;
     /** cuff pressure actual value. */
-    int value;
+    float value;
     /** cuff pressure target value. */
     int target;
     /** signal to noise ratio. */
     int snr;
     /** Time stamp from the device associated with the data. */
-    unsigned int timestamp;
+    unsigned long long timestamp;
 } libct_cuff_pressure_t;
 /**
  * \class libct_cal_curve_t
  * Calibration curve data point within the libct_stream_data_t packet.
  *  @note The cal curve data is for internal use or research only
  */
-// MUST match CTAppCalCurveData byte format defined in libct.h exactly.
+// MUST match AppCalCurveData byte format defined in libct.h exactly.
 typedef struct libct_cal_curve_t {
     /** The other fields are valid when this field is non-zero (true) and invalid otherwise. */
     bool valid;
@@ -760,10 +818,20 @@ typedef struct libct_cal_curve_t {
  * <li>for_each_dp()
  * </ul>
  */
-// MUST match CTAppStreamData byte format defined in libct.h exactly
+// MUST match AppStreamData byte format defined in libct.h exactly
 typedef struct libct_stream_data_t {
     /** Reference to the device that generated this data. */
     libct_device_t* device;
+    /**
+     * Global flag indicating Caretaker data realtime status.
+     * True if the device is forwarding stored data, and false if the
+     * data is realtime. Note data entries with a local nonrealtime
+     * flag supersedes the global flag.
+     *
+     * @note The device and battery status is always realtime and is not
+     * affected by this flag.
+     */
+    bool nonrealtime;
     /** Device status information. */
     libct_device_status_t device_status;
     /** Battery information. */
@@ -917,42 +985,46 @@ typedef struct libct_stream_data_t {
         unsigned int count;
     } vitals2;
     /**
-     * Array of raw pulse (pulse rate) waveform data points.
-     * For convenience, you could iterate over all raw pulse data points with the for_each_dp() macro
+     * Array of raw, unfiltered waveform data points.
+     * The raw, unfiltered waveform is available when the Caretaker
+     * device is configured for research mode. It is not available otherwiwse.
+     * For convenience, you could iterate over all raw pulse data points with the for_each_smpl() macro
      * like so.
      * \code
-     *      libct_pulse_t* dp;
+     *      short* sample;
+     *      long long* timestamp;
      *      unsigned int idx;
-     *      for_each_dp(data, idx, dp, raw_pulse) {
-     *          if ( dp && dp->valid ) {
-     *              // use pulse data point
-     *          }
+     *      for_each_smpl(data, idx, sample, timestamp, int_pulse) {
+     *          // use sample
      *      }
      * \endcode
      */
     struct {
-        /** Array of raw pulse (pulse rate) data points. */
-        libct_pulse_t* datapoints;
+        /** Waveform samples. */
+        short* samples;
+        /** Time stamp associated with the samples */
+        long long* timestamps;
         /** The count of data points. */
         unsigned int count;
     } raw_pulse;
     /**
-     * Array of integrated pulse (pulse pressure) waveform data points.
+     * Array of pulse pressure waveform data points.
      * For convenience, you could iterate over all integrated pulse data points with the
-     * for_each_dp() macro like so.
+     * for_each_smpl() macro like so.
      * \code
-     *      libct_pulse_t* dp;
+     *      short* sample;
+     *      long long* timestamp;
      *      unsigned int idx;
-     *      for_each_dp(data, idx, dp, int_pulse) {
-     *          if ( dp && dp->valid ) {
-     *              // use pulse data point
-     *          }
+     *      for_each_smpl(data, idx, sample, timestamp, int_pulse) {
+     *          // use sample
      *      }
      * \endcode
      */
     struct {
-        /** Array of integrated pulse (pulse pressure) data points. */
-        libct_pulse_t* datapoints;
+        /** Waveform samples. */
+        short* samples;
+        /** Time stamp associated with the samples */
+        long long* timestamps;
         /** The count of data points. */
         unsigned int count;
     } int_pulse;
@@ -1095,8 +1167,9 @@ typedef struct libct_stream_data_t {
 /**
  * \ingroup unmanaged_secondary_api
  *
- * Iterate over data points of the specified member array to extract from \ref libct_stream_data_t
- * "stream data" received at the application.
+ * Iterate \ref libct_stream_data_t member datapoints to extract individual data points.
+ * This macro does not work for int_pulse and raw_pulse array member; use \ref for_each_smpl
+ * for these.
  *
  * @param data The stream data received in your \ref libct_app_callbacks_t.on_data_received
  *             "on_data_received()" application callback.
@@ -1104,7 +1177,30 @@ typedef struct libct_stream_data_t {
  * @param dp   Pointer variable of type corresponding to the memb argument.
  * @param memb The \ref libct_stream_data_t "stream data" member name of the data points to extract.
  */
-#define for_each_dp(data, idx, dp, memb) for(idx=0; (idx<(data)->memb.count) && (dp=((data)->memb.datapoints) ? &(data)->memb.datapoints[idx] : NULL); idx++)
+#define for_each_dp(data, idx, dp, memb) \
+    for(idx=0; \
+        (idx<(data)->memb.count) && \
+        (dp=((data)->memb.datapoints) ? &(data)->memb.datapoints[idx] : NULL); \
+        idx++)
+ /**
+ * \ingroup unmanaged_secondary_api
+ *
+ * Iterate \ref libct_stream_data_t waveform to extract individual samples.
+ * This macro only works for members int_pulse or raw_pulse array.
+ *
+ * @param data The stream data received in your \ref libct_app_callbacks_t.on_data_received
+ *             "on_data_received()" application callback.
+ * @param idx  Iterator variable of type unsigned integer.
+ * @param s    Sample pointer.
+ * @param t    Time stamp pointer.
+ * @param memb The int_pulse or raw_pulse array member name.
+ */
+#define for_each_smpl(data, idx, s, t, memb) \
+    for(idx=0; \
+        (idx<(data)->memb.count) && \
+        (s=((data)->memb.samples) ? &(data)->memb.samples[idx] : NULL) && \
+        (t=((data)->memb.timestamps) ? &(data)->memb.timestamps[idx] : NULL); \
+        idx++)
 /**
  * Pulse waveform data returned from the device as a result of a previous
  * read request. Note this data is returned only after an explicit read
@@ -1115,15 +1211,23 @@ typedef struct libct_pulse_waveform_t {
      * Array of integrated waveform pulse data points.
      */
     struct {
-        libct_pulse_t* datapoints;
+        /** Waveform samples */
+        short* datapoints;
+        /** Count of samples */
         unsigned int count;
+        /** Time stamp associated with samples */
+        unsigned long long timestamp;
     } int_pulse;
     /**
      * Array of parameterize pulse waveform data points.
      */
     struct {
-        libct_param_pulse_t* datapoints;
+        /** Waveform samples */
+        short* datapoints;
+        /** Count of samples */
         unsigned int count;
+        /** Time stamp associated with samples */
+        unsigned long long timestamp;
     } param_pulse;
     /**
      * Value of local clock (in milliseconds) when this stream packet was received.
@@ -1178,7 +1282,12 @@ typedef struct libct_cal_t {
  * Structure defining initialization data passed to libct_init().
  */
 typedef struct libct_init_data_t {
-    /** The \ref libct_device_class_t "device class". */
+    /** 
+    * The \ref libct_device_class_t "device class".
+    * Set to LIBCT_DEVICE_CLASS_BLE to monitor either the Caretaker4 or Caretaker5 via BLE connectivity.
+    * Set to LIBCT_DEVICE_CLASS_USB or LIBCT_DEVICE_CLASS_TCP to monitor the Caretaker5 via USB or Wi-Fi
+    * connectivity, respectively. Note the Caretaker4 only supports BLE communication
+    */
     int device_class;
 } libct_init_data_t;
 /**
@@ -1229,7 +1338,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_device_discovered = on_device_discovered;
      * \endcode
      *
@@ -1267,7 +1375,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_discovery_timedout = on_discovery_timedout;
      * \endcode
      *
@@ -1293,7 +1400,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_discovery_failed = on_discovery_failed;
      * \endcode
      *
@@ -1322,7 +1428,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_device_connected_not_ready = on_device_connected_not_ready;
      * \endcode
      *
@@ -1354,7 +1459,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_device_connected_ready = on_device_connected_ready;
      * \endcode
      *
@@ -1385,7 +1489,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_connect_error = on_connect_error;
      * \endcode
      *
@@ -1417,7 +1520,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_connect_timedout = on_connect_timedout;
      * \endcode
      *
@@ -1459,7 +1561,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_device_disconnected = on_device_disconnected;
      * \endcode
      *
@@ -1488,7 +1589,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_start_monitoring = on_start_monitoring;
      * \endcode
      *
@@ -1519,7 +1619,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_stop_monitoring = on_stop_monitoring;
      * \endcode
      *
@@ -1549,7 +1648,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_start_measuring = on_start_measuring;
      * \endcode
      *
@@ -1578,7 +1676,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_stop_measuring = on_stop_measuring;
      * \endcode
      *
@@ -1609,7 +1706,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_data_received = on_data_received;
      * \endcode
      *
@@ -1647,7 +1743,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_data_error = on_data_error;
      * \endcode
      *
@@ -1677,7 +1772,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_rd_snr_min_rsp = on_rd_snr_min_rsp;
      * \endcode
      *
@@ -1709,7 +1803,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_wrt_snr_min_rsp = on_wrt_snr_min_rsp;
      * \endcode
      *
@@ -1739,7 +1832,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_rd_display_state_rsp = on_rd_display_state_rsp;
      * \endcode
      *
@@ -1771,7 +1863,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_wrt_display_state_rsp = on_wrt_display_state_rsp;
      * \endcode
      *
@@ -1802,7 +1893,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_rd_recal_itvl_rsp = on_rd_recal_itvl_rsp;
      * \endcode
      *
@@ -1834,7 +1924,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_wrt_recal_itvl_rsp = on_wrt_recal_itvl_rsp;
      * \endcode
      *
@@ -1864,8 +1953,7 @@ typedef struct libct_app_callbacks_t {
         * <p>
         * And you can set the function pointer as follows.
         * \code
-        *      libct_app_callbacks_t callbacks = {0};
-        *      callbacks.on_rd_cuff_pressure_rsp = on_rd_cuff_pressure_rsp;
+           *      callbacks.on_rd_cuff_pressure_rsp = on_rd_cuff_pressure_rsp;
         * \endcode
         *
         * @param context  The context returned from libct_init().
@@ -1896,7 +1984,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_vent_cuff_rsp = on_vent_cuff_rsp;
      * \endcode
      *
@@ -1926,7 +2013,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_clr_status_rsp = on_clr_status_rsp;
      * \endcode
      *
@@ -1956,7 +2042,6 @@ typedef struct libct_app_callbacks_t {
      * <p>
      * And you can set the function pointer as follows.
      * \code
-     *      libct_app_callbacks_t callbacks = {0};
      *      callbacks.on_diag_flush_rsp = on_diag_flush_rsp;
      * \endcode
      *
@@ -2036,16 +2121,16 @@ typedef struct libct_app_callbacks_t {
 		int status);
     /**
     * Function pointer to the application callback to receive status in response to calling
-    * libct_rd_vitals_filter().
+    * libct_rd_median_filter().
     *
     * This notification will be sent only once (one-shot) to notify success or failure after calling
-    * libct_rd_vitals_filter().
+    * libct_rd_median_filter().
     * <p>
     * The following example illustrates a sample implementation of the callback. Note you must
     * specify <b>LIBCTAPI</b> in the function signature.
     * <p>
     * \code
-    * void LIBCTAPI on_rd_vitals_filter(libct_context_t* context, libct_device_t* device, int status)
+    * void LIBCTAPI on_rd_median_filter(libct_context_t* context, libct_device_t* device, int status)
     * {
     *     // do something
     * }
@@ -2054,7 +2139,7 @@ typedef struct libct_app_callbacks_t {
     * And you can set the function pointer as follows.
     * \code
     *      libct_app_callbacks_t callbacks = {0};
-    *      callbacks.on_rd_vitals_filter = on_rd_vitals_filter;
+    *      callbacks.on_rd_median_filter = on_rd_median_filter;
     * \endcode
     *
     * @param context The context returned from libct_init().
@@ -2062,22 +2147,22 @@ typedef struct libct_app_callbacks_t {
     * @param value   The median filter value when success. 0 = Disabled, 1 = Enabled.
     * @param status  Status indicating success or failure: zero on success and nonzero otherwise.
     */
-    void (LIBCTAPI *on_rd_vitals_filter)(libct_context_t* context,
+    void (LIBCTAPI *on_rd_median_filter)(libct_context_t* context,
                                          libct_device_t* device,
                                          int value,
                                          int status);
     /**
     * Function pointer to the application callback to receive status in response to calling
-    * libct_wrt_vitals_filter().
+    * libct_wrt_median_filter().
     *
     * This notification will be sent only once (one-shot) to notify success or failure after calling
-    * libct_wrt_vitals_filter().
+    * libct_wrt_median_filter().
     * <p>
     * The following example illustrates a sample implementation of the callback. Note you must
     * specify <b>LIBCTAPI</b> in the function signature.
     * <p>
     * \code
-    * void LIBCTAPI on_wrt_vitals_filter(libct_context_t* context, libct_device_t* device, int status)
+    * void LIBCTAPI on_wrt_median_filter(libct_context_t* context, libct_device_t* device, int status)
     * {
     *     // do something
     * }
@@ -2086,14 +2171,38 @@ typedef struct libct_app_callbacks_t {
     * And you can set the function pointer as follows.
     * \code
     *      libct_app_callbacks_t callbacks = {0};
-    *      callbacks.on_wrt_vitals_filter = on_wrt_vitals_filter;
+    *      callbacks.on_wrt_median_filter = on_wrt_median_filter;
     * \endcode
     *
     * @param context The context returned from libct_init().
     * @param device  The device associated with the context.
     * @param status  Status indicating success or failure: zero on success and non-zero otherwise.
     */
-    void (LIBCTAPI *on_wrt_vitals_filter)(libct_context_t* context,
+    void (LIBCTAPI *on_wrt_median_filter)(libct_context_t* context,
+                                          libct_device_t* device,
+                                          int status);
+    /**
+    * Function pointer to the application callback to receive status in response to calling
+    * libct_rd_ambulatory_filter().
+    *
+    * @param context The context returned from libct_init().
+    * @param device  The device associated with the context.
+    * @param value   The ambulatory filter value when success. 0 = Disabled, 1 = Enabled.
+    * @param status  Status indicating success or failure: zero on success and nonzero otherwise.
+    */
+    void (LIBCTAPI *on_rd_ambulatory_filter)(libct_context_t* context,
+                                         libct_device_t* device,
+                                         int value,
+                                         int status);
+    /**
+    * Function pointer to the application callback to receive status in response to calling
+    * libct_wrt_ambulatory_filter().
+    *
+    * @param context The context returned from libct_init().
+    * @param device  The device associated with the context.
+    * @param status  Status indicating success or failure: zero on success and non-zero otherwise.
+    */
+    void (LIBCTAPI *on_wrt_ambulatory_filter)(libct_context_t* context,
                                           libct_device_t* device,
                                           int status);
 	/**
@@ -2162,11 +2271,92 @@ typedef struct libct_app_callbacks_t {
 	* @param status  Status indicating success or failure: zero on success and non-zero otherwise.
 	*/
 	void (LIBCTAPI *on_rd_persistent_log)(libct_context_t* context,
-		libct_device_t* device,
-		const char* log,
-		unsigned int len,
-		int status);
-ECHO is off.
+		                                  libct_device_t* device,
+		                                  const char* log,
+		                                  unsigned int len,
+		                                  int status);
+#if 0
+    void (LIBCTAPI *on_wrt_vitals_filter)(libct_context_t* context,
+        libct_device_t* device,
+        int status);
+    void (LIBCTAPI *on_rd_vitals_filter)(libct_context_t* context,
+        libct_device_t* device,
+        int value,
+        int status);
+#endif
+	/**
+	* Function pointer to the application callback to receive status in response to calling
+	* libct_rd_config().
+	*
+	* This notification will be sent only once (one-shot) to notify success or failure after calling
+	* libct_rd_config().
+	* <p>
+	* The following example illustrates a sample implementation of the callback. Note you must
+	* specify <b>LIBCTAPI</b> in the function signature.
+	* <p>
+	* \code
+	* void LIBCTAPI on_rd_device_config(libct_context_t* context,
+	*                                   libct_device_t* device,
+	*                                   unsigned short index,
+	*                                   const void* config,
+    *                                   unsigned int len.
+    *                                   int status)
+	* {
+	*     // do something
+	* }
+	* \endcode
+	* <p>
+	* And you can set the function pointer as follows.
+	* \code
+	*      libct_app_callbacks_t callbacks = {0};
+	*      callbacks.on_rd_device_config = on_rd_device_config;
+	* \endcode
+	*
+	* @param context The context returned from libct_init().
+	* @param device  The device associated with the context.
+	* @param index   The configuration index.
+	* @param config  The configuration data on success, and null otherwise.
+	* @param len     The configuration data length.
+	* @param status  Status indicating success or failure: zero on success and non-zero otherwise.
+	*/
+	void (LIBCTAPI *on_rd_device_config)(libct_context_t* context,
+		                                 libct_device_t* device,
+                                         unsigned short index,
+		                                 const void* config,
+                                         unsigned int len,
+		                                 int status);
+	/**
+	* Function pointer to the application callback to receive status in response to calling
+	* libct_wrt_config().
+	*
+	* This notification will be sent only once (one-shot) to notify success or failure after calling
+	* libct_wrt_config().
+	* <p>
+	* The following example illustrates a sample implementation of the callback. Note you must
+	* specify <b>LIBCTAPI</b> in the function signature.
+	* <p>
+	* \code
+	* void LIBCTAPI on_wrt_device_config(libct_context_t* context,
+	*                                    libct_device_t* device,
+	*                                    int status)
+	* {
+	*     // do something
+	* }
+	* \endcode
+	* <p>
+	* And you can set the function pointer as follows.
+	* \code
+	*      libct_app_callbacks_t callbacks = {0};
+	*      callbacks.on_wrt_device_config = on_wrt_device_config;
+	* \endcode
+	*
+	* @param context The context returned from libct_init().
+	* @param device  The device associated with the context.
+	* @param status  Status indicating success or failure: zero on success and non-zero otherwise.
+	*/
+	void (LIBCTAPI *on_wrt_device_config)(libct_context_t* context,
+		                                  libct_device_t* device,
+		                                  int status);
 } libct_app_callbacks_t;
 /**
 * \ingroup unmanaged_device
@@ -2183,13 +2373,12 @@ ECHO is off.
 */
 struct libct_device_t {
     /**
-     * Return a \ref libct_device_state_t "device state" enumeration representing the current state of the library context
-     * that is associated with this device.
+     * Return a \ref libct_device_state_t "device state" enumeration representing the current state of the
+     * library context that is associated with this device.
      *
-     * You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
      *
      * \code
-     * // These two calls are similar, but the second is simpler.
      * // (1) Use the device function.
      * int state = device->get_state(device);
      *
@@ -2274,10 +2463,9 @@ struct libct_device_t {
     /**
      * Return the device class that was set in the initialization data passed to libct_init().
      *
-     * You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
      *
      * \code
-     * // These two calls are similar, but the second is simpler.
      * // (1) Use the device function.
      * int class = device->get_class(device);
      *
@@ -2299,10 +2487,9 @@ struct libct_device_t {
     /**
      * Return the device manufacturer friendly name.
      *
-     * You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
      *
      * \code
-     * // These two calls are similar, but the second is simpler.
      * // (1) Use the device function.
      * const char* name = device->get_name(device);
      *
@@ -2323,10 +2510,9 @@ struct libct_device_t {
     /**
      * Return the device address.
      *
-     * You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
      *
      * \code
-     * // These two calls are similar, but the second is simpler.
      * // (1) Use the device function.
      * const char* address = device->get_address(device);
      *
@@ -2347,10 +2533,9 @@ struct libct_device_t {
     /**
      * Return the device serial number.
      *
-     * You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
      *
      * \code
-     * // These two calls are similar, but the second is simpler.
      * // (1) Use the device function.
      * const char* sn = device->get_serial_number(device);
      *
@@ -2371,10 +2556,9 @@ struct libct_device_t {
     /**
      * Return the device hardware version.
      *
-     * You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
      *
      * \code
-     * // These two calls are similar, but the second is simpler.
      * // (1) Use the device function.
      * const libct_version_t* version = device->get_hw_version(device);
      *
@@ -2395,10 +2579,9 @@ struct libct_device_t {
     /**
      * Return the device firmware version.
      *
-     * You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
      *
      * \code
-     * // These two calls are similar, but the second is simpler.
      * // (1) Use the device function.
      * const libct_version_t* version = device->get_fw_version(device);
      *
@@ -2419,10 +2602,9 @@ struct libct_device_t {
     /**
      * Return the library context bound to this device.
      *
-     * You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
      *
      * \code
-     * // These two calls are similar, but the second is simpler.
      * // (1) Use the device function.
      * libct_context_t* context = device->get_context(device);
      *
@@ -2439,6 +2621,50 @@ struct libct_device_t {
      * @param dev Pointer to the device instance.
      */
     #define libct_device_get_context(dev) (dev)->get_context(dev)
+    /**
+     * Return true if connected to a Caretaker4 device, and false otherwise.
+     *
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
+     *
+     * \code
+     * // (1) Use the device function.
+     * bool is_caretaker4 = device->is_caretaker4(device);
+     *
+     * // (2) Or use macro with simpler interface.
+     * bool is_caretaker4  = libct_is_caretaker4(device);
+     * \endcode
+     *
+     * @param thiz The device instance.
+     */
+    bool (LIBCTAPI *is_caretaker4)(struct libct_device_t* thiz);
+    /**
+     * \ingroup unmanaged_device
+     * Convenience macro to \ref libct_device_t.is_caretaker4 "device->is_caretaker4(device)"
+     * @param dev Pointer to the device instance.
+     */
+    #define libct_is_caretaker4(dev) (dev)->get_context(dev)
+    /**
+     * Return true if connected to a Caretaker5 device, and false otherwise.
+     *
+     * You would invoke the function as follows. The two calls are similar but the second is simpler.
+     *
+     * \code
+     * // (1) Use the device function.
+     * bool is_caretaker5 = device->is_caretaker5(device);
+     *
+     * // (2) Or use macro with simpler interface.
+     * bool is_caretaker5  = libct_is_caretaker5(device);
+     * \endcode
+     *
+     * @param thiz The device instance.
+     */
+    bool (LIBCTAPI *is_caretaker5)(struct libct_device_t* thiz);
+    /**
+     * \ingroup unmanaged_device
+     * Convenience macro to \ref libct_device_t.libct_is_caretaker5 "device->is_caretaker5(device)"
+     * @param dev Pointer to the device instance.
+     */
+    #define libct_is_caretaker5(dev) (dev)->get_context(dev)
 };
 /*-------------------------------------------------------------------------------------------------
  * Primary APIs
@@ -2533,12 +2759,13 @@ LIBCTEXPORT int LIBCTAPI libct_stop_discovery(libct_context_t* context);
 /**
  * \ingroup unmanaged_primary_api
  *
- * \brief Connect to a device.
+ * \brief Connect to a discovered device.
  *
- * Call this method after device discovery to establish connection to the device.
- * The results will be notified asynchronously via the \ref libct_app_callbacks_t "application callbacks"
+ * Call this connect version to establish connection to a discovered device passed to the application's
+ * \ref libct_app_callbacks_t.on_device_discovered() "on_device_discovered() callback.
+ * The connect results is notified asynchronously via the \ref libct_app_callbacks_t "callbacks"
  * passed to libct_init(); specifically, one or more of the following callback functions will be invoked
- * some time later with the results if the connection is established, timed out or failed.
+ * some time later with the results if the connection is established, timed out, or failed.
  * <ul>
  * <li>\ref libct_app_callbacks_t.on_device_connected_not_ready() "on_device_connected_not_ready()"
 * <li>\ref libct_app_callbacks_t.on_device_connected_ready() "on_device_connected_ready()"
@@ -2547,12 +2774,36 @@ LIBCTEXPORT int LIBCTAPI libct_stop_discovery(libct_context_t* context);
  * </ul>
  *
  * @param context The context returned from libct_init().
- * @param device  A discovered device notified with your application callback
+ * @param device  A discovered device passed to your application callback
  *                \ref libct_app_callbacks_t.on_device_discovered "on_device_discovered()".
  *
  * @return An appropriate \ref libct_status_t "status code" indicating success or error.
  */
 LIBCTEXPORT int LIBCTAPI libct_connect(libct_context_t* context, libct_device_t* device);
+/**
+* \ingroup unmanaged_primary_api
+*
+* \brief Connect to an address by passing device discovery.
+*
+* Call this connect version to establish connection to a device with the specified address.
+* The connect results is notified asynchronously via the \ref libct_app_callbacks_t "callbacks"
+* passed to libct_init(); specifically, one or more of the following callback functions will be invoked
+* some time later with the results if the connection is established, timed out, or failed.
+* <ul>
+* <li>\ref libct_app_callbacks_t.on_device_connected_not_ready() "on_device_connected_not_ready()"
+* <li>\ref libct_app_callbacks_t.on_device_connected_ready() "on_device_connected_ready()"
+* <li>\ref libct_app_callbacks_t.on_connect_error() "on_connect_error()"
+* <li>\ref libct_app_callbacks_t.on_connect_timedout() "on_connect_timedout()"
+* </ul>
+*
+* @param context The context returned from libct_init().
+* @param address Address of the Caretaker device.
+*                This is either the BLE address if LIBCT_DEVICE_CLASS_BLE context, or the TCP/IP address
+*                if LIBCT_DEVICE_CLASS_TCP context.
+*
+* @return An appropriate \ref libct_status_t "status code" indicating success or error.
+*/
+LIBCTEXPORT int LIBCTAPI libct_connect_to_address(libct_context_t* context, const char* address);
 /**
  * \ingroup unmanaged_primary_api
  *
@@ -2577,8 +2828,8 @@ LIBCTEXPORT int LIBCTAPI libct_disconnect(libct_context_t* context);
  *
  * \brief Start monitoring data at the remote caretaker device.
  *
- * Call this function after the connection is established with the device to start monitoring data
- * or to change the data being monitored.
+ * Call this function after the connection is established to start monitoring data or to change the data
+ * being monitored.
  * <p>
  * Calling this function will trigger your application's \ref libct_app_callbacks_t.on_start_monitoring()
  * "on_start_monitoring()" to be invoked some time later with results. Also, if monitoring was started
@@ -2836,6 +3087,16 @@ LIBCTEXPORT int LIBCTAPI libct_vent_cuff(libct_context_t* context);
  * \brief Clears the device status.
  * Results will be notified later with \ref libct_app_callbacks_t.on_clr_status_rsp "on_clr_status_rsp()".
  *
+ * @note The Caretaker stores measurements after ungraceful WiFi disconnects, such as
+ * connection losts, and then fowards the stored measurements when the connection
+ * is re-established. The size of the stored data increases with the disconnect duration
+ * and can introduce large latency to receive realtime measurements after reconnecting
+ * since the stored measurments are sent before realtime data. The stored data can be
+ * be discarded in the application with the use of the nonrealtime flag if they are
+ * are not needed. However, you can call libct_clr_status() from the application
+ * \ref libct_app_callbacks_t.on_device_connected_ready() "on_device_connected_ready()"
+ * to clear the stored data at the device to start streaming realtime data instantaneously.
+ * 
  * @param context     The context returned from libct_init().
  *
  * @return Success if a request was queued to be sent to the device, and error otherwise.
@@ -2947,26 +3208,49 @@ LIBCTEXPORT int LIBCTAPI libct_rd_waveform_clamping(libct_context_t* context);
 /**
 * \ingroup unmanaged_secondary_api
 *
-* Reads the current filter settings to enable or disable filtering outlier vitals measurements.
-* Status will be notified later with \ref libct_app_callbacks_t.on_rd_vitals_filter "on_rd_vitals_filter()".
+* Reads the median filter settings.
+* Status will be notified later with \ref libct_app_callbacks_t.on_rd_median_filter "on_rd_median_filter()".
 *
 * @param context  The context returned from libct_init().
 *
 * @return Success if a request was queued to be sent to the device, and error otherwise.
 */
-LIBCTEXPORT int LIBCTAPI libct_rd_vitals_filter(libct_context_t* context);
+LIBCTEXPORT int LIBCTAPI libct_rd_median_filter(libct_context_t* context);
 /**
  * \ingroup unmanaged_secondary_api
  *
- * Writes the filter settings to enable or disable filtering outlier vitals measurements.
- * Status will be notified later with \ref libct_app_callbacks_t.on_wrt_vitals_filter "on_wrt_vitals_filter()".
+ * Writes the median filter settings to enable or disable smoothing of vitals measurements.
+ * Status will be notified later with \ref libct_app_callbacks_t.on_wrt_median_filter "on_wrt_median_filter()".
  *
  * @param context  The context returned from libct_init().
  * @param value   Filter setting value: 1 = Enable, 0 = Disable.
  *
  * @return Success if a request was queued to be sent to the device, and error otherwise.
  */
-LIBCTEXPORT int LIBCTAPI libct_wrt_vitals_filter(libct_context_t* context, unsigned char value);
+LIBCTEXPORT int LIBCTAPI libct_wrt_median_filter(libct_context_t* context, unsigned char value);
+/**
+* \ingroup unmanaged_secondary_api
+*
+* Reads the ambulatory filter settings.
+* Status will be notified later with \ref libct_app_callbacks_t.on_rd_median_filter "on_rd_ambulatory_filter()".
+*
+* @param context  The context returned from libct_init().
+*
+* @return Success if a request was queued to be sent to the device, and error otherwise.
+*/
+LIBCTEXPORT int LIBCTAPI libct_rd_ambulatory_filter(libct_context_t* context);
+/**
+ * \ingroup unmanaged_secondary_api
+ *
+ * Writes the median filter settings to enable or disable stronger smoothing of vitals measurements..
+ * Status will be notified later with \ref libct_app_callbacks_t.on_wrt_median_filter "on_wrt_ambulatory_filter()".
+ *
+ * @param context  The context returned from libct_init().
+ * @param value   Filter setting value: 1 = Enable, 0 = Disable.
+ *
+ * @return Success if a request was queued to be sent to the device, and error otherwise.
+ */
+LIBCTEXPORT int LIBCTAPI libct_wrt_ambulatory_filter(libct_context_t* context, unsigned char value);
 /**
  * \ingroup unmanaged_secondary_api
  *
@@ -3017,6 +3301,51 @@ LIBCTEXPORT int LIBCTAPI libct_rd_motion_timeout(libct_context_t* context);
 * @return Success if a request was queued to be sent to the device, and error otherwise.
 */
 LIBCTEXPORT int LIBCTAPI libct_rd_persistent_log(libct_context_t* context);
+/**
+* \ingroup unmanaged_secondary_api
+*
+* Disables the device stop button while in session.
+*
+* @param context  The context returned from libct_init().
+*
+* @return Success if a request was queued to be sent to the device, and error otherwise.
+*/
+LIBCTEXPORT int LIBCTAPI  libct_disable_pda_stop_button(libct_context_t* context);
+/**
+* \ingroup unmanaged_secondary_api
+*
+* Enables the device stop button while in session.
+*
+* @param context  The context returned from libct_init().
+*
+* @return Success if a request was queued to be sent to the device, and error otherwise.
+*/
+LIBCTEXPORT int LIBCTAPI  libct_enable_pda_stop_button(libct_context_t* context);
+/**
+* \ingroup unmanaged_secondary_api
+*
+* Reads the device configuration.
+* Configuration will be notified later with \ref libct_app_callbacks_t.on_rd_device_config "on_rd_device_config()".
+*
+* @param context  The context returned from libct_init().
+* @param index    The device configuration index. See \ref libct_device_config_idx_t "libct_device_config_idx_t".
+*
+* @return Success if a request was queued to be sent to the device, and error otherwise.
+*/
+LIBCTEXPORT int LIBCTAPI  libct_rd_config(libct_context_t* context, unsigned short index);
+/**
+* \ingroup unmanaged_secondary_api
+*
+* Writes the device configuration.
+* Status will be notified later with \ref libct_app_callbacks_t.on_wrt_device_config "on_wrt_device_config()".
+*
+* @param context  The context returned from libct_init().
+* @param index    The device configuration index. See \ref libct_device_config_idx_t "libct_device_config_idx_t".
+* @param data     The configuration data.
+* @param len      The configuration data length.
+* @return Success if a request was queued to be sent to the device, and error otherwise.
+*/
+LIBCTEXPORT int LIBCTAPI  libct_wrt_config(libct_context_t* context, unsigned short index, void* data, unsigned int len);
 #ifdef __cplusplus
 }
 #endif

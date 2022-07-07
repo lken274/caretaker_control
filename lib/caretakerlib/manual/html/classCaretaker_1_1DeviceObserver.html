@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: Caretaker::DeviceObserver Class Reference</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: Caretaker::DeviceObserver Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -49,14 +49,14 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Managed class defining the application observer interface to receive real-time notifications.  
+<p>Managed class defining the application observer interface to receive asynchronous notifications.  
  <a href="classCaretaker_1_1DeviceObserver.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4bc95c4f5bed37a1df636c9f15c50b22"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#a4bc95c4f5bed37a1df636c9f15c50b22">OnDeviceDiscovered</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, String^ name, String^ serialNumber, String^ macAddress)</td></tr>
-<tr class="memdesc:a4bc95c4f5bed37a1df636c9f15c50b22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report a discovered device after the application called <a class="el" href="classCaretaker_1_1Device.html#a23dc37a0ef2ac55ca77cd913663e18fa" title="Initiates scanning for nearby Caretaker devices. ">Device::StartScan()</a>.  <a href="#a4bc95c4f5bed37a1df636c9f15c50b22">More...</a><br /></td></tr>
-<tr class="separator:a4bc95c4f5bed37a1df636c9f15c50b22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5f6ae8fa84fdd192f802b059d3ea31c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#ad5f6ae8fa84fdd192f802b059d3ea31c">OnDeviceDiscovered</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, String^ name, String^ serialNumber, String^ address)</td></tr>
+<tr class="memdesc:ad5f6ae8fa84fdd192f802b059d3ea31c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report a discovered device after the application called <a class="el" href="classCaretaker_1_1Device.html#a23dc37a0ef2ac55ca77cd913663e18fa" title="Scan Caretaker devices. ">Device::StartScan()</a>.  <a href="#ad5f6ae8fa84fdd192f802b059d3ea31c">More...</a><br /></td></tr>
+<tr class="separator:ad5f6ae8fa84fdd192f802b059d3ea31c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae84001fac443605574ddd01aa662124a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a">OnConnectionStatus</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, <a class="el" href="group__windows__managed__api.html#gacee2851c7adad0ce5a4f3e5a034fde04">ConnectionStatus</a> status)</td></tr>
 <tr class="memdesc:ae84001fac443605574ddd01aa662124a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report Device::Connect() and <a class="el" href="classCaretaker_1_1Device.html#a245cb442071bbac2a9abe4c46aa5ac69" title="Initiates disconnecting from the remote device if connected. ">Device::Disconnect()</a> status.  <a href="#ae84001fac443605574ddd01aa662124a">More...</a><br /></td></tr>
 <tr class="separator:ae84001fac443605574ddd01aa662124a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -66,15 +66,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abbcdb574930f0b7ba1b2314bdd6116af"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#abbcdb574930f0b7ba1b2314bdd6116af">OnStopStatus</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, <a class="el" href="group__windows__managed__api.html#gadaa7176707cb9074f588cfe6498fb883">StopStatus</a> status)</td></tr>
 <tr class="memdesc:abbcdb574930f0b7ba1b2314bdd6116af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report <a class="el" href="classCaretaker_1_1Device.html#a50e993b04a8cb5d4486843124679c049" title="Call this method after calling StartAutoCal() or StartManualCal() to stop the device. ">Device::Stop()</a> status.  <a href="#abbcdb574930f0b7ba1b2314bdd6116af">More...</a><br /></td></tr>
 <tr class="separator:abbcdb574930f0b7ba1b2314bdd6116af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ebf659cdaa7cae84e874641b190f7ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#a0ebf659cdaa7cae84e874641b190f7ac">OnPulseRateWaveformDataPoints</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, <a class="el" href="classCaretaker_1_1WaveformDataPoints.html">WaveformDataPoints</a>^ dataPoints)</td></tr>
-<tr class="memdesc:a0ebf659cdaa7cae84e874641b190f7ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report real-time pulse rate (raw pulse) waveform data.  <a href="#a0ebf659cdaa7cae84e874641b190f7ac">More...</a><br /></td></tr>
-<tr class="separator:a0ebf659cdaa7cae84e874641b190f7ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5086662920d4adc7862f1bc5b40b7145"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#a5086662920d4adc7862f1bc5b40b7145">OnRawPulseWaveformDataPoints</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, <a class="el" href="classCaretaker_1_1WaveformDataPoints.html">WaveformDataPoints</a>^ dataPoints)</td></tr>
+<tr class="memdesc:a5086662920d4adc7862f1bc5b40b7145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report raw waveform data.  <a href="#a5086662920d4adc7862f1bc5b40b7145">More...</a><br /></td></tr>
+<tr class="separator:a5086662920d4adc7862f1bc5b40b7145"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43779362ef20d6b2814d6a7cfa91fcd6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#a43779362ef20d6b2814d6a7cfa91fcd6">OnPulsePressureWaveformDataPoints</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, <a class="el" href="classCaretaker_1_1WaveformDataPoints.html">WaveformDataPoints</a>^ dataPoints)</td></tr>
-<tr class="memdesc:a43779362ef20d6b2814d6a7cfa91fcd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report real-time pulse pressure (integrated pulse) waveform data.  <a href="#a43779362ef20d6b2814d6a7cfa91fcd6">More...</a><br /></td></tr>
+<tr class="memdesc:a43779362ef20d6b2814d6a7cfa91fcd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report pulse pressure waveform data.  <a href="#a43779362ef20d6b2814d6a7cfa91fcd6">More...</a><br /></td></tr>
 <tr class="separator:a43779362ef20d6b2814d6a7cfa91fcd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69e68b9101d8c85be43cd33ce7d7a4c3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#a69e68b9101d8c85be43cd33ce7d7a4c3">OnParameterizedPulse</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, <a class="el" href="classCaretaker_1_1WaveformDataPoints.html">WaveformDataPoints</a>^ dataPoints, Int16 t0, Int16 t1, Int16 t2, Int16 t3, Int32 p0, Int32 p1, Int32 p2, Int32 p3)</td></tr>
-<tr class="memdesc:a69e68b9101d8c85be43cd33ce7d7a4c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report the most recent parameterized pulse including pulse snapshot waveform and pulse parameters.  <a href="#a69e68b9101d8c85be43cd33ce7d7a4c3">More...</a><br /></td></tr>
-<tr class="separator:a69e68b9101d8c85be43cd33ce7d7a4c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8165919a5e823e7b5bf9a0a1556e160"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#ae8165919a5e823e7b5bf9a0a1556e160">OnParameterizedPulse</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, <a class="el" href="classCaretaker_1_1ParamPulseSnapshot.html">ParamPulseSnapshot</a>^ snapshot, Int16 t0, Int16 t1, Int16 t2, Int16 t3, Int32 p0, Int32 p1, Int32 p2, Int32 p3)</td></tr>
+<tr class="memdesc:ae8165919a5e823e7b5bf9a0a1556e160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report the most recent parameterized pulse including pulse snapshot waveform and pulse parameters.  <a href="#ae8165919a5e823e7b5bf9a0a1556e160">More...</a><br /></td></tr>
+<tr class="separator:ae8165919a5e823e7b5bf9a0a1556e160"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5180395af2d867a3f9e9e3075c045102"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#a5180395af2d867a3f9e9e3075c045102">OnDeviceStatus</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, <a class="el" href="classCaretaker_1_1DeviceStatus.html">DeviceStatus</a>^ status)</td></tr>
 <tr class="memdesc:a5180395af2d867a3f9e9e3075c045102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report real-time device status information.  <a href="#a5180395af2d867a3f9e9e3075c045102">More...</a><br /></td></tr>
 <tr class="separator:a5180395af2d867a3f9e9e3075c045102"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,9 +99,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af18a587d87ec6982f5ef6c24124d028c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#af18a587d87ec6982f5ef6c24124d028c">OnReadRecalibrationInterval</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, Boolean status, UInt32 interval)</td></tr>
 <tr class="memdesc:af18a587d87ec6982f5ef6c24124d028c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report Device::OnReadRecalibrationInterval() transaction result.  <a href="#af18a587d87ec6982f5ef6c24124d028c">More...</a><br /></td></tr>
 <tr class="separator:af18a587d87ec6982f5ef6c24124d028c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf6ddf3ea0afa04648aed0f830223ebd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#aaf6ddf3ea0afa04648aed0f830223ebd">OnReadVitalsFilterSetting</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, Boolean status, Byte value)</td></tr>
-<tr class="memdesc:aaf6ddf3ea0afa04648aed0f830223ebd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report <a class="el" href="classCaretaker_1_1Device.html#a076c23dabc4734c6dcd6808d1f93fb26" title="Reads the current filter settings to enable or disable filtering outlier vitals measurements. ">Device::ReadVitalsFilterSetting()</a> transaction result.  <a href="#aaf6ddf3ea0afa04648aed0f830223ebd">More...</a><br /></td></tr>
-<tr class="separator:aaf6ddf3ea0afa04648aed0f830223ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a135ecf9bf5f92dcb045738eac9254b65"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#a135ecf9bf5f92dcb045738eac9254b65">OnReadMedianFilterSetting</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, Boolean status, Byte value)</td></tr>
+<tr class="memdesc:a135ecf9bf5f92dcb045738eac9254b65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report <a class="el" href="classCaretaker_1_1Device.html#a0f142f83782458bfddcee1d127935620" title="Reads the device vitals median filter settings. ">Device::ReadMedianFilterSetting()</a> transaction result.  <a href="#a135ecf9bf5f92dcb045738eac9254b65">More...</a><br /></td></tr>
+<tr class="separator:a135ecf9bf5f92dcb045738eac9254b65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4770bc3345a9c0e8342ec9782d38151"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html#ae4770bc3345a9c0e8342ec9782d38151">OnReadMotionTolerance</a> (<a class="el" href="classCaretaker_1_1Device.html">Device</a>^ device, Boolean status, int timeout)</td></tr>
 <tr class="memdesc:ae4770bc3345a9c0e8342ec9782d38151"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notification sent to report <a class="el" href="classCaretaker_1_1Device.html#a834ca451afa581f0ab8f849fd49242ce" title="Reads the device motion tolerance parameter. ">Device::ReadMotionTolerance()</a> transaction result.  <a href="#ae4770bc3345a9c0e8342ec9782d38151">More...</a><br /></td></tr>
 <tr class="separator:ae4770bc3345a9c0e8342ec9782d38151"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,15 +113,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac93191ae3d09de85a63a3e7a9caea50e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Managed class defining the application observer interface to receive real-time notifications. </p>
+<div class="textblock"><p>Managed class defining the application observer interface to receive asynchronous notifications. </p>
 <p>Extend this class in the application and override the methods to receive Caretaker data and event notifications.</p>
-<p><b>IMPORTANT: </b> The <a class="el" href="classCaretaker_1_1DeviceObserver.html" title="Managed class defining the application observer interface to receive real-time notifications. ">DeviceObserver</a> methods are called from unmanaged threads within the Caretaker library so the application cannot access user interface (UI) elements from these methods directly. The following C# snippet illustrates one way to dispatch work asynchronously to the application main thread to update the UI.</p>
-<div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keywordtype">void</span> <a class="code" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a">OnConnectionStatus</a>(Device device,onnectionStatus status)</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span> (status == <a class="code" href="group__windows__managed__api.html#gacee2851c7adad0ce5a4f3e5a034fde04">ConnectionStatus</a>.CONNECTED)</div><div class="line">   {</div><div class="line">       Application.Current.Dispatcher.BeginInvoke(<span class="keyword">new</span> Action(() =&gt; {</div><div class="line">            <span class="comment">// add code to update UI here</span></div><div class="line">        }));</div><div class="line">   }</div><div class="line">}</div></div><!-- fragment --><p>Connection status and device discovery events are notified directly from the low-level stack thread so that these events are reported immediately to the application. However, the low-level stack thread cannot tolerate blocking calls in the application or else data and other events from the device may be lost. As such, the application must not perform any blocking operations in <a class="el" href="classCaretaker_1_1DeviceObserver.html#a4bc95c4f5bed37a1df636c9f15c50b22" title="Notification sent to report a discovered device after the application called Device::StartScan(). ">OnDeviceDiscovered()</a> or <a class="el" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a" title="Notification sent to report Device::Connect() and Device::Disconnect() status. ">OnConnectionStatus()</a>. For example, the application should call the asynchronous Application.Current.Dispatcher.BeginInvoke() instead of the synchronous Application.Current.Dispatcher.Invoke() to update status on the UI without blocking.</p>
+<p><b>IMPORTANT:</b> The <a class="el" href="classCaretaker_1_1DeviceObserver.html" title="Managed class defining the application observer interface to receive asynchronous notifications...">DeviceObserver</a> methods are called from unmanaged threads within the Caretaker library so the application must not access user interface (UI) elements from these methods directly. The following C# snippet illustrates one way to dispatch work asynchronously to the application main thread to update the UI.</p>
+<div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keywordtype">void</span> <a class="code" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a">OnConnectionStatus</a>(Device device,onnectionStatus status)</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span> (status == <a class="code" href="group__windows__managed__api.html#gacee2851c7adad0ce5a4f3e5a034fde04">ConnectionStatus</a>.CONNECTED)</div><div class="line">   {</div><div class="line">       Application.Current.Dispatcher.BeginInvoke(<span class="keyword">new</span> Action(() =&gt; {</div><div class="line">            <span class="comment">// add code to update UI here</span></div><div class="line">        }));</div><div class="line">   }</div><div class="line">}</div></div><!-- fragment --><p>Connection status and device discovery events are notified directly from the low-level library thread so that these events are reported immediately to the application. However, the low-level library thread cannot tolerate blocking calls in the application or else data and other events from the device may be lost. As such, the application must not perform any blocking operations in <a class="el" href="classCaretaker_1_1DeviceObserver.html#ad5f6ae8fa84fdd192f802b059d3ea31c" title="Notification sent to report a discovered device after the application called Device::StartScan(). ">OnDeviceDiscovered()</a> or <a class="el" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a" title="Notification sent to report Device::Connect() and Device::Disconnect() status. ">OnConnectionStatus()</a>. For example, the application should call the asynchronous Application.Current.Dispatcher.BeginInvoke() instead of the synchronous Application.Current.Dispatcher.Invoke() to update status on the UI without blocking.</p>
 <p>In contrast, other observer notifications reporting device status and data are called from an application interfacing thread in the library that can tolerate blocking calls in the application without dropping data so either Application.Current.Dispatcher.BeginInvoke() or Application.Current.Dispatcher.Invoke() can be called from these methods to update the UI.</p>
-<p>Finally, the application must not call Disconnect() or ReleaseResources() from any <a class="el" href="classCaretaker_1_1DeviceObserver.html" title="Managed class defining the application observer interface to receive real-time notifications. ">DeviceObserver</a> methods. The <a class="el" href="classCaretaker_1_1DeviceObserver.html" title="Managed class defining the application observer interface to receive real-time notifications. ">DeviceObserver</a> methods are called from library threads that the aforementioned methods attempt to kill. As such, Disconnect() or ReleaseResources() must be called from an application thread, otherwise the application may deadlock. </p>
+<p>Finally, the application must not call Disconnect() or ReleaseResources() from any <a class="el" href="classCaretaker_1_1DeviceObserver.html" title="Managed class defining the application observer interface to receive asynchronous notifications...">DeviceObserver</a> methods. The <a class="el" href="classCaretaker_1_1DeviceObserver.html" title="Managed class defining the application observer interface to receive asynchronous notifications...">DeviceObserver</a> methods are called from library threads that the aforementioned methods attempt to kill. As such, Disconnect() or ReleaseResources() must be called from an application thread, otherwise the application may deadlock. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4bc95c4f5bed37a1df636c9f15c50b22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bc95c4f5bed37a1df636c9f15c50b22">&#9670;&nbsp;</a></span>OnDeviceDiscovered()</h2>
+<a id="ad5f6ae8fa84fdd192f802b059d3ea31c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5f6ae8fa84fdd192f802b059d3ea31c">&#9670;&nbsp;</a></span>OnDeviceDiscovered()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -151,7 +151,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">String^&#160;</td>
-          <td class="paramname"><em>macAddress</em>&#160;</td>
+          <td class="paramname"><em>address</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -166,15 +166,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Notification sent to report a discovered device after the application called <a class="el" href="classCaretaker_1_1Device.html#a23dc37a0ef2ac55ca77cd913663e18fa" title="Initiates scanning for nearby Caretaker devices. ">Device::StartScan()</a>. </p>
-<p>The application must call <a class="el" href="classCaretaker_1_1Device.html#a7a541e1094860510352d6c1443be89d5" title="Initiates connecting to the Caretaker device with the specified serial number. ">Device::ConnectToSerialNumber()</a> or <a class="el" href="classCaretaker_1_1Device.html#ad6e7e189884e2fbcfea61559fc54f583" title="Initiates connecting to the Caretaker device with the specified MAC address. ">Device::ConnectToMacAddress()</a> to connect to the desired, discovered device.</p>
-<p><b>IMPORTANT: </b> <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> discovery events are notified directly from the low-level stack thread to report these events immediately to the application. The low-level stack thread cannot tolerate blocking calls in the application or else data and other events may be lost. As such, the application must not call any methods that block in <a class="el" href="classCaretaker_1_1DeviceObserver.html#a4bc95c4f5bed37a1df636c9f15c50b22" title="Notification sent to report a discovered device after the application called Device::StartScan(). ">OnDeviceDiscovered()</a>. For example, call the asynchronous Application.Current.Dispatcher.BeginInvoke() that doesn't block instead of the synchronous Application.Current.Dispatcher.Invoke() that blocks to forward these events to the application main thread.</p>
+<p>Notification sent to report a discovered device after the application called <a class="el" href="classCaretaker_1_1Device.html#a23dc37a0ef2ac55ca77cd913663e18fa" title="Scan Caretaker devices. ">Device::StartScan()</a>. </p>
+<p>The application must call <a class="el" href="classCaretaker_1_1Device.html#a7a541e1094860510352d6c1443be89d5" title="Initiates connection to the device with the specified serial number. ">Device::ConnectToSerialNumber()</a> or Device::ConnectToMacAddress() to connect to the desired, discovered device.</p>
+<p><b>IMPORTANT: </b> <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> discovery events are notified directly from the low-level library thread to report these events immediately to the application. The low-level library thread cannot tolerate blocking calls in the application or else data and other events may be lost. As such, the application must not call any methods that block in <a class="el" href="classCaretaker_1_1DeviceObserver.html#ad5f6ae8fa84fdd192f802b059d3ea31c" title="Notification sent to report a discovered device after the application called Device::StartScan(). ">OnDeviceDiscovered()</a>. For example, call the asynchronous Application.Current.Dispatcher.BeginInvoke() that doesn't block instead of the synchronous Application.Current.Dispatcher.Invoke() that blocks to forward these events to the application main thread.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">device</td><td>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance. </td></tr>
     <tr><td class="paramname">name</td><td>The discovered Caretaker device name. </td></tr>
     <tr><td class="paramname">serialNumber</td><td>The discovered Caretaker device serial number. </td></tr>
-    <tr><td class="paramname">macAddress</td><td>The discovered Caretaker device MAC address. </td></tr>
+    <tr><td class="paramname">address</td><td>The discovered Caretaker device address. This is the device BLE address if connecting to the BLE interface, IP address if connecting to Wi-Fi interface, or an USB address string if connecting to the USB interface. </td></tr>
   </table>
   </dd>
 </dl>
@@ -216,7 +216,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Notification sent to report Device::Connect() and <a class="el" href="classCaretaker_1_1Device.html#a245cb442071bbac2a9abe4c46aa5ac69" title="Initiates disconnecting from the remote device if connected. ">Device::Disconnect()</a> status. </p>
-<p><b>IMPORTANT: </b> Connection status events are notified directly from the low-level stack thread to report these events immediately to the application. The low-level stack thread cannot tolerate blocking calls in the application or else data and other events may be lost. As such, the application must not call any methods that block in <a class="el" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a" title="Notification sent to report Device::Connect() and Device::Disconnect() status. ">OnConnectionStatus()</a>. For example, call the asynchronous Application.Current.Dispatcher.BeginInvoke() that doesn't block instead of the synchronous Application.Current.Dispatcher.Invoke() that blocks to forward these events to the application main thread.</p>
+<p><b>IMPORTANT: </b> Connection status events are notified directly from the low-level library thread to report these events immediately to the application. The low-level library thread cannot tolerate blocking calls in the application or else data and other events may be lost. As such, the application must not call any methods that block in <a class="el" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a" title="Notification sent to report Device::Connect() and Device::Disconnect() status. ">OnConnectionStatus()</a>. For example, call the asynchronous Application.Current.Dispatcher.BeginInvoke() that doesn't block instead of the synchronous Application.Current.Dispatcher.Invoke() that blocks to forward these events to the application main thread.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">device</td><td>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance. </td></tr>
@@ -317,8 +317,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0ebf659cdaa7cae84e874641b190f7ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ebf659cdaa7cae84e874641b190f7ac">&#9670;&nbsp;</a></span>OnPulseRateWaveformDataPoints()</h2>
+<a id="a5086662920d4adc7862f1bc5b40b7145"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5086662920d4adc7862f1bc5b40b7145">&#9670;&nbsp;</a></span>OnRawPulseWaveformDataPoints()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -327,7 +327,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void Caretaker::DeviceObserver::OnPulseRateWaveformDataPoints </td>
+          <td class="memname">virtual void Caretaker::DeviceObserver::OnRawPulseWaveformDataPoints </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classCaretaker_1_1Device.html">Device</a>^&#160;</td>
           <td class="paramname"><em>device</em>, </td>
@@ -351,7 +351,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Notification sent to report real-time pulse rate (raw pulse) waveform data. </p>
+<p>Notification sent to report raw waveform data. </p>
+<p>This is the unfiltered waveform with all features and is not suitable for displaying. It is only available when the Caretaker is configured for research mode.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">device</td><td>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance. </td></tr>
@@ -396,7 +397,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Notification sent to report real-time pulse pressure (integrated pulse) waveform data. </p>
+<p>Notification sent to report pulse pressure waveform data. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">device</td><td>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance. </td></tr>
@@ -407,8 +408,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a69e68b9101d8c85be43cd33ce7d7a4c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69e68b9101d8c85be43cd33ce7d7a4c3">&#9670;&nbsp;</a></span>OnParameterizedPulse()</h2>
+<a id="ae8165919a5e823e7b5bf9a0a1556e160"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8165919a5e823e7b5bf9a0a1556e160">&#9670;&nbsp;</a></span>OnParameterizedPulse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -425,8 +426,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCaretaker_1_1WaveformDataPoints.html">WaveformDataPoints</a>^&#160;</td>
-          <td class="paramname"><em>dataPoints</em>, </td>
+          <td class="paramtype"><a class="el" href="classCaretaker_1_1ParamPulseSnapshot.html">ParamPulseSnapshot</a>^&#160;</td>
+          <td class="paramname"><em>snapshot</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -493,7 +494,7 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">device</td><td>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance. </td></tr>
-    <tr><td class="paramname">dataPoints</td><td>Parameterized pulse waveform data points. </td></tr>
+    <tr><td class="paramname">snapshot</td><td>Parameterized pulse waveform snapshot. </td></tr>
     <tr><td class="paramname">t0</td><td>Pulse onset index. </td></tr>
     <tr><td class="paramname">t1</td><td>First pulse peak index. </td></tr>
     <tr><td class="paramname">t2</td><td>Second pulse peak index. </td></tr>
@@ -678,7 +679,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Notification sent to report real-time primary vitals. </p>
-<p><b>IMPORTANT:</b> Application.Current.Dispatcher.BeginInvoke() executes asynchronous processing on the main thread to update the UI, so call the synchronous Application.Current.Dispatcher.Invoke() instead to throttle library calls as <a class="el" href="classCaretaker_1_1DeviceObserver.html#ac91971108586dab7a11f2121b670e138" title="Notification sent to report real-time primary vitals. ">OnPrimaryVitals()</a> maybe called once or multiple times per second to report vitals to the application depending on the Caretaker's update interval setting as well as queuing in the library. If Dispatcher.BeginInvoke() is called instead, the application must be capable of handling high library call volumes to prevent application freeze.</p>
+<p><b>IMPORTANT:</b> Application.Current.Dispatcher.BeginInvoke() executes asynchronous processing on the main thread to update the UI, so call the synchronous Application.Current.Dispatcher.Invoke() instead to throttle library calls as <a class="el" href="classCaretaker_1_1DeviceObserver.html#ac91971108586dab7a11f2121b670e138" title="Notification sent to report real-time primary vitals. ">OnPrimaryVitals()</a> maybe called multiple times per second to report vitals to the application depending on the Caretaker's update interval setting as well as queuing in the library. If Dispatcher.BeginInvoke() is called instead, the application must be capable of handling high library call volumes to prevent application freeze.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">device</td><td>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance. </td></tr>
@@ -725,7 +726,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Notification sent to report real-time secondary vitals. </p>
 <p>For internal and research use only.</p>
-<p><b>IMPORTANT:</b> Application.Current.Dispatcher.BeginInvoke() executes asynchronous processing on the main thread to update the UI, so call the synchronous Application.Current.Dispatcher.Invoke() instead to throttle library calls as <a class="el" href="classCaretaker_1_1DeviceObserver.html#a9f92125771eb5b4e498fe871d50ac53e" title="Notification sent to report real-time secondary vitals. ">OnSecondaryVitals()</a> maybe called once or multiple times per second to report vitals to the application depending on the Caretaker's update interval setting as well as queuing in the library. If Dispatcher.BeginInvoke() is called instead, the application must be capable of handling high library call volumes to prevent application freeze.</p>
+<p><b>IMPORTANT:</b> Application.Current.Dispatcher.BeginInvoke() executes asynchronous processing on the main thread to update the UI, so call the synchronous Application.Current.Dispatcher.Invoke() instead to throttle library calls as <a class="el" href="classCaretaker_1_1DeviceObserver.html#a9f92125771eb5b4e498fe871d50ac53e" title="Notification sent to report real-time secondary vitals. ">OnSecondaryVitals()</a> maybe called multiple times per second to report vitals to the application depending on the Caretaker's update interval setting as well as queuing in the library. If Dispatcher.BeginInvoke() is called instead, the application must be capable of handling high library call volumes to prevent application freeze.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">device</td><td>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance. </td></tr>
@@ -892,8 +893,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aaf6ddf3ea0afa04648aed0f830223ebd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf6ddf3ea0afa04648aed0f830223ebd">&#9670;&nbsp;</a></span>OnReadVitalsFilterSetting()</h2>
+<a id="a135ecf9bf5f92dcb045738eac9254b65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a135ecf9bf5f92dcb045738eac9254b65">&#9670;&nbsp;</a></span>OnReadMedianFilterSetting()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -902,7 +903,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void Caretaker::DeviceObserver::OnReadVitalsFilterSetting </td>
+          <td class="memname">virtual void Caretaker::DeviceObserver::OnReadMedianFilterSetting </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classCaretaker_1_1Device.html">Device</a>^&#160;</td>
           <td class="paramname"><em>device</em>, </td>
@@ -932,7 +933,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Notification sent to report <a class="el" href="classCaretaker_1_1Device.html#a076c23dabc4734c6dcd6808d1f93fb26" title="Reads the current filter settings to enable or disable filtering outlier vitals measurements. ">Device::ReadVitalsFilterSetting()</a> transaction result. </p>
+<p>Notification sent to report <a class="el" href="classCaretaker_1_1Device.html#a0f142f83782458bfddcee1d127935620" title="Reads the device vitals median filter settings. ">Device::ReadMedianFilterSetting()</a> transaction result. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">device</td><td>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance. </td></tr>
@@ -1106,7 +1107,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:19 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

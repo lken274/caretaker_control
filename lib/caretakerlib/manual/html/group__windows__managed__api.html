@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: Managed API for .NET Applications</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: Managed API for .NET Applications</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -68,7 +68,7 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Managed class defining the secondary vitals measured by the Caretaker.  <a href="classCaretaker_1_1SecondaryVitals.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceObserver.html">Caretaker::DeviceObserver</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Managed class defining the application observer interface to receive real-time notifications.  <a href="classCaretaker_1_1DeviceObserver.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Managed class defining the application observer interface to receive asynchronous notifications.  <a href="classCaretaker_1_1DeviceObserver.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1Device.html">Caretaker::Device</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Managed class for .NET applications to monitor the Caretaker device.  <a href="classCaretaker_1_1Device.html#details">More...</a><br /></td></tr>
@@ -76,6 +76,12 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:ga1af26e1f8144705a3e729689cf45e92b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__windows__managed__api.html#ga1af26e1f8144705a3e729689cf45e92b">Caretaker::DeviceClass</a> { <a class="el" href="group__windows__managed__api.html#gga1af26e1f8144705a3e729689cf45e92ba5db6947ad87b55ef1439052172868fd4">Caretaker::DeviceClass::DEVICE_CLASS_BLE</a> =1, 
+<a class="el" href="group__windows__managed__api.html#gga1af26e1f8144705a3e729689cf45e92ba735d700fdce95d43962233cf5586dbba">Caretaker::DeviceClass::DEVICE_CLASS_USB</a> =2, 
+<a class="el" href="group__windows__managed__api.html#gga1af26e1f8144705a3e729689cf45e92bae5740454b35cc5940049aa1a64acb2e4">Caretaker::DeviceClass::DEVICE_CLASS_TCP</a> =3
+ }</td></tr>
+<tr class="memdesc:ga1af26e1f8144705a3e729689cf45e92b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumeration of device classes indicating the protocol to use for communication.  <a href="group__windows__managed__api.html#ga1af26e1f8144705a3e729689cf45e92b">More...</a><br /></td></tr>
+<tr class="separator:ga1af26e1f8144705a3e729689cf45e92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacee2851c7adad0ce5a4f3e5a034fde04"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__windows__managed__api.html#gacee2851c7adad0ce5a4f3e5a034fde04">Caretaker::ConnectionStatus</a> { <br />
 &#160;&#160;<a class="el" href="group__windows__managed__api.html#ggacee2851c7adad0ce5a4f3e5a034fde04a8438e850b15699a6ac7fb74dff19d8be">Caretaker::ConnectionStatus::SCAN_ERROR</a> = 0, 
 <a class="el" href="group__windows__managed__api.html#ggacee2851c7adad0ce5a4f3e5a034fde04ad64c000285773068f3a96992579f39a5">Caretaker::ConnectionStatus::SCAN_TIMEOUT</a> = 1, 
@@ -87,7 +93,7 @@ Enumerations</h2></td></tr>
 <a class="el" href="group__windows__managed__api.html#ggacee2851c7adad0ce5a4f3e5a034fde04a6afae85c81e24d106bec978e17b89ce7">Caretaker::ConnectionStatus::CONNECTION_LOST</a> =6
 <br />
  }</td></tr>
-<tr class="memdesc:gacee2851c7adad0ce5a4f3e5a034fde04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Managed class defining connection status codes notified with DeviceObserver::OnConnectionStatus().  <a href="group__windows__managed__api.html#gacee2851c7adad0ce5a4f3e5a034fde04">More...</a><br /></td></tr>
+<tr class="memdesc:gacee2851c7adad0ce5a4f3e5a034fde04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumeration of the connection status codes notified with DeviceObserver::OnConnectionStatus().  <a href="group__windows__managed__api.html#gacee2851c7adad0ce5a4f3e5a034fde04">More...</a><br /></td></tr>
 <tr class="separator:gacee2851c7adad0ce5a4f3e5a034fde04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga49b40175fe34a75a5925cdb7f9a9e068"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__windows__managed__api.html#ga49b40175fe34a75a5925cdb7f9a9e068">Caretaker::StartStatus</a> { <a class="el" href="group__windows__managed__api.html#gga49b40175fe34a75a5925cdb7f9a9e068a17130e6c806885e23770df1519b18eb7">Caretaker::StartStatus::STARTED</a> = 0, 
 <a class="el" href="group__windows__managed__api.html#gga49b40175fe34a75a5925cdb7f9a9e068a587568608550163e8f618a5f048cdb60">Caretaker::StartStatus::START_ERROR</a> = 1
@@ -104,11 +110,58 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:gabc29121ccac1aa1261962767a550112b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Managed class defining patient postures.  <a href="group__windows__managed__api.html#gabc29121ccac1aa1261962767a550112b">More...</a><br /></td></tr>
 <tr class="separator:gabc29121ccac1aa1261962767a550112b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5ef656a9ae5338f43ea2e9d367f0c9ba"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__windows__managed__api.html#ga5ef656a9ae5338f43ea2e9d367f0c9ba">Caretaker::MonitorFlag</a> { <br />
+&#160;&#160;<a class="el" href="group__windows__managed__api.html#gga5ef656a9ae5338f43ea2e9d367f0c9baac8a50d9b270ddc61b3daeb98c221585a">Caretaker::MonitorFlag::PULSE_WAVEFORMS</a> = (1 &lt;&lt; 0), 
+<a class="el" href="group__windows__managed__api.html#gga5ef656a9ae5338f43ea2e9d367f0c9baa4f0d14ad4b6084a16766cb23bf6e31f7">Caretaker::MonitorFlag::PULSE_PARAMETERS</a> = (1 &lt;&lt; 2), 
+<a class="el" href="group__windows__managed__api.html#gga5ef656a9ae5338f43ea2e9d367f0c9baa620be111130e41bc47b1944a5ff4a99a">Caretaker::MonitorFlag::PRIMARY_VITALS</a> = (1 &lt;&lt; 3), 
+<a class="el" href="group__windows__managed__api.html#gga5ef656a9ae5338f43ea2e9d367f0c9baa617b8db02ba1ea3756856996a13e68f5">Caretaker::MonitorFlag::SECONDARY_VITALS</a> = (1 &lt;&lt; 4), 
+<br />
+&#160;&#160;<a class="el" href="group__windows__managed__api.html#gga5ef656a9ae5338f43ea2e9d367f0c9baae2218507a61d4697434434fddcf2d5d4">Caretaker::MonitorFlag::CUFF_PRESSURE</a> = (1 &lt;&lt; 7), 
+<a class="el" href="group__windows__managed__api.html#gga5ef656a9ae5338f43ea2e9d367f0c9baa97563a7d5b9ad61292ad2f7a53e50856">Caretaker::MonitorFlag::DEVICE_STATUS</a> = (1 &lt;&lt; 8), 
+<a class="el" href="group__windows__managed__api.html#gga5ef656a9ae5338f43ea2e9d367f0c9baaebd55adb715a471b6e8b79c0fa5c8168">Caretaker::MonitorFlag::BATTERY_STATUS</a> = (1 &lt;&lt; 9)
+<br />
+ }</td></tr>
+<tr class="memdesc:ga5ef656a9ae5338f43ea2e9d367f0c9ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumeration of data types that can be monitored by the application.  <a href="group__windows__managed__api.html#ga5ef656a9ae5338f43ea2e9d367f0c9ba">More...</a><br /></td></tr>
+<tr class="separator:ga5ef656a9ae5338f43ea2e9d367f0c9ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p><br />
  This module describes the Caretaker library managed APIs to be used with .NET applications. </p>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga1af26e1f8144705a3e729689cf45e92b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1af26e1f8144705a3e729689cf45e92b">&#9670;&nbsp;</a></span>DeviceClass</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__windows__managed__api.html#ga1af26e1f8144705a3e729689cf45e92b">Caretaker::DeviceClass</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enumeration of device classes indicating the protocol to use for communication. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga1af26e1f8144705a3e729689cf45e92ba5db6947ad87b55ef1439052172868fd4"></a>DEVICE_CLASS_BLE&#160;</td><td class="fielddoc"><p><a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> class specifying the CareTaker4 or CareTaker5 BLE interface. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga1af26e1f8144705a3e729689cf45e92ba735d700fdce95d43962233cf5586dbba"></a>DEVICE_CLASS_USB&#160;</td><td class="fielddoc"><p><a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> class specifying the CareTaker5 USB interface. </p>
+<p>Note the Caretaker4 does not support the USB interface. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga1af26e1f8144705a3e729689cf45e92bae5740454b35cc5940049aa1a64acb2e4"></a>DEVICE_CLASS_TCP&#160;</td><td class="fielddoc"><p><a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> class specifying the CareTaker5 Wi-Fi interface. </p>
+<p>Note the Caretaker4 does not support the Wi-Fi interface. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <a id="gacee2851c7adad0ce5a4f3e5a034fde04"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gacee2851c7adad0ce5a4f3e5a034fde04">&#9670;&nbsp;</a></span>ConnectionStatus</h2>
 
@@ -129,7 +182,7 @@ Enumerations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Managed class defining connection status codes notified with <a class="el" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a" title="Notification sent to report Device::Connect() and Device::Disconnect() status. ">DeviceObserver::OnConnectionStatus()</a>. </p>
+<p>Enumeration of the connection status codes notified with <a class="el" href="classCaretaker_1_1DeviceObserver.html#ae84001fac443605574ddd01aa662124a" title="Notification sent to report Device::Connect() and Device::Disconnect() status. ">DeviceObserver::OnConnectionStatus()</a>. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggacee2851c7adad0ce5a4f3e5a034fde04a8438e850b15699a6ac7fb74dff19d8be"></a>SCAN_ERROR&#160;</td><td class="fielddoc"><p>Error while scanning for a device. </p>
 <p>Scan errors are typically due to protocol errors such as when the BLE dongle is not plugged. </p>
@@ -145,7 +198,7 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="ggacee2851c7adad0ce5a4f3e5a034fde04a99c8ce56e7ab246445d3b134724428f3"></a>DISCONNECTED&#160;</td><td class="fielddoc"><p>The application initiated disconnect completed successfully. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ggacee2851c7adad0ce5a4f3e5a034fde04a6afae85c81e24d106bec978e17b89ce7"></a>CONNECTION_LOST&#160;</td><td class="fielddoc"><p>The connection to the device was lost. </p>
-<p>Typically, the connection is lost after the Caretaker device moves outside the BLE range.</p>
+<p>Typically, the connection is lost after the Caretaker device moves outside the BLE or Wi-Fi range.</p>
 <dl class="section note"><dt>Note</dt><dd>The <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> instance can be configured to reconnect automatically when the device moves back in range by setting the autoReconnect argument to true when invoking the <a class="el" href="classCaretaker_1_1Device.html" title="Managed class for .NET applications to monitor the Caretaker device. ">Device</a> constructor to create the instance. </dd></dl>
 </td></tr>
 </table>
@@ -245,10 +298,51 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
+<a id="ga5ef656a9ae5338f43ea2e9d367f0c9ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5ef656a9ae5338f43ea2e9d367f0c9ba">&#9670;&nbsp;</a></span>MonitorFlag</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__windows__managed__api.html#ga5ef656a9ae5338f43ea2e9d367f0c9ba">Caretaker::MonitorFlag</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enumeration of data types that can be monitored by the application. </p>
+<p>The library forwards all data to the application by default, but the application can limit the amount of data sent by the device by calling <a class="el" href="classCaretaker_1_1Device.html#a39dd5a98c08ae250fb1674657de437fe" title="Sets the data to monitor by the application. ">Device::SetMonitorFlags()</a> to set the desired data. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga5ef656a9ae5338f43ea2e9d367f0c9baac8a50d9b270ddc61b3daeb98c221585a"></a>PULSE_WAVEFORMS&#160;</td><td class="fielddoc"><p>Set this flag to forward the raw and pressure waveforms to the application. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga5ef656a9ae5338f43ea2e9d367f0c9baa4f0d14ad4b6084a16766cb23bf6e31f7"></a>PULSE_PARAMETERS&#160;</td><td class="fielddoc"><p>Set this flag to forward the pulse parameters to the application. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga5ef656a9ae5338f43ea2e9d367f0c9baa620be111130e41bc47b1944a5ff4a99a"></a>PRIMARY_VITALS&#160;</td><td class="fielddoc"><p>Set this flag to forward primary vitals to the application. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga5ef656a9ae5338f43ea2e9d367f0c9baa617b8db02ba1ea3756856996a13e68f5"></a>SECONDARY_VITALS&#160;</td><td class="fielddoc"><p>Set this flag to forward secondary vitals to the application. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga5ef656a9ae5338f43ea2e9d367f0c9baae2218507a61d4697434434fddcf2d5d4"></a>CUFF_PRESSURE&#160;</td><td class="fielddoc"><p>Set this flag to forward cuff status to the application. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga5ef656a9ae5338f43ea2e9d367f0c9baa97563a7d5b9ad61292ad2f7a53e50856"></a>DEVICE_STATUS&#160;</td><td class="fielddoc"><p>Set this flag to forward device status to the application. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga5ef656a9ae5338f43ea2e9d367f0c9baaebd55adb715a471b6e8b79c0fa5c8168"></a>BATTERY_STATUS&#160;</td><td class="fielddoc"><p>Set this flag to forward battery status to the application. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:18 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

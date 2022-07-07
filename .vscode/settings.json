@@ -83,6 +83,7 @@
         "random": "cpp",
         "shared_mutex": "cpp",
         "strstream": "cpp",
-        "xthread": "cpp"
+        "xthread": "cpp",
+        "*.ipp": "cpp"
     }
 }

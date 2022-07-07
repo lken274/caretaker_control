@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: Unmanaged Primary API</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: Unmanaged Primary API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -63,8 +63,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga524b51de6eeeced9b5a32308c5bb65dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop device discovery.  <a href="#ga524b51de6eeeced9b5a32308c5bb65dc">More...</a><br /></td></tr>
 <tr class="separator:ga524b51de6eeeced9b5a32308c5bb65dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga51d57b1a49ed2c98ad8b50bf71046503"><td class="memItemLeft" align="right" valign="top">LIBCTEXPORT int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__unmanaged__primary__api.html#ga51d57b1a49ed2c98ad8b50bf71046503">libct_connect</a> (<a class="el" href="classlibct__context__t.html">libct_context_t</a> *context, <a class="el" href="structlibct__device__t.html">libct_device_t</a> *device)</td></tr>
-<tr class="memdesc:ga51d57b1a49ed2c98ad8b50bf71046503"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect to a device.  <a href="#ga51d57b1a49ed2c98ad8b50bf71046503">More...</a><br /></td></tr>
+<tr class="memdesc:ga51d57b1a49ed2c98ad8b50bf71046503"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect to a discovered device.  <a href="#ga51d57b1a49ed2c98ad8b50bf71046503">More...</a><br /></td></tr>
 <tr class="separator:ga51d57b1a49ed2c98ad8b50bf71046503"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga74b21a6b3e9456e100afa45e3f2d3886"><td class="memItemLeft" align="right" valign="top">LIBCTEXPORT int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__unmanaged__primary__api.html#ga74b21a6b3e9456e100afa45e3f2d3886">libct_connect_to_address</a> (<a class="el" href="classlibct__context__t.html">libct_context_t</a> *context, const char *address)</td></tr>
+<tr class="memdesc:ga74b21a6b3e9456e100afa45e3f2d3886"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect to an address by passing device discovery.  <a href="#ga74b21a6b3e9456e100afa45e3f2d3886">More...</a><br /></td></tr>
+<tr class="separator:ga74b21a6b3e9456e100afa45e3f2d3886"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9c14c6e45dc29e8645c7343f91f1b2ec"><td class="memItemLeft" align="right" valign="top">LIBCTEXPORT int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__unmanaged__primary__api.html#ga9c14c6e45dc29e8645c7343f91f1b2ec">libct_disconnect</a> (<a class="el" href="classlibct__context__t.html">libct_context_t</a> *context)</td></tr>
 <tr class="memdesc:ga9c14c6e45dc29e8645c7343f91f1b2ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disconnect from a device.  <a href="#ga9c14c6e45dc29e8645c7343f91f1b2ec">More...</a><br /></td></tr>
 <tr class="separator:ga9c14c6e45dc29e8645c7343f91f1b2ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -264,8 +267,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Connect to a device. </p>
-<p>Call this method after device discovery to establish connection to the device. The results will be notified asynchronously via the <a class="el" href="structlibct__app__callbacks__t.html">application callbacks</a> passed to <a class="el" href="group__unmanaged__primary__api.html#ga8577c848cdc2e70978f3ada3314727d7" title="Initializes device context. ">libct_init()</a>; specifically, one or more of the following callback functions will be invoked some time later with the results if the connection is established, timed out or failed. </p><ul>
+<p>Connect to a discovered device. </p>
+<p>Call this connect version to establish connection to a discovered device passed to the application's <a class="el" href="structlibct__app__callbacks__t.html#a9defac5d33283217e6a94d4cb4e334b8">on_device_discovered() callback.</a> The connect results is notified asynchronously via the <a class="el" href="structlibct__app__callbacks__t.html">callbacks</a> passed to <a class="el" href="group__unmanaged__primary__api.html#ga8577c848cdc2e70978f3ada3314727d7" title="Initializes device context. ">libct_init()</a>; specifically, one or more of the following callback functions will be invoked some time later with the results if the connection is established, timed out, or failed. </p><ul>
 <li>
 <a class="el" href="structlibct__app__callbacks__t.html#a5a75869613eb266a34fea762398c77f3">on_device_connected_not_ready()</a> </li>
 <li>
@@ -278,7 +281,55 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">context</td><td>The context returned from <a class="el" href="group__unmanaged__primary__api.html#ga8577c848cdc2e70978f3ada3314727d7" title="Initializes device context. ">libct_init()</a>. </td></tr>
-    <tr><td class="paramname">device</td><td>A discovered device notified with your application callback <a class="el" href="structlibct__app__callbacks__t.html#a9defac5d33283217e6a94d4cb4e334b8">on_device_discovered()</a>.</td></tr>
+    <tr><td class="paramname">device</td><td>A discovered device passed to your application callback <a class="el" href="structlibct__app__callbacks__t.html#a9defac5d33283217e6a94d4cb4e334b8">on_device_discovered()</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An appropriate <a class="el" href="classlibct__status__t.html">status code</a> indicating success or error. </dd></dl>
+
+</div>
+</div>
+<a id="ga74b21a6b3e9456e100afa45e3f2d3886"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga74b21a6b3e9456e100afa45e3f2d3886">&#9670;&nbsp;</a></span>libct_connect_to_address()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">LIBCTEXPORT int libct_connect_to_address </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classlibct__context__t.html">libct_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>address</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Connect to an address by passing device discovery. </p>
+<p>Call this connect version to establish connection to a device with the specified address. The connect results is notified asynchronously via the <a class="el" href="structlibct__app__callbacks__t.html">callbacks</a> passed to <a class="el" href="group__unmanaged__primary__api.html#ga8577c848cdc2e70978f3ada3314727d7" title="Initializes device context. ">libct_init()</a>; specifically, one or more of the following callback functions will be invoked some time later with the results if the connection is established, timed out, or failed. </p><ul>
+<li>
+<a class="el" href="structlibct__app__callbacks__t.html#a5a75869613eb266a34fea762398c77f3">on_device_connected_not_ready()</a> </li>
+<li>
+<a class="el" href="structlibct__app__callbacks__t.html#a2a0f329bdc4d94877dee77a8af61ab2e">on_device_connected_ready()</a> </li>
+<li>
+<a class="el" href="structlibct__app__callbacks__t.html#a2fe0ea2089f3d99c5350bd6fe23e7bf3">on_connect_error()</a> </li>
+<li>
+<a class="el" href="structlibct__app__callbacks__t.html#adaee6c8103a72c46365855df98f654d3">on_connect_timedout()</a> </li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>The context returned from <a class="el" href="group__unmanaged__primary__api.html#ga8577c848cdc2e70978f3ada3314727d7" title="Initializes device context. ">libct_init()</a>. </td></tr>
+    <tr><td class="paramname">address</td><td>Address of the Caretaker device. This is either the BLE address if LIBCT_DEVICE_CLASS_BLE context, or the TCP/IP address if LIBCT_DEVICE_CLASS_TCP context.</td></tr>
   </table>
   </dd>
 </dl>
@@ -303,8 +354,8 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Disconnect from a device. </p>
-<p>Call this method after calling <a class="el" href="group__unmanaged__primary__api.html#ga51d57b1a49ed2c98ad8b50bf71046503" title="Connect to a device. ">libct_connect()</a> to clean up resources that were allocated by the connect call.</p>
-<p><b>IMPORTANT:</b> The application must call <a class="el" href="group__unmanaged__primary__api.html#ga9c14c6e45dc29e8645c7343f91f1b2ec" title="Disconnect from a device. ">libct_disconnect()</a> to release connection resources before calling <a class="el" href="group__unmanaged__primary__api.html#ga51d57b1a49ed2c98ad8b50bf71046503" title="Connect to a device. ">libct_connect()</a> subsequently on the same context. Otherwise, the subsequent connect calls may fail. Also, the application must not call <a class="el" href="group__unmanaged__primary__api.html#ga9c14c6e45dc29e8645c7343f91f1b2ec" title="Disconnect from a device. ">libct_disconnect()</a> from any library callback function. Library callbacks are called from internal library threads and this function attempts to kill. As such, it must only be called from an application thread.</p>
+<p>Call this method after calling <a class="el" href="group__unmanaged__primary__api.html#ga51d57b1a49ed2c98ad8b50bf71046503" title="Connect to a discovered device. ">libct_connect()</a> to clean up resources that were allocated by the connect call.</p>
+<p><b>IMPORTANT:</b> The application must call <a class="el" href="group__unmanaged__primary__api.html#ga9c14c6e45dc29e8645c7343f91f1b2ec" title="Disconnect from a device. ">libct_disconnect()</a> to release connection resources before calling <a class="el" href="group__unmanaged__primary__api.html#ga51d57b1a49ed2c98ad8b50bf71046503" title="Connect to a discovered device. ">libct_connect()</a> subsequently on the same context. Otherwise, the subsequent connect calls may fail. Also, the application must not call <a class="el" href="group__unmanaged__primary__api.html#ga9c14c6e45dc29e8645c7343f91f1b2ec" title="Disconnect from a device. ">libct_disconnect()</a> from any library callback function. Library callbacks are called from internal library threads and this function attempts to kill. As such, it must only be called from an application thread.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">context</td><td>The context returned from <a class="el" href="group__unmanaged__primary__api.html#ga8577c848cdc2e70978f3ada3314727d7" title="Initializes device context. ">libct_init()</a>.</td></tr>
@@ -342,7 +393,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Start monitoring data at the remote caretaker device. </p>
-<p>Call this function after the connection is established with the device to start monitoring data or to change the data being monitored. </p>
+<p>Call this function after the connection is established to start monitoring data or to change the data being monitored. </p>
 <p>Calling this function will trigger your application's <a class="el" href="structlibct__app__callbacks__t.html#a2e6f566be8a83ad4e6ff241ca96189e6">on_start_monitoring()</a> to be invoked some time later with results. Also, if monitoring was started successfully, data from the device will be notified to your application's <a class="el" href="structlibct__app__callbacks__t.html#ad39120a47c368701668fffed0d3f9c55">on_data_received()</a> continuously until stopped explicitly by calling to <a class="el" href="group__unmanaged__primary__api.html#ga8873f6ed1ede17a7d01d7e435b654f4f" title="Stops monitoring. ">libct_stop_monitoring()</a> or if the device becomes disconnected.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -458,7 +509,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:18 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

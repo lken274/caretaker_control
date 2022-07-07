@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: libct_device_status_t Class Reference</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: libct_device_status_t Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -58,6 +58,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stru
 long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a4e37e11a028658bf64eacd2009f793fe">value</a></td></tr>
 <tr class="memdesc:a4e37e11a028658bf64eacd2009f793fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Integer value representing logically OR of all status flags, which essentially is the raw value from the device. <br /></td></tr>
 <tr class="separator:a4e37e11a028658bf64eacd2009f793fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a248d76442b20452e9b5fbd4cbee39c24"><td class="memItemLeft" align="right" valign="top"><a id="a248d76442b20452e9b5fbd4cbee39c24"></a>
+long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a248d76442b20452e9b5fbd4cbee39c24">timestamp</a></td></tr>
+<tr class="memdesc:a248d76442b20452e9b5fbd4cbee39c24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device timestamp. <br /></td></tr>
+<tr class="separator:a248d76442b20452e9b5fbd4cbee39c24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af99196960880edf18b2dc6655f5993d7"><td class="memItemLeft" align="right" valign="top"><a id="af99196960880edf18b2dc6655f5993d7"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#af99196960880edf18b2dc6655f5993d7">pda_enabled</a></td></tr>
 <tr class="memdesc:af99196960880edf18b2dc6655f5993d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">An indicator of whether the system PDA measurement system is enabled. <br /></td></tr>
@@ -85,24 +89,24 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stru
 <tr class="memitem:ae811326dd8f3500acaf775dd150d97b5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#ae811326dd8f3500acaf775dd150d97b5">pump_overrun</a></td></tr>
 <tr class="memdesc:ae811326dd8f3500acaf775dd150d97b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pump has violated an overrun condition.  <a href="#ae811326dd8f3500acaf775dd150d97b5">More...</a><br /></td></tr>
 <tr class="separator:ae811326dd8f3500acaf775dd150d97b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af31cab54c6d4b0ec7ed3d80513507b0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#af31cab54c6d4b0ec7ed3d80513507b0f">ble_temperature_sensor_paired</a></td></tr>
-<tr class="memdesc:af31cab54c6d4b0ec7ed3d80513507b0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The BLE Temperature Sensor is paired and actively communicating with CareTaker.  <a href="#af31cab54c6d4b0ec7ed3d80513507b0f">More...</a><br /></td></tr>
-<tr class="separator:af31cab54c6d4b0ec7ed3d80513507b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60c70967bd27e584258d38420d17cda1"><td class="memItemLeft" align="right" valign="top"><a id="a60c70967bd27e584258d38420d17cda1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a60c70967bd27e584258d38420d17cda1">ble_handheld_paired</a></td></tr>
-<tr class="memdesc:a60c70967bd27e584258d38420d17cda1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The a BLE hand-held device is paired and actively communicating with CareTaker. <br /></td></tr>
-<tr class="separator:a60c70967bd27e584258d38420d17cda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52d8a5d2da164f9f13839c503da0d8e8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a52d8a5d2da164f9f13839c503da0d8e8">ble_stream_control</a></td></tr>
-<tr class="memdesc:a52d8a5d2da164f9f13839c503da0d8e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TThe current stream control status bit of the BLE stream.  <a href="#a52d8a5d2da164f9f13839c503da0d8e8">More...</a><br /></td></tr>
-<tr class="separator:a52d8a5d2da164f9f13839c503da0d8e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5d63444b3efbd0a6044972a7f442ce1"><td class="memItemLeft" align="right" valign="top"><a id="aa5d63444b3efbd0a6044972a7f442ce1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#aa5d63444b3efbd0a6044972a7f442ce1">cellular_control</a></td></tr>
-<tr class="memdesc:aa5d63444b3efbd0a6044972a7f442ce1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current stream control status bit of the cellular stream. <br /></td></tr>
-<tr class="separator:aa5d63444b3efbd0a6044972a7f442ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a439255070a403c66f3dd009d4273c94a"><td class="memItemLeft" align="right" valign="top"><a id="a439255070a403c66f3dd009d4273c94a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a439255070a403c66f3dd009d4273c94a">serial_stream_control</a></td></tr>
-<tr class="memdesc:a439255070a403c66f3dd009d4273c94a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current stream control status bit of the serial stream. <br /></td></tr>
-<tr class="separator:a439255070a403c66f3dd009d4273c94a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad807c28638eff7fc13c57297930a1aed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#ad807c28638eff7fc13c57297930a1aed">body_temp_connected</a></td></tr>
+<tr class="memdesc:ad807c28638eff7fc13c57297930a1aed"><td class="mdescLeft">&#160;</td><td class="mdescRight">External temperature senosr connnected.  <a href="#ad807c28638eff7fc13c57297930a1aed">More...</a><br /></td></tr>
+<tr class="separator:ad807c28638eff7fc13c57297930a1aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab13e6b89702415d4302388500525e7d6"><td class="memItemLeft" align="right" valign="top"><a id="ab13e6b89702415d4302388500525e7d6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#ab13e6b89702415d4302388500525e7d6">spo2_connected</a></td></tr>
+<tr class="memdesc:ab13e6b89702415d4302388500525e7d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">External spo2 connected. <br /></td></tr>
+<tr class="separator:ab13e6b89702415d4302388500525e7d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2e31edb0c53ea3d9ea57a40b35d2488"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#aa2e31edb0c53ea3d9ea57a40b35d2488">reserved4</a></td></tr>
+<tr class="memdesc:aa2e31edb0c53ea3d9ea57a40b35d2488"><td class="mdescLeft">&#160;</td><td class="mdescRight">Was stream control status bit of the BLE stream.  <a href="#aa2e31edb0c53ea3d9ea57a40b35d2488">More...</a><br /></td></tr>
+<tr class="separator:aa2e31edb0c53ea3d9ea57a40b35d2488"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3085131992891a70d4a4004ddef9623"><td class="memItemLeft" align="right" valign="top"><a id="ab3085131992891a70d4a4004ddef9623"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#ab3085131992891a70d4a4004ddef9623">reserved5</a></td></tr>
+<tr class="memdesc:ab3085131992891a70d4a4004ddef9623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Was stream control status bit of the cellular stream. <br /></td></tr>
+<tr class="separator:ab3085131992891a70d4a4004ddef9623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2337c772efe492067a7a86cb8bd2c617"><td class="memItemLeft" align="right" valign="top"><a id="a2337c772efe492067a7a86cb8bd2c617"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a2337c772efe492067a7a86cb8bd2c617">stop_button_pressed</a></td></tr>
+<tr class="memdesc:a2337c772efe492067a7a86cb8bd2c617"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates that the user pressed stop on the UI. <br /></td></tr>
+<tr class="separator:a2337c772efe492067a7a86cb8bd2c617"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abaa2e519da929c0a11d73a3670762b1a"><td class="memItemLeft" align="right" valign="top"><a id="abaa2e519da929c0a11d73a3670762b1a"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#abaa2e519da929c0a11d73a3670762b1a">auto_cal_mode</a></td></tr>
 <tr class="memdesc:abaa2e519da929c0a11d73a3670762b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The system has been started and running in auto-calibration mode. <br /></td></tr>
@@ -177,10 +181,10 @@ short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a17b322f3a0e8934b265e7b009d061abc">charging</a></td></tr>
 <tr class="memdesc:a17b322f3a0e8934b265e7b009d061abc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The device is charging. <br /></td></tr>
 <tr class="separator:a17b322f3a0e8934b265e7b009d061abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9ca1518e4c357ddd9fced0934092ef4"><td class="memItemLeft" align="right" valign="top"><a id="aa9ca1518e4c357ddd9fced0934092ef4"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#aa9ca1518e4c357ddd9fced0934092ef4">chargeComplete</a></td></tr>
-<tr class="memdesc:aa9ca1518e4c357ddd9fced0934092ef4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Charging complete. <br /></td></tr>
-<tr class="separator:aa9ca1518e4c357ddd9fced0934092ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21fe5efc559d0a4084bf7bc4c8cb4125"><td class="memItemLeft" align="right" valign="top"><a id="a21fe5efc559d0a4084bf7bc4c8cb4125"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a21fe5efc559d0a4084bf7bc4c8cb4125">charge_complete</a></td></tr>
+<tr class="memdesc:a21fe5efc559d0a4084bf7bc4c8cb4125"><td class="mdescLeft">&#160;</td><td class="mdescRight">Charging complete. <br /></td></tr>
+<tr class="separator:a21fe5efc559d0a4084bf7bc4c8cb4125"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f1b7470c1e0995445703179458f7d73"><td class="memItemLeft" align="right" valign="top"><a id="a9f1b7470c1e0995445703179458f7d73"></a>
 short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a9f1b7470c1e0995445703179458f7d73">posture</a></td></tr>
 <tr class="memdesc:a9f1b7470c1e0995445703179458f7d73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posture. <br /></td></tr>
@@ -188,6 +192,16 @@ short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 <tr class="memitem:a01bb9efd581d3a269393320d68f3c022"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#a01bb9efd581d3a269393320d68f3c022">invalid_data_entry</a></td></tr>
 <tr class="memdesc:a01bb9efd581d3a269393320d68f3c022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalid input received in the last command.  <a href="#a01bb9efd581d3a269393320d68f3c022">More...</a><br /></td></tr>
 <tr class="separator:a01bb9efd581d3a269393320d68f3c022"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8b66332bbf93aeac94e58fbb8972c79"><td class="memItemLeft" align="right" valign="top"><a id="ae8b66332bbf93aeac94e58fbb8972c79"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__status__t.html#ae8b66332bbf93aeac94e58fbb8972c79">recal_recommended</a></td></tr>
+<tr class="memdesc:ae8b66332bbf93aeac94e58fbb8972c79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recalibration Recommended Enabled when the signal is not sufficient to have high confidence in the readings. <br /></td></tr>
+<tr class="separator:ae8b66332bbf93aeac94e58fbb8972c79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcf79f23a5b485e510ffb95186684c93"><td class="memItemLeft" align="right" valign="top"><a id="abcf79f23a5b485e510ffb95186684c93"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hemodynamics_enabled</b></td></tr>
+<tr class="separator:abcf79f23a5b485e510ffb95186684c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01e977b3dc331211c30fc3cc1ce0374b"><td class="memItemLeft" align="right" valign="top"><a id="a01e977b3dc331211c30fc3cc1ce0374b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>cardiac_output_calibrated</b></td></tr>
+<tr class="separator:a01e977b3dc331211c30fc3cc1ce0374b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Device status data point within the <a class="el" href="structlibct__stream__data__t.html" title="This structure is used to hand-off data received from the remote device to the application. ">libct_stream_data_t</a> packet. </p>
@@ -272,35 +286,35 @@ short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 
 </div>
 </div>
-<a id="af31cab54c6d4b0ec7ed3d80513507b0f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af31cab54c6d4b0ec7ed3d80513507b0f">&#9670;&nbsp;</a></span>ble_temperature_sensor_paired</h2>
+<a id="ad807c28638eff7fc13c57297930a1aed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad807c28638eff7fc13c57297930a1aed">&#9670;&nbsp;</a></span>body_temp_connected</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool libct_device_status_t::ble_temperature_sensor_paired</td>
+          <td class="memname">bool libct_device_status_t::body_temp_connected</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>The BLE Temperature Sensor is paired and actively communicating with CareTaker. </p>
+<p>External temperature senosr connnected. </p>
 
 </div>
 </div>
-<a id="a52d8a5d2da164f9f13839c503da0d8e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52d8a5d2da164f9f13839c503da0d8e8">&#9670;&nbsp;</a></span>ble_stream_control</h2>
+<a id="aa2e31edb0c53ea3d9ea57a40b35d2488"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2e31edb0c53ea3d9ea57a40b35d2488">&#9670;&nbsp;</a></span>reserved4</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool libct_device_status_t::ble_stream_control</td>
+          <td class="memname">bool libct_device_status_t::reserved4</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>TThe current stream control status bit of the BLE stream. </p>
+<p>Was stream control status bit of the BLE stream. </p>
 
 </div>
 </div>
@@ -488,7 +502,7 @@ short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:18 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
