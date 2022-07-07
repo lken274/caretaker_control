@@ -93,7 +93,7 @@ int main(int argc, char **argv)
         if(io->running == false) {
             set_state(QUIT);
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(20)); //prevent cpu spinning
+        //std::this_thread::sleep_for(std::chrono::milliseconds(20)); //prevent cpu spinning
     }
 
     return 0;
