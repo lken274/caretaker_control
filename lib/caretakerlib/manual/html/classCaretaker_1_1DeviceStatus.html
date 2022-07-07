@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: Caretaker::DeviceStatus Class Reference</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: Caretaker::DeviceStatus Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -176,6 +176,15 @@ Int16&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <tr class="memitem:a6d75d706f686fce3d7fab47e626e5346"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceStatus.html#a6d75d706f686fce3d7fab47e626e5346">invalidDataEntry</a></td></tr>
 <tr class="memdesc:a6d75d706f686fce3d7fab47e626e5346"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalid input received in the last command.  <a href="#a6d75d706f686fce3d7fab47e626e5346">More...</a><br /></td></tr>
 <tr class="separator:a6d75d706f686fce3d7fab47e626e5346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a729b08aeb28c70f993727263ce65bd0f"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceStatus.html#a729b08aeb28c70f993727263ce65bd0f">recalRecommended</a></td></tr>
+<tr class="memdesc:a729b08aeb28c70f993727263ce65bd0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled when the signal is not sufficient to have high confidence in the readings.  <a href="#a729b08aeb28c70f993727263ce65bd0f">More...</a><br /></td></tr>
+<tr class="separator:a729b08aeb28c70f993727263ce65bd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58f9621ad806b4ac95f83b2b7e2d4182"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceStatus.html#a58f9621ad806b4ac95f83b2b7e2d4182">hemodynamicsEnabled</a></td></tr>
+<tr class="memdesc:a58f9621ad806b4ac95f83b2b7e2d4182"><td class="mdescLeft">&#160;</td><td class="mdescRight">enables display of CO/SV/LVET in gui.  <a href="#a58f9621ad806b4ac95f83b2b7e2d4182">More...</a><br /></td></tr>
+<tr class="separator:a58f9621ad806b4ac95f83b2b7e2d4182"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3890ee65ec175a29fe6000593cfe3a91"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCaretaker_1_1DeviceStatus.html#a3890ee65ec175a29fe6000593cfe3a91">cardiacOutputCalibrated</a></td></tr>
+<tr class="memdesc:a3890ee65ec175a29fe6000593cfe3a91"><td class="mdescLeft">&#160;</td><td class="mdescRight">indicates whether user has calibrated cardiac output for the current session.  <a href="#a3890ee65ec175a29fe6000593cfe3a91">More...</a><br /></td></tr>
+<tr class="separator:a3890ee65ec175a29fe6000593cfe3a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Managed class defining device status. </p>
@@ -214,13 +223,61 @@ Int16&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 </div>
 </div>
+<a id="a729b08aeb28c70f993727263ce65bd0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a729b08aeb28c70f993727263ce65bd0f">&#9670;&nbsp;</a></span>recalRecommended</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Boolean Caretaker::DeviceStatus::recalRecommended</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enabled when the signal is not sufficient to have high confidence in the readings. </p>
+
+</div>
+</div>
+<a id="a58f9621ad806b4ac95f83b2b7e2d4182"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58f9621ad806b4ac95f83b2b7e2d4182">&#9670;&nbsp;</a></span>hemodynamicsEnabled</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Boolean Caretaker::DeviceStatus::hemodynamicsEnabled</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>enables display of CO/SV/LVET in gui. </p>
+
+</div>
+</div>
+<a id="a3890ee65ec175a29fe6000593cfe3a91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3890ee65ec175a29fe6000593cfe3a91">&#9670;&nbsp;</a></span>cardiacOutputCalibrated</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Boolean Caretaker::DeviceStatus::cardiacOutputCalibrated</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>indicates whether user has calibrated cardiac output for the current session. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="CaretakerDevice_8h_source.html">CaretakerDevice.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:19 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: libct_temperature_t Class Reference</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: libct_temperature_t Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -54,25 +54,25 @@ Data Fields</h2></td></tr>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__temperature__t.html#aeb6bf80be176794c4ea669fa60a9c39b">valid</a></td></tr>
 <tr class="memdesc:aeb6bf80be176794c4ea669fa60a9c39b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The other fields are valid when this field is non-zero (true) and invalid otherwise. <br /></td></tr>
 <tr class="separator:aeb6bf80be176794c4ea669fa60a9c39b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0f4434a769bffe914ab12a1c0c28059"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__temperature__t.html#ae0f4434a769bffe914ab12a1c0c28059">value</a></td></tr>
-<tr class="memdesc:ae0f4434a769bffe914ab12a1c0c28059"><td class="mdescLeft">&#160;</td><td class="mdescRight">The temperature value.  <a href="#ae0f4434a769bffe914ab12a1c0c28059">More...</a><br /></td></tr>
-<tr class="separator:ae0f4434a769bffe914ab12a1c0c28059"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9590d27af74febed8d803581cc0c642"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__temperature__t.html#ae9590d27af74febed8d803581cc0c642">timestamp</a></td></tr>
-<tr class="memdesc:ae9590d27af74febed8d803581cc0c642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time stamp from the device associated with the data.  <a href="#ae9590d27af74febed8d803581cc0c642">More...</a><br /></td></tr>
-<tr class="separator:ae9590d27af74febed8d803581cc0c642"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7933b0ec32204defbbe3d67e4a6ad4b3"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__temperature__t.html#a7933b0ec32204defbbe3d67e4a6ad4b3">value</a></td></tr>
+<tr class="memdesc:a7933b0ec32204defbbe3d67e4a6ad4b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The temperature value.  <a href="#a7933b0ec32204defbbe3d67e4a6ad4b3">More...</a><br /></td></tr>
+<tr class="separator:a7933b0ec32204defbbe3d67e4a6ad4b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeec2041cfa6a40a9f0681f1d6251550f"><td class="memItemLeft" align="right" valign="top">unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__temperature__t.html#aeec2041cfa6a40a9f0681f1d6251550f">timestamp</a></td></tr>
+<tr class="memdesc:aeec2041cfa6a40a9f0681f1d6251550f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time stamp from the device associated with the data.  <a href="#aeec2041cfa6a40a9f0681f1d6251550f">More...</a><br /></td></tr>
+<tr class="separator:aeec2041cfa6a40a9f0681f1d6251550f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Temperature data point within the <a class="el" href="structlibct__stream__data__t.html" title="This structure is used to hand-off data received from the remote device to the application. ">libct_stream_data_t</a> packet. </p>
 <dl class="section note"><dt>Note</dt><dd>Reserved for future use. </dd></dl>
 </div><h2 class="groupheader">Field Documentation</h2>
-<a id="ae0f4434a769bffe914ab12a1c0c28059"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0f4434a769bffe914ab12a1c0c28059">&#9670;&nbsp;</a></span>value</h2>
+<a id="a7933b0ec32204defbbe3d67e4a6ad4b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7933b0ec32204defbbe3d67e4a6ad4b3">&#9670;&nbsp;</a></span>value</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int libct_temperature_t::value</td>
+          <td class="memname">float libct_temperature_t::value</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -81,14 +81,14 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stru
 
 </div>
 </div>
-<a id="ae9590d27af74febed8d803581cc0c642"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9590d27af74febed8d803581cc0c642">&#9670;&nbsp;</a></span>timestamp</h2>
+<a id="aeec2041cfa6a40a9f0681f1d6251550f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeec2041cfa6a40a9f0681f1d6251550f">&#9670;&nbsp;</a></span>timestamp</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int libct_temperature_t::timestamp</td>
+          <td class="memname">unsigned long long libct_temperature_t::timestamp</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -103,7 +103,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stru
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:19 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

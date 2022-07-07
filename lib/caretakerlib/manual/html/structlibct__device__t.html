@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: libct_device_t Class Reference</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: libct_device_t Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -74,6 +74,12 @@ Data Fields</h2></td></tr>
 <tr class="memitem:ab32f4787ce038bf192f1f582d4073926"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classlibct__context__t.html">libct_context_t</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__t.html#ab32f4787ce038bf192f1f582d4073926">get_context</a> )(struct <a class="el" href="structlibct__device__t.html">libct_device_t</a> *thiz)</td></tr>
 <tr class="memdesc:ab32f4787ce038bf192f1f582d4073926"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the library context bound to this device.  <a href="#ab32f4787ce038bf192f1f582d4073926">More...</a><br /></td></tr>
 <tr class="separator:ab32f4787ce038bf192f1f582d4073926"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a282e0d3186892e89800339b9851ed36b"><td class="memItemLeft" align="right" valign="top">bool(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__t.html#a282e0d3186892e89800339b9851ed36b">is_caretaker4</a> )(struct <a class="el" href="structlibct__device__t.html">libct_device_t</a> *thiz)</td></tr>
+<tr class="memdesc:a282e0d3186892e89800339b9851ed36b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if connected to a Caretaker4 device, and false otherwise.  <a href="#a282e0d3186892e89800339b9851ed36b">More...</a><br /></td></tr>
+<tr class="separator:a282e0d3186892e89800339b9851ed36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa76a8a47443bf4a7ceed5cf17108c9d2"><td class="memItemLeft" align="right" valign="top">bool(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__device__t.html#aa76a8a47443bf4a7ceed5cf17108c9d2">is_caretaker5</a> )(struct <a class="el" href="structlibct__device__t.html">libct_device_t</a> *thiz)</td></tr>
+<tr class="memdesc:aa76a8a47443bf4a7ceed5cf17108c9d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if connected to a Caretaker5 device, and false otherwise.  <a href="#aa76a8a47443bf4a7ceed5cf17108c9d2">More...</a><br /></td></tr>
+<tr class="separator:aa76a8a47443bf4a7ceed5cf17108c9d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Handle used to identify a connected device the application is monitoring. </p>
@@ -93,8 +99,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return a <a class="el" href="classlibct__device__state__t.html">device state</a> enumeration representing the current state of the library context that is associated with this device. </p>
-<p>You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.</p>
-<div class="fragment"><div class="line"><span class="comment">// These two calls are similar, but the second is simpler.</span></div><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keywordtype">int</span> state = device-&gt;<a class="code" href="structlibct__device__t.html#a2d0c2fbf0d60540bd663049a60b10782">get_state</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keywordtype">int</span> state = <a class="code" href="group__unmanaged__device.html#gaed3bd6b0f4bd33099776283f3ce19acf">libct_device_get_state</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keywordtype">int</span> state = device-&gt;<a class="code" href="structlibct__device__t.html#a2d0c2fbf0d60540bd663049a60b10782">get_state</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keywordtype">int</span> state = <a class="code" href="group__unmanaged__device.html#gaed3bd6b0f4bd33099776283f3ce19acf">libct_device_get_state</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thiz</td><td>The device instance.</td></tr>
   </table>
@@ -135,8 +141,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the device class that was set in the initialization data passed to <a class="el" href="group__unmanaged__primary__api.html#ga8577c848cdc2e70978f3ada3314727d7" title="Initializes device context. ">libct_init()</a>. </p>
-<p>You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.</p>
-<div class="fragment"><div class="line"><span class="comment">// These two calls are similar, but the second is simpler.</span></div><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keywordtype">int</span> <span class="keyword">class </span>= device-&gt;<a class="code" href="structlibct__device__t.html#a3510961db8572ad4a09e10dae7eb1a96">get_class</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keywordtype">int</span> <span class="keyword">class </span>= libct_device_get_class(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keywordtype">int</span> <span class="keyword">class </span>= device-&gt;<a class="code" href="structlibct__device__t.html#a3510961db8572ad4a09e10dae7eb1a96">get_class</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keywordtype">int</span> <span class="keyword">class </span>= libct_device_get_class(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thiz</td><td>The device instance.</td></tr>
   </table>
@@ -159,8 +165,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the device manufacturer friendly name. </p>
-<p>You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.</p>
-<div class="fragment"><div class="line"><span class="comment">// These two calls are similar, but the second is simpler.</span></div><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* name = device-&gt;<a class="code" href="structlibct__device__t.html#a4fd546f20ed5e591c1c830a0778a4f78">get_name</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* name = <a class="code" href="group__unmanaged__device.html#ga79a3a4f65a09491a153e4906ab3e41f0">libct_device_get_name</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* name = device-&gt;<a class="code" href="structlibct__device__t.html#a4fd546f20ed5e591c1c830a0778a4f78">get_name</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* name = <a class="code" href="group__unmanaged__device.html#ga79a3a4f65a09491a153e4906ab3e41f0">libct_device_get_name</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thiz</td><td>The device instance. </td></tr>
   </table>
@@ -183,8 +189,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the device address. </p>
-<p>You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.</p>
-<div class="fragment"><div class="line"><span class="comment">// These two calls are similar, but the second is simpler.</span></div><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* address = device-&gt;<a class="code" href="structlibct__device__t.html#af33826e9b1baf590dedc7998e0d2a532">get_address</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* address = <a class="code" href="group__unmanaged__device.html#ga743bd65a519aae31086e9aba6a7783bf">libct_device_get_address</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* address = device-&gt;<a class="code" href="structlibct__device__t.html#af33826e9b1baf590dedc7998e0d2a532">get_address</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* address = <a class="code" href="group__unmanaged__device.html#ga743bd65a519aae31086e9aba6a7783bf">libct_device_get_address</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thiz</td><td>The device instance. </td></tr>
   </table>
@@ -207,8 +213,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the device serial number. </p>
-<p>You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.</p>
-<div class="fragment"><div class="line"><span class="comment">// These two calls are similar, but the second is simpler.</span></div><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* sn = device-&gt;<a class="code" href="structlibct__device__t.html#ab311618c7dc48f21cc9e5647deaaca16">get_serial_number</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* sn = <a class="code" href="group__unmanaged__device.html#ga84864853449490364b1dfc5e4fe9678a">libct_device_get_serial_number</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* sn = device-&gt;<a class="code" href="structlibct__device__t.html#ab311618c7dc48f21cc9e5647deaaca16">get_serial_number</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* sn = <a class="code" href="group__unmanaged__device.html#ga84864853449490364b1dfc5e4fe9678a">libct_device_get_serial_number</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thiz</td><td>The device instance. </td></tr>
   </table>
@@ -231,8 +237,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the device hardware version. </p>
-<p>You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.</p>
-<div class="fragment"><div class="line"><span class="comment">// These two calls are similar, but the second is simpler.</span></div><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <a class="code" href="structlibct__version__t.html">libct_version_t</a>* version = device-&gt;<a class="code" href="structlibct__device__t.html#a6b9d921df2b93f6891f43558cadb9dbb">get_hw_version</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <a class="code" href="structlibct__version__t.html">libct_version_t</a>* version = <a class="code" href="group__unmanaged__device.html#ga754925b3dbd278b38d99f557104cd593">libct_device_get_hw_version</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <a class="code" href="structlibct__version__t.html">libct_version_t</a>* version = device-&gt;<a class="code" href="structlibct__device__t.html#a6b9d921df2b93f6891f43558cadb9dbb">get_hw_version</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <a class="code" href="structlibct__version__t.html">libct_version_t</a>* version = <a class="code" href="group__unmanaged__device.html#ga754925b3dbd278b38d99f557104cd593">libct_device_get_hw_version</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thiz</td><td>The device instance. </td></tr>
   </table>
@@ -255,8 +261,8 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the device firmware version. </p>
-<p>You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.</p>
-<div class="fragment"><div class="line"><span class="comment">// These two calls are similar, but the second is simpler.</span></div><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <a class="code" href="structlibct__version__t.html">libct_version_t</a>* version = device-&gt;<a class="code" href="structlibct__device__t.html#a5c762636293801fb7227ceda5d3b561d">get_fw_version</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <a class="code" href="structlibct__version__t.html">libct_version_t</a>* version = <a class="code" href="group__unmanaged__device.html#gae21dc780276b46b3e19a05a73625a288">libct_device_get_fw_version</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keyword">const</span> <a class="code" href="structlibct__version__t.html">libct_version_t</a>* version = device-&gt;<a class="code" href="structlibct__device__t.html#a5c762636293801fb7227ceda5d3b561d">get_fw_version</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keyword">const</span> <a class="code" href="structlibct__version__t.html">libct_version_t</a>* version = <a class="code" href="group__unmanaged__device.html#gae21dc780276b46b3e19a05a73625a288">libct_device_get_fw_version</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thiz</td><td>The device instance. </td></tr>
   </table>
@@ -279,8 +285,54 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the library context bound to this device. </p>
-<p>You would invoke the function as follows, but note a convenience macro with simpler interface than the function is available.</p>
-<div class="fragment"><div class="line"><span class="comment">// These two calls are similar, but the second is simpler.</span></div><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><a class="code" href="classlibct__context__t.html">libct_context_t</a>* context = device-&gt;<a class="code" href="structlibct__device__t.html#ab32f4787ce038bf192f1f582d4073926">get_context</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><a class="code" href="classlibct__context__t.html">libct_context_t</a>* context  = <a class="code" href="group__unmanaged__device.html#gad9a309d8d79de0ca6222697051532d25">libct_device_get_context</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><a class="code" href="classlibct__context__t.html">libct_context_t</a>* context = device-&gt;<a class="code" href="structlibct__device__t.html#ab32f4787ce038bf192f1f582d4073926">get_context</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><a class="code" href="classlibct__context__t.html">libct_context_t</a>* context  = <a class="code" href="group__unmanaged__device.html#gad9a309d8d79de0ca6222697051532d25">libct_device_get_context</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">thiz</td><td>The device instance. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a282e0d3186892e89800339b9851ed36b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a282e0d3186892e89800339b9851ed36b">&#9670;&nbsp;</a></span>is_caretaker4</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool( * libct_device_t::is_caretaker4) (struct <a class="el" href="structlibct__device__t.html">libct_device_t</a> *thiz)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return true if connected to a Caretaker4 device, and false otherwise. </p>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keywordtype">bool</span> <a class="code" href="structlibct__device__t.html#a282e0d3186892e89800339b9851ed36b">is_caretaker4</a> = device-&gt;<a class="code" href="structlibct__device__t.html#a282e0d3186892e89800339b9851ed36b">is_caretaker4</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keywordtype">bool</span> <a class="code" href="structlibct__device__t.html#a282e0d3186892e89800339b9851ed36b">is_caretaker4</a>  = <a class="code" href="group__unmanaged__device.html#gadaaeb3fb1fedb80c7a87cc227103f115">libct_is_caretaker4</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">thiz</td><td>The device instance. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa76a8a47443bf4a7ceed5cf17108c9d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa76a8a47443bf4a7ceed5cf17108c9d2">&#9670;&nbsp;</a></span>is_caretaker5</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool( * libct_device_t::is_caretaker5) (struct <a class="el" href="structlibct__device__t.html">libct_device_t</a> *thiz)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return true if connected to a Caretaker5 device, and false otherwise. </p>
+<p>You would invoke the function as follows. The two calls are similar but the second is simpler.</p>
+<div class="fragment"><div class="line"><span class="comment">// (1) Use the device function.</span></div><div class="line"><span class="keywordtype">bool</span> <a class="code" href="structlibct__device__t.html#aa76a8a47443bf4a7ceed5cf17108c9d2">is_caretaker5</a> = device-&gt;<a class="code" href="structlibct__device__t.html#aa76a8a47443bf4a7ceed5cf17108c9d2">is_caretaker5</a>(device);</div><div class="line"></div><div class="line"><span class="comment">// (2) Or use macro with simpler interface.</span></div><div class="line"><span class="keywordtype">bool</span> <a class="code" href="structlibct__device__t.html#aa76a8a47443bf4a7ceed5cf17108c9d2">is_caretaker5</a>  = <a class="code" href="group__unmanaged__device.html#ga43e35dd14e555c3f2380baaf84a74dd1">libct_is_caretaker5</a>(device);</div></div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thiz</td><td>The device instance. </td></tr>
   </table>
@@ -295,7 +347,7 @@ Data Fields</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:19 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

@@ -1,5 +1,4 @@
 #define _WIN32_WINNT 0x0601
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include "basic_serial.hpp"
 #include "iinterface.hpp"
@@ -7,7 +6,7 @@
 #include "gui.hpp"
 #include <cxxopts.hpp>
 #include "program_state.hpp"
-#define BLE_ENABLED 0
+#define USB_ENABLED 1
 
 int main(int argc, char **argv)
 {
@@ -39,12 +38,12 @@ int main(int argc, char **argv)
                         io->log("Failed to connect to COM port " + io->get_com_port());
                         break;
                     }
-                
+                    io->log("Connected to EEG COM port on " + io->get_com_port());
                     //start Caretaker link
-                    if(BLE_ENABLED) {
+                    if(USB_ENABLED) {
                         bool discovery_started = cth.connect_to_single_device();
                         if(!discovery_started) {
-                            io->log("Failed to begin Caretaker discovery (is your bluetooth enabled?)");
+                            io->log("Failed to begin Caretaker discovery (check usb/bluetooth)");
                             tb.endComConnection();
                             break;
                         }
@@ -54,19 +53,19 @@ int main(int argc, char **argv)
                 break;
             case CONNECTING_CARETAKER:
                 //await connection
-                if (cth.isConnected || BLE_ENABLED == 0){
+                if (cth.isConnected || USB_ENABLED == 0){
                     next_state = CONNECTED;
                 }
                 break;
             case CONNECTED:
                 if(io->get_start_pressed()) {
-                    if(BLE_ENABLED) cth.start_device_readings();
+                    if(USB_ENABLED) cth.start_device_readings();
                     tb.sendTrigger(io->get_trigger_value());
                     io->log("Send trigger " + std::to_string((int)io->get_trigger_value()));
                     next_state = RUNNING;
                 }
                 if(io->get_stop_pressed()) {
-                    if(BLE_ENABLED) cth.stop_device_readings();
+                    if(USB_ENABLED) cth.stop_device_readings();
                     tb.endComConnection();
                     next_state = IDLE;
                 }
@@ -83,7 +82,7 @@ int main(int argc, char **argv)
         //common logic
         //
         if(io->get_stop_pressed()) {
-            if(BLE_ENABLED) cth.stop_device_readings();
+            if(USB_ENABLED) cth.stop_device_readings();
             tb.endComConnection();
             next_state = IDLE;
         }

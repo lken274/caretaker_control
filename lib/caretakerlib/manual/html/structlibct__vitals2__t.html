@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: libct_vitals2_t Class Reference</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: libct_vitals2_t Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -54,12 +54,14 @@ Data Fields</h2></td></tr>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#aca5c56474f5af19e8b1aeaf7a6c45af8">valid</a></td></tr>
 <tr class="memdesc:aca5c56474f5af19e8b1aeaf7a6c45af8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The other fields are valid when this field is non-zero (true) and invalid otherwise. <br /></td></tr>
 <tr class="separator:aca5c56474f5af19e8b1aeaf7a6c45af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb51c8f01bbaacf340c20bbcbfcd006c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#aeb51c8f01bbaacf340c20bbcbfcd006c">nonrealtime</a></td></tr>
+<tr class="memdesc:aeb51c8f01bbaacf340c20bbcbfcd006c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Local flag indicating measurements realtime status.  <a href="#aeb51c8f01bbaacf340c20bbcbfcd006c">More...</a><br /></td></tr>
+<tr class="separator:aeb51c8f01bbaacf340c20bbcbfcd006c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ac69d15da3fc42d83cbba6c9f381d24"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a7ac69d15da3fc42d83cbba6c9f381d24">blood_volume</a></td></tr>
 <tr class="memdesc:a7ac69d15da3fc42d83cbba6c9f381d24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blood volume in mS.  <a href="#a7ac69d15da3fc42d83cbba6c9f381d24">More...</a><br /></td></tr>
 <tr class="separator:a7ac69d15da3fc42d83cbba6c9f381d24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0704121ec6e5b44b3f5398f84cda8544"><td class="memItemLeft" align="right" valign="top"><a id="a0704121ec6e5b44b3f5398f84cda8544"></a>
-unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a0704121ec6e5b44b3f5398f84cda8544">cardiac_output</a></td></tr>
-<tr class="memdesc:a0704121ec6e5b44b3f5398f84cda8544"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cardiac output in L/min. <br /></td></tr>
+<tr class="memitem:a0704121ec6e5b44b3f5398f84cda8544"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a0704121ec6e5b44b3f5398f84cda8544">cardiac_output</a></td></tr>
+<tr class="memdesc:a0704121ec6e5b44b3f5398f84cda8544"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cardiac output (CO) in liters per minute (l/min).  <a href="#a0704121ec6e5b44b3f5398f84cda8544">More...</a><br /></td></tr>
 <tr class="separator:a0704121ec6e5b44b3f5398f84cda8544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96295b716aa5edd066e344c415c0c542"><td class="memItemLeft" align="right" valign="top"><a id="a96295b716aa5edd066e344c415c0c542"></a>
 unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a96295b716aa5edd066e344c415c0c542">ibi</a></td></tr>
@@ -73,26 +75,51 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a521e63e9e1657908e673fdf302d3989c">p2p1</a></td></tr>
 <tr class="memdesc:a521e63e9e1657908e673fdf302d3989c"><td class="mdescLeft">&#160;</td><td class="mdescRight">P ratio. <br /></td></tr>
 <tr class="separator:a521e63e9e1657908e673fdf302d3989c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa39b945a8e8b0e6ba7e96c5fe00596eb"><td class="memItemLeft" align="right" valign="top"><a id="aa39b945a8e8b0e6ba7e96c5fe00596eb"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#aa39b945a8e8b0e6ba7e96c5fe00596eb">hrComp</a></td></tr>
-<tr class="memdesc:aa39b945a8e8b0e6ba7e96c5fe00596eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">hrComp <br /></td></tr>
-<tr class="separator:aa39b945a8e8b0e6ba7e96c5fe00596eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a088c2d30a7bc362c955ec93b1c0c70f4"><td class="memItemLeft" align="right" valign="top"><a id="a088c2d30a7bc362c955ec93b1c0c70f4"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a088c2d30a7bc362c955ec93b1c0c70f4">reservedFloat0</a></td></tr>
+<tr class="memdesc:a088c2d30a7bc362c955ec93b1c0c70f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserved for future use. <br /></td></tr>
+<tr class="separator:a088c2d30a7bc362c955ec93b1c0c70f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfa97d9ad560210306300faed379de6c"><td class="memItemLeft" align="right" valign="top"><a id="acfa97d9ad560210306300faed379de6c"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#acfa97d9ad560210306300faed379de6c">pr</a></td></tr>
 <tr class="memdesc:acfa97d9ad560210306300faed379de6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">pr <br /></td></tr>
 <tr class="separator:acfa97d9ad560210306300faed379de6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba4d12246e664f11393db9e173464558"><td class="memItemLeft" align="right" valign="top"><a id="aba4d12246e664f11393db9e173464558"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#aba4d12246e664f11393db9e173464558">reserved</a> [7]</td></tr>
-<tr class="memdesc:aba4d12246e664f11393db9e173464558"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserved for future use. <br /></td></tr>
-<tr class="separator:aba4d12246e664f11393db9e173464558"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06152e610f1c7f84852231cc82431148"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a06152e610f1c7f84852231cc82431148">timestamp</a></td></tr>
-<tr class="memdesc:a06152e610f1c7f84852231cc82431148"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time stamp from the device associated with the data.  <a href="#a06152e610f1c7f84852231cc82431148">More...</a><br /></td></tr>
-<tr class="separator:a06152e610f1c7f84852231cc82431148"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5a70aa4ca02785da8cb45e779827922"><td class="memItemLeft" align="right" valign="top"><a id="af5a70aa4ca02785da8cb45e779827922"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#af5a70aa4ca02785da8cb45e779827922">reservedFloat</a></td></tr>
+<tr class="memdesc:af5a70aa4ca02785da8cb45e779827922"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserved for future use. <br /></td></tr>
+<tr class="separator:af5a70aa4ca02785da8cb45e779827922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf791eeb652c9331177ae5d3962fba91"><td class="memItemLeft" align="right" valign="top"><a id="acf791eeb652c9331177ae5d3962fba91"></a>
+unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#acf791eeb652c9331177ae5d3962fba91">strokeVolume</a></td></tr>
+<tr class="memdesc:acf791eeb652c9331177ae5d3962fba91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stroke Volume in ml. <br /></td></tr>
+<tr class="separator:acf791eeb652c9331177ae5d3962fba91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6506db0d80a7ffbc705a95b7453a5140"><td class="memItemLeft" align="right" valign="top"><a id="a6506db0d80a7ffbc705a95b7453a5140"></a>
+char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a6506db0d80a7ffbc705a95b7453a5140">reservedByte</a> [2]</td></tr>
+<tr class="memdesc:a6506db0d80a7ffbc705a95b7453a5140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserved for future use. <br /></td></tr>
+<tr class="separator:a6506db0d80a7ffbc705a95b7453a5140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2225da6c30e72197a659e271656086c6"><td class="memItemLeft" align="right" valign="top">unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlibct__vitals2__t.html#a2225da6c30e72197a659e271656086c6">timestamp</a></td></tr>
+<tr class="memdesc:a2225da6c30e72197a659e271656086c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time stamp from the device associated with the data.  <a href="#a2225da6c30e72197a659e271656086c6">More...</a><br /></td></tr>
+<tr class="separator:a2225da6c30e72197a659e271656086c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Secondary Vitals data point within the <a class="el" href="structlibct__stream__data__t.html" title="This structure is used to hand-off data received from the remote device to the application. ">libct_stream_data_t</a> packet. </p>
 <dl class="section note"><dt>Note</dt><dd>The secondary vitals are for internal use or research only. </dd></dl>
 </div><h2 class="groupheader">Field Documentation</h2>
+<a id="aeb51c8f01bbaacf340c20bbcbfcd006c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb51c8f01bbaacf340c20bbcbfcd006c">&#9670;&nbsp;</a></span>nonrealtime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool libct_vitals2_t::nonrealtime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Local flag indicating measurements realtime status. </p>
+<p>True if the device is forwarding stored (nonrealtime) measurements, and false if the measurements are realtime. </p>
+
+</div>
+</div>
 <a id="a7ac69d15da3fc42d83cbba6c9f381d24"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7ac69d15da3fc42d83cbba6c9f381d24">&#9670;&nbsp;</a></span>blood_volume</h2>
 
@@ -109,14 +136,31 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struc
 
 </div>
 </div>
-<a id="a06152e610f1c7f84852231cc82431148"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06152e610f1c7f84852231cc82431148">&#9670;&nbsp;</a></span>timestamp</h2>
+<a id="a0704121ec6e5b44b3f5398f84cda8544"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0704121ec6e5b44b3f5398f84cda8544">&#9670;&nbsp;</a></span>cardiac_output</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int libct_vitals2_t::timestamp</td>
+          <td class="memname">unsigned char libct_vitals2_t::cardiac_output</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Cardiac output (CO) in liters per minute (l/min). </p>
+<p>Divide by 10 to calculate the CO measurement. CO = cardiac_output / 10.0 </p>
+
+</div>
+</div>
+<a id="a2225da6c30e72197a659e271656086c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2225da6c30e72197a659e271656086c6">&#9670;&nbsp;</a></span>timestamp</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned long long libct_vitals2_t::timestamp</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -131,7 +175,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struc
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:19 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

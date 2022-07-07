@@ -52,7 +52,7 @@ class TriggerBox {
             try{
                 ser.reset(new SimpleSerialOutput(port, 19200));
                 return true;
-            } catch (const std::exception& e) {
+            } catch (const std::exception&) {
                 return false;
             }
         }

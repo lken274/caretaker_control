@@ -17,107 +17,50 @@
         VerticalAlignment="Stretch"
         Background="Black">
 
-        <!-- Pulse Rate waveform and Heart Rate numberic display -->
+        <!-- Connect Type -->
         <Grid
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Margin="10,0,0,0">
-
-            <Label
-                Content="Pulse Rate"
+            Name="ConnectionGrid"
+            VerticalAlignment="Top" 
+            HorizontalAlignment="Stretch"
+            Margin="10,20,0,0"
+            Height="40">
+            <Label 
+                Content="Connection mode"
+                VerticalAlignment="Center" 
                 HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                VerticalContentAlignment="Bottom"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Left" 
                 Foreground="White"
                 FontSize="18"
                 Height="30"/>
-
-            <Canvas
-                Name="mPulseRateCanvas"
+            <ComboBox
+                Name="ConnectionComboBox"
+                HorizontalAlignment="Left" 
                 VerticalAlignment="Top"
-                HorizontalAlignment="Left"
-                Height="100" 
-                Margin="0,30,0,0" 
-                Width="500"
-                Background="Black"/>
-
-            <Grid
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Margin="510,0,0,0">
-
-                <Label
-                    Content="HR"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    VerticalContentAlignment="Bottom"
-                    Foreground="White"
-                    FontSize="24"
-                    Height="40"
-                    Width="40"/>
-
-                <Label
-                    Content="(bpm)"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    VerticalContentAlignment="Bottom"
-                    Foreground="White"
-                    FontSize="12"
-                    Margin="35,12,0,0"/>
-
-                <Label
-                    Name="HeartRate"
-                    Content="??"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    VerticalContentAlignment="Bottom"
-                    Foreground="Green"
-                    FontSize="70"
-                    Margin="0,10,0,0"/>
-            </Grid>
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                SelectionChanged="ConnectionMode_SelectionChanged"
+                SelectedIndex="0"
+                Margin="160,10,0,0"
+                Width="80"
+                Height="30">
+                <ComboBoxItem  Name="ConnectBLE">BLE</ComboBoxItem>
+                <ComboBoxItem Name="ConnectWiFi">WiFi</ComboBoxItem>
+                <ComboBoxItem Name="ConnectUSB">USB</ComboBoxItem>
+            </ComboBox>
         </Grid>
 
-        <!--  Respiration -->
-        <Grid
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Margin="650,10,0,0">
-
-            <Label
-                    Content="RR"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    VerticalContentAlignment="Bottom"
-                    Foreground="White"
-                    FontSize="24"
-                    Height="40"
-                    Width="40"/>
-
-            <Label
-                    Content="(BPM)"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    VerticalContentAlignment="Bottom"
-                    Foreground="White"
-                    FontSize="12"
-                    Margin="35,12,0,0"/>
-
-            <Label
-                    Name="Respiration"
-                    Content="??"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    VerticalContentAlignment="Bottom"
-                    Foreground="Yellow"
-                    FontSize="70"
-                    Margin="0,10,0,0"/>
-        </Grid>
-        
-        <!-- Pulse Pressure waveform and Blood Pressure numberic display -->
-        <Grid
+        <!-- Pulse Pressure waveform -->
+        <Border
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Margin="10,140,0,0">
+            BorderThickness="1"
+            CornerRadius="1"
+            BorderBrush="DarkGray"
+            Margin="10,90,0,0" 
+            Width="800" 
+            Height="150">
+            <Grid>
 
             <Label
                 Content="Pulse Pressure"
@@ -126,40 +69,38 @@
                 VerticalContentAlignment="Bottom"
                 Foreground="White"
                 FontSize="18"
-               Height="30"/>
+                Height="30"/>
 
             <Canvas
                 Name="mPulsePressureCanvas"
-                VerticalAlignment="Top"
+                VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Height="100" 
                 Margin="0,30,0,0" 
-                Width="500"
+                Width="780"
                 Background="Black"/>
+        </Grid>
+        </Border>
+    
+        <!-- Numerics display -->
+        <Grid
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="10,240,0,0">
 
+            <!-- Blood Pressure-->
             <Grid
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Margin="510,0,0,0">
+                Margin="10,30,0,0">
 
                 <Label
-                    Content="BP"
-                    HorizontalAlignment="Left"
+                    Content="BP (mmHg)"
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     VerticalContentAlignment="Bottom"
                     Foreground="White"
-                    FontSize="24"
-                    Height="40"
-                    Width="40"/>
-
-                <Label
-                    Content="(mmHg)"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    VerticalContentAlignment="Bottom"
-                    Foreground="White"
-                    FontSize="12"
-                    Margin="35,12,0,0"/>
+                    FontSize="24"/>
 
                 <Label
                     Name="Systolic"
@@ -191,21 +132,86 @@
                     Foreground="Red"
                     FontSize="60"
                     Margin="130 ,15,0,0"/>
+            </Grid>
+
+            <!-- MAP -->
+            <Grid
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Margin="280,30,0,0">
+
+                <Label
+                    Content="MAP (mmHg)"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    VerticalContentAlignment="Bottom"
+                    Foreground="White"
+                    FontSize="24"/>
 
                 <Label
                     Name="MAP"
-                    Content="(??)"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="TOP"
+                    Content="??"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
                     VerticalContentAlignment="Bottom"
                     Foreground="Red"
-                    FontSize="40"
-                    Margin="225 ,35,0,0"/>
+                    FontSize="60"
+                    Margin="0,15,0,0"/>
+            </Grid>
+            
+            <!-- Heart Rate -->
+            <Grid
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Margin="480,30,0,0">
+
+                <Label
+                    Content="HR (bpm)"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    VerticalContentAlignment="Bottom"
+                    Foreground="White"
+                    FontSize="24"/>
+
+                <Label
+                    Name="HeartRate"
+                    Content="??"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    VerticalContentAlignment="Bottom"
+                    Foreground="Green"
+                    FontSize="60"
+                    Margin="0,15,0,0"/>
+            </Grid>
+
+            <!--  Respiration -->
+            <Grid
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Margin="680,30,0,0">
+
+                <Label
+                    Content="RR (BPM)"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    VerticalContentAlignment="Bottom"
+                    Foreground="White"
+                    FontSize="24"/>
+
+                <Label
+                    Name="Respiration"
+                    Content="??"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    VerticalContentAlignment="Bottom"
+                    Foreground="Yellow"
+                    FontSize="60"
+                    Margin="0,15,0,0"/>
             </Grid>
         </Grid>
-
+        
         <!-- Start, Recalibrate, Stop buttons -->
-            <Grid
+        <Grid
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             Margin="0,0,0,80" 
@@ -622,7 +628,7 @@
                 </Grid>
             </Grid>
         </Border>
-        
+
         <!-- Status bar -->
         <Grid
             VerticalAlignment="Bottom" 

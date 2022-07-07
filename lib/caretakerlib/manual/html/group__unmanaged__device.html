@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caretaker Library API 1.6.5 Reference Manual: Unmanaged Device Information</title>
+<title>Caretaker Library API 2.1.8 Reference Manual: Unmanaged Device Information</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Caretaker Library API 1.6.5 Reference Manual
+   <div id="projectname">Caretaker Library API 2.1.8 Reference Manual
    </div>
   </td>
  </tr>
@@ -109,6 +109,12 @@ Macros</h2></td></tr>
 <tr class="memitem:gad9a309d8d79de0ca6222697051532d25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__unmanaged__device.html#gad9a309d8d79de0ca6222697051532d25">libct_device_get_context</a>(dev)&#160;&#160;&#160;(dev)-&gt;get_context(dev)</td></tr>
 <tr class="memdesc:gad9a309d8d79de0ca6222697051532d25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience macro to <a class="el" href="structlibct__device__t.html#ab32f4787ce038bf192f1f582d4073926">device-&gt;get_context(device)</a>.  <a href="#gad9a309d8d79de0ca6222697051532d25">More...</a><br /></td></tr>
 <tr class="separator:gad9a309d8d79de0ca6222697051532d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadaaeb3fb1fedb80c7a87cc227103f115"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__unmanaged__device.html#gadaaeb3fb1fedb80c7a87cc227103f115">libct_is_caretaker4</a>(dev)&#160;&#160;&#160;(dev)-&gt;get_context(dev)</td></tr>
+<tr class="memdesc:gadaaeb3fb1fedb80c7a87cc227103f115"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience macro to <a class="el" href="structlibct__device__t.html#a282e0d3186892e89800339b9851ed36b">device-&gt;is_caretaker4(device)</a>.  <a href="#gadaaeb3fb1fedb80c7a87cc227103f115">More...</a><br /></td></tr>
+<tr class="separator:gadaaeb3fb1fedb80c7a87cc227103f115"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga43e35dd14e555c3f2380baaf84a74dd1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__unmanaged__device.html#ga43e35dd14e555c3f2380baaf84a74dd1">libct_is_caretaker5</a>(dev)&#160;&#160;&#160;(dev)-&gt;get_context(dev)</td></tr>
+<tr class="memdesc:ga43e35dd14e555c3f2380baaf84a74dd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience macro to <a class="el" href="group__unmanaged__device.html#ga43e35dd14e555c3f2380baaf84a74dd1">device-&gt;is_caretaker5(device)</a>.  <a href="#ga43e35dd14e555c3f2380baaf84a74dd1">More...</a><br /></td></tr>
+<tr class="separator:ga43e35dd14e555c3f2380baaf84a74dd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>This modules describes the interface to retrieve general information about the Caretaker device. </p>
@@ -529,10 +535,62 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="gadaaeb3fb1fedb80c7a87cc227103f115"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadaaeb3fb1fedb80c7a87cc227103f115">&#9670;&nbsp;</a></span>libct_is_caretaker4</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define libct_is_caretaker4</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">dev</td><td>)</td>
+          <td>&#160;&#160;&#160;(dev)-&gt;get_context(dev)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convenience macro to <a class="el" href="structlibct__device__t.html#a282e0d3186892e89800339b9851ed36b">device-&gt;is_caretaker4(device)</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev</td><td>Pointer to the device instance. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga43e35dd14e555c3f2380baaf84a74dd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga43e35dd14e555c3f2380baaf84a74dd1">&#9670;&nbsp;</a></span>libct_is_caretaker5</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define libct_is_caretaker5</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">dev</td><td>)</td>
+          <td>&#160;&#160;&#160;(dev)-&gt;get_context(dev)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convenience macro to <a class="el" href="group__unmanaged__device.html#ga43e35dd14e555c3f2380baaf84a74dd1">device-&gt;is_caretaker5(device)</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev</td><td>Pointer to the device instance. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 11 2018 10:47:18 for Caretaker Library API 1.6.5 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 29 2022 15:59:48 for Caretaker Library API 2.1.8 Reference Manual by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

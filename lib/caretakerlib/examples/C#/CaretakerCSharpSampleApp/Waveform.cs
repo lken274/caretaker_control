@@ -5,54 +5,46 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Collections.Generic;
 
 namespace CaretakerCSharpSampleApp
 {
-    /// <summary>
-    /// Defines how new data is added to the waveform
-    /// </summary>
-    public enum WaveformDirection
-    {
-        /// <summary>
-        /// New data is added to the right so the waveform updates from right to left
-        /// </summary>
-        RIGHT_SHFIT,
-        /// <summary>
-        /// New data is added to the left so the waveform updates from left to right
-        /// </summary>
-        LEFT_SHFIT,
-    }
-
     /// <summary>
     /// Displays Caretaker waveform data
     /// </summary>
     public class Waveform
     {
-        // The waveform data rate in Hz. Approximately 31 Hz.
-        uint mDataPointsRate = 31;
+        // Device data rate in Hz.
+        // Default settings for Caretker5
+         double mInputRate = 500;   // 500 Hz data
 
-        // The waveform length in seconds
-        uint mDuration = 6;
+        // Scale to down-sample input rate
+        int mInputRateDivider = 10;
 
-        // The maximum number of points to display on the waveform
-        // MaxPoints = Duration * DataRate
-        int mMaxDisplayedPoints;
+        // Rate at which the waveform staging buffer fills
+        double mBufferedRate;
 
-        // Waveform backing buffer to hold Caretaker data to display
-        Point[] mDataPoints;
-        Point mDataPointsMax = new Point();
-        Point mDataPointsMin = new Point();
-        Point mDataPointsRange = new Point();
-        int mDataPointsCount = 0;
-        WaveformDirection mDirection = WaveformDirection.LEFT_SHFIT;
+        // The displayed waveform refresh rate (Hz)
+        double mRefreshRate = 10;
 
-        // Data points converted to xy canvas coordinates
-        Point[] mCoordinates;
+        // The waveform window length
+        const uint mWindowDuration = 6; // 6 seconds
+
+        // The desired latency of points displayed on the waveform.
+        // The value set here is not guaranteed.
+        const double mDisplayLatency = 2; // 2 seconds
+
+        // Staging buffer to hold data points to display
+        List<Int32> mDataBuffer = new List<Int32>();
+
+        // Display window
+        Point[] mWindow;
+        int mWindowSize;
+        int mWindowIndex;
+        Boolean mFirstWindow;
 
         // Canvas to draw waveform
         Canvas mCanvas;
-
-        // Data mutex
         System.Threading.Mutex mMutex = new System.Threading.Mutex();
 
         // Plot grid where the waveform is drawn
@@ -61,6 +53,7 @@ namespace CaretakerCSharpSampleApp
         Margins mPlotMargins;
         Brush mPlotStroke;
         double mPlotStrokeThickness;
+        System.Windows.Shapes.Rectangle mCursor = new System.Windows.Shapes.Rectangle();
 
         // Range and text labels dimensions
         int mScaleMarkerHeight = 0; // set to font size
@@ -69,7 +62,7 @@ namespace CaretakerCSharpSampleApp
         // Range of waveform values to display on plot
         int[] mRange = null;
 
-        // Scales to to show on the waveform. Each scale must be within Range.
+        // Scales to show on the waveform. Each scale must be within Range.
         int[] mScales = null;
 
         /// <summary>
@@ -104,50 +97,53 @@ namespace CaretakerCSharpSampleApp
         }
 
         /// <summary>
-        /// Waveform window length in seconds
+        /// Displayed waveform refresh rate Hertz (Hz)
         /// </summary>
-        public uint Duration
-        {
-            set
-            {
-                mDuration = value;
-                Reset();
-            }
-            get
-            {
-                return mDuration;
-            }
-        }
-
-        /// <summary>
-        /// Waveform data rate Hertz (Hz)
-        /// </summary>
-        public uint DataRate
+        public double RefreshRate
         {
             get
             {
-                return mDataPointsRate;
+                return mRefreshRate;
             }
             set
             {
-                mDataPointsRate = value;
+                mRefreshRate = value;
                 Reset();
             }
         }
 
         /// <summary>
-        /// Waveform direction
+        /// Set/Get device data rate Hertz (Hz)
+        /// For Caretaker4, data rate = 31.25Hz
+        /// For Caretaker5, data rate = 500 Hz
         /// </summary>
-        public WaveformDirection Direction
+        public double InputRate
         {
-            set
-            {
-                mDirection = value;
-                Reset();
-            }
             get
             {
-                return mDirection;
+                return mInputRate;
+            }
+            set
+            {
+                mInputRate = value;
+                Reset();
+            }
+        }
+
+        /// <summary>
+        /// Set/Get device input data rate divider
+        /// Use it to scale 500Hz input to reducing buffer
+        /// </summary>
+        public int InputRateDivder
+        {
+            get
+            {
+                return mInputRateDivider;
+            }
+            set
+            {
+                mInputRateDivider = value;
+                Reset();
             }
         }
 
@@ -191,9 +187,9 @@ namespace CaretakerCSharpSampleApp
         public Waveform(Canvas canvas)
         {
             mCanvas = canvas;
-
             PlotStroke = Brushes.Green;
             PlotStrokeThickness = 2;
+
             Reset();
             ShowScales();
         }
@@ -202,6 +198,10 @@ namespace CaretakerCSharpSampleApp
         private void Reset()
         {
             LockMutex();
+
+            mBufferedRate = mInputRate / mInputRateDivider;
+            mWindowSize = (int)(mWindowDuration * mBufferedRate);
+            mWindow = new Point[mWindowSize];
 
             // calculate range and scale marker label dimensions
             if (mRange != null && mRange.GetLength(0) > 1)
@@ -212,26 +212,18 @@ namespace CaretakerCSharpSampleApp
                 mScaleMarkerHeight = 12;
             }
 
-            // set plot margins to account for range and scale markers
-            //int top = mScaleMarkerHeight;
-            //int bottom = 
+            // Set plot margins to account for range and scale markers
             mPlotMargins = new Margins(mScaleMarkerHeight, 0, mScaleMarkerWidth, 0);
             mPlotWidth = mCanvas.Width - mPlotMargins.Left - mPlotMargins.Right ;
             mPlotHeight = mCanvas.Height - mPlotMargins.Top - mPlotMargins.Bottom;
 
-            mMaxDisplayedPoints = (int)mDuration * (int)mDataPointsRate;
-            mDataPointsCount = 0;
+            mCursor.Stroke = new SolidColorBrush(Color.FromRgb(15, 15, 15));
+            mCursor.Fill = mCursor.Stroke;
+            mCursor.HorizontalAlignment = HorizontalAlignment.Left;
+            mCursor.VerticalAlignment = VerticalAlignment.Center;
+            mCursor.Height = mPlotHeight;
 
-            mDataPoints = new Point[mMaxDisplayedPoints];
-            mCoordinates = new Point[mMaxDisplayedPoints];
-           
-            for (int i = 0; i < mMaxDisplayedPoints; i++)
-            {
-               mDataPoints[i].X = 0;
-                mDataPoints[i].Y = 0;
-                mCoordinates[i].X = 0;
-                mCoordinates[i].Y = 0;
-            }
+            Clear();
 
             UnLockMutex();
         }
@@ -245,14 +237,16 @@ namespace CaretakerCSharpSampleApp
         {
             LockMutex();
 
+            mDataBuffer.Clear();
             mCanvas.Children.Clear();
-            mDataPointsCount = 0;
-            for (int i = 0; i < mMaxDisplayedPoints; i++)
+
+            mFirstWindow = true;
+            mWindowIndex = 0;
+  
+            for (int i = 0; i < mWindowSize; i++)
             {
-                mDataPoints[i].X = 0;
-                mDataPoints[i].Y = 0;
-                mCoordinates[i].X = 0;
-                mCoordinates[i].Y = 0;
+                mWindow[i].X = i;
+                mWindow[i].Y = 0;
             }
 
             ShowScales();
@@ -265,92 +259,20 @@ namespace CaretakerCSharpSampleApp
          * Method to call from library thread to add new points.
          * </summary>
          */
-        public void AddPoints(Int32[] values, Int32[] timestamps)
+        public void AddPoints(Int32[] values, Int64[] timestamps)
         {
             LockMutex();
 
-            int maxDataPoints = mDataPoints.GetLength(0);
-            int count = Math.Min(values.GetLength(0), timestamps.GetLength(0));
-            int newDataStart = 0;
-            int newDataEnd = count;
-
-            // truncate new points to fit within the grid as needed.
-            // this effectively throws away the oldest points.
-            if (count > maxDataPoints)
+            // down-sample data if needed
+            int stride = mInputRateDivider;
+            int count = values.GetLength(0);
+            for (int i = 0; i < count; i+=stride)
             {
-                newDataStart = count- maxDataPoints;
-                count = maxDataPoints;
-            }
-
-            // shift then add new points
-            for (int i = count, j = 0; i < maxDataPoints; i++, j++)
-            {
-                mDataPoints[j] = mDataPoints[i];
-            }
-
-            for (int i = (maxDataPoints - count), j = newDataStart; i < maxDataPoints; i++, j++)
-            {
-                mDataPoints[i].X = timestamps[j];
-                mDataPoints[i].Y = values[j];
-            }
-
-            mDataPointsCount += count;
-            if (mDataPointsCount > maxDataPoints)
-            {
-                mDataPointsCount = maxDataPoints;
-            }
-
-            // calculate pixels per unit (ppu) resolution to map data to screen space
-            double xRes, yRes = xRes = 1.0f;
-            if (mDirection == WaveformDirection.RIGHT_SHFIT)
-            {
-                mDataPointsMin.Y = mDataPointsMax.Y = mDataPoints[maxDataPoints - 1].Y;
-                mDataPointsMin.X = mDataPointsMax.X = mDataPoints[maxDataPoints - 1].X;
-                int end = maxDataPoints - mDataPointsCount;
-                for (int i = maxDataPoints - 1; i >= end; i--)
-                {
-                    mDataPointsMin.X = Math.Min(mDataPoints[i].X, mDataPointsMin.X);
-                    mDataPointsMin.Y = Math.Min(mDataPoints[i].Y, mDataPointsMin.Y);
-                    mDataPointsMax.X = Math.Max(mDataPoints[i].X, mDataPointsMax.X);
-                    mDataPointsMax.Y = Math.Max(mDataPoints[i].Y, mDataPointsMax.Y);
-                }
-            } else
-            {
-                mDataPointsMin.Y = mDataPointsMax.Y = mDataPoints[0].Y;
-                mDataPointsMin.X = mDataPointsMax.X = mDataPoints[0].X;
-                for (int i = 0; i < mDataPointsCount; i++)
-                {
-                    mDataPointsMin.X = Math.Min(mDataPoints[i].X, mDataPointsMin.X);
-                    mDataPointsMin.Y = Math.Min(mDataPoints[i].Y, mDataPointsMin.Y);
-                    mDataPointsMax.X = Math.Max(mDataPoints[i].X, mDataPointsMax.X);
-                    mDataPointsMax.Y = Math.Max(mDataPoints[i].Y, mDataPointsMax.Y);
-                }
-            }
-
-            mDataPointsRange.X = mDataPointsMax.X - mDataPointsMin.X;
-            if (mDataPointsRange.X > 0)
-            {
-                xRes = mPlotWidth / mDataPointsRange.X; 
-            }
-
-            mDataPointsRange.Y = mDataPointsMax.Y - mDataPointsMin.Y;
-            if (mDataPointsRange.Y > 0)
-            {
-                yRes = mPlotHeight / mDataPointsRange.Y;
-            }
-
-            // convert values to pixels in screen coordinates.
-            int maxCoordinates = mCoordinates.GetLength(0);
-            int copyCount = Math.Min(maxCoordinates, mDataPointsCount);
-            int xOffset = mPlotMargins.Left;
-            int yOffset = mPlotMargins.Top;
-            for (int i = 0; i < copyCount; i++)
-            {
-                mCoordinates[i].X = xOffset + (mDataPoints[i].X - mDataPointsMin.X) * xRes;
-                mCoordinates[i].Y = yOffset + mPlotHeight - (mDataPoints[i].Y - mDataPointsMin.Y) * yRes;
+                mDataBuffer.Add(values[i]);
             }
 
             UnLockMutex();
+            
         }
 
         private void ShowScales()
@@ -406,7 +328,7 @@ namespace CaretakerCSharpSampleApp
             upperLine.Y1 = mPlotMargins.Top;
             upperLine.X2 = mPlotWidth;
             upperLine.Y2 = mPlotMargins.Top;
-            mCanvas.Children.Add(upperLine);
+            //mCanvas.Children.Add(upperLine);
 
             Line lowerLine = new Line();
             lowerLine.Stroke = Brushes.Gray;
@@ -415,7 +337,7 @@ namespace CaretakerCSharpSampleApp
             lowerLine.Y1 = mPlotMargins.Top + mPlotHeight;
             lowerLine.X2 = mPlotWidth;
             lowerLine.Y2 = mPlotMargins.Top + mPlotHeight;
-            mCanvas.Children.Add(lowerLine);
+            //mCanvas.Children.Add(lowerLine);
         }
 
         /** 
@@ -427,27 +349,91 @@ namespace CaretakerCSharpSampleApp
         {
             LockMutex();
 
+            // Calculate the number of points to remove
+            int desiredMaxThreshold = (int) (mDisplayLatency * mBufferedRate + 0.5);
+            int desiredMinThreshold = (int) (mDisplayLatency * 0.75 * mBufferedRate + 0.5);
+            int removeCount = (int)(mBufferedRate / mRefreshRate + 0.5);
+            if (removeCount < 1)
+                removeCount = 1;
+
+            // Adjust remove count up/down as needed to control display latency.
+            if (mDataBuffer.Count > desiredMaxThreshold)
+            {
+                removeCount++;
+                Console.WriteLine("Max buffer threshold exceeded: Count={0}, Desired={1}, RemoveCount={2}",
+                    mDataBuffer.Count, desiredMinThreshold, removeCount);
+            }
+            else if (mDataBuffer.Count < desiredMinThreshold)
+            {
+                removeCount--;
+            }
+
+            // Add new points to Window
+            if (mDataBuffer.Count > removeCount)
+            {
+                for(int i=0; i<removeCount; i++)
+                {
+                    mWindow[mWindowIndex].Y = mDataBuffer[0];
+                    mDataBuffer.RemoveAt(0);
+                    if ( ++mWindowIndex >= mWindowSize )
+                    {
+                        mWindowIndex = 0;
+                        mFirstWindow = false;
+                    }
+                }
+            }
+
+            UnLockMutex();
+
+            //Console.WriteLine("Displayed {0} points, BufferCount={1}", removeCount, mDataBuffer.Count);
+
+            // Calculate pixels per unit resolution to map data to screen space
+            double yMin, yMax;
+            yMin = yMax =mWindow[0].Y;
+            for (int i = 0; i < mWindowSize; i++) {
+                yMin = Math.Min(mWindow[i].Y, yMin);
+                yMax = Math.Max(mWindow[i].Y, yMax);
+            }
+
+            double yRes = 1.0;
+            double yRange = yMax - yMin;
+            if (yRange > 0)
+                yRes = mPlotHeight / yRange;
+            else
+                yRes = 1;
+
+            double xRes = mPlotWidth / mWindowSize; 
+
+            // Convert values to pixels in screen coordinates.
+            int xOffset = mPlotMargins.Left;
+            int yOffset = mPlotMargins.Top;
+            Point[] window = new Point[mWindowSize];
+            for (int i = 0; i < mWindowSize; i++)
+            {
+                window[i].X = xOffset + i*xRes;
+                window[i].Y = yOffset + mPlotHeight - (mWindow[i].Y - yMin) * yRes;
+            }
+
+            // Draw waveform
             mCanvas.Children.Clear();
-
             ShowScales();
-
-            // draw waveform
-            int maxCoordinates = mCoordinates.GetLength(0);
-            int count = Math.Min(maxCoordinates, mDataPointsCount);
-            int stop = maxCoordinates - count;
-            for (int i = count - 1; i > stop; i--)
+            int count = (mFirstWindow) ? mWindowIndex : mWindowSize;
+            for (int i = 1; i < count; i++)
             {
                 Line line = new Line();
                 line.Stroke = PlotStroke;
                 line.StrokeThickness = PlotStrokeThickness;
-                line.X1 = mCoordinates[i].X;
-                line.Y1 = mCoordinates[i].Y;
-                line.X2 = mCoordinates[i - 1].X;
-                line.Y2 = mCoordinates[i - 1].Y;
+                line.X1 = window[i].X;
+                line.Y1 = window[i].Y;
+                line.X2 = window[i - 1].X;
+                line.Y2 = window[i - 1].Y;
                 mCanvas.Children.Add(line);
+
             }
 
-            UnLockMutex();
+            mCursor.Width = 10 * xRes;
+            mCanvas.Children.Add(mCursor);
+            Canvas.SetLeft(mCursor, xOffset + mWindowIndex * xRes);
         }
 
         private void LockMutex()

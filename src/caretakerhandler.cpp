@@ -1,7 +1,9 @@
 #include "caretakerhandler.hpp"
 #include <iostream>
 #include <map>
-
+#include <algorithm>
+#include <iomanip>
+#include <sstream>
 #define DISCOVER_TIMEOUT 10000
 
 void LIBCTAPI cb_on_device_discovered(libct_context_t* context, libct_device_t* device);
@@ -11,12 +13,20 @@ void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_devic
 void LIBCTAPI cb_on_start_measuring(libct_context_t *context, libct_device_t *device, int status);
 void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *device, libct_stream_data_t *data);
 
-static std::map<libct_context_t*, CaretakerHandler*> context2handler;
+std::string GetCurrentTimeForFileName()
+{
+    auto time = std::time(nullptr);
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&time), "%F_%T") << ".csv"; // ISO 8601 without timezone information.
+    auto s = ss.str();
+    std::replace(s.begin(), s.end(), ':', '-');
+    return s;
+}
 
-CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fileOut(3) /*trigger, timestamp, values*/ {
+CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fileOut(",",4) /*trigger, label, timestamp, computer timestamp*/ {
     io->log("Initialising Caretaker Library...");
     memset(&hd.init_data, 0, sizeof(hd.init_data));
-    hd.init_data.device_class = LIBCT_DEVICE_CLASS_BLE_CARETAKER4;
+    hd.init_data.device_class = LIBCT_DEVICE_CLASS_USB;
     hd.callbacks.on_device_discovered = cb_on_device_discovered;/*, cb_on_device_connected_ready, cb_on_device_disconneted, cb_on_data_received*/
     hd.callbacks.on_discovery_timedout = cb_on_discovery_timedout;
     hd.callbacks.on_discovery_failed = cb_on_discovery_failed;
@@ -25,13 +35,15 @@ CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fil
     hd.callbacks.on_start_measuring = cb_on_start_measuring;
     hd.context = NULL;
     hd.status = libct_init(&hd.context, &hd.init_data, &hd.callbacks);
-    context2handler[hd.context] = this;
+    libct_set_app_specific_data(hd.context, this);
     if ( LIBCT_FAILED(hd.status) ) {
         io->log("Caretaker Library failed to initialise! Exiting...");
         exit(1);
     } else
     io->log("Caretaker Library Initialised Successfully");
-
+    filename = GetCurrentTimeForFileName();
+    fileOut << "trigger" << "datatype" << "ct timestamp" << "computer timestamp";
+    fileOut.writeToFile(filename);
 }
 
 bool CaretakerHandler::connect_to_single_device() {
@@ -48,39 +60,42 @@ void CaretakerHandler::start_device_readings() {
     libct_start_measuring(hd.context, &cal);
 }
 
-
-
 void CaretakerHandler::stop_device_readings() {
     libct_stop_measuring(hd.context);
     libct_stop_monitoring(hd.context);
-    std::cout << "Measurements stopped!" << std::endl;
+    io->log("Measurements stopped!");
 }
 
 void CaretakerHandler::recordLastTimestamp(int triggerNum) {
+    std::time_t localTime = std::time(nullptr);
     for (auto& datatype : hd.recentData) {
-        fileOut << triggerNum << datatype.first << datatype.second.timestamp;
+        fileOut << triggerNum << datatype.first << datatype.second.timestamp << std::asctime(std::localtime(&localTime)) ;
     }
-    fileOut.writeToFile("testfile.csv");
+    fileOut.writeToFile(filename);
 }
 ///CALLBACKS///
 
 void LIBCTAPI cb_on_start_measuring(libct_context_t *context, libct_device_t *device, int status) {
-    std::cout << "Measurements started!" << std::endl;
+    CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
+    handler->io->log("Measurements started!");
 }
 
 void LIBCTAPI cb_on_device_discovered(libct_context_t* context, libct_device_t* device){
-    std::cout << "Successfully detected a caretaker device: " << device->get_name(device) << std::endl;
-    std::cout << "Attempting to connect..." << std::endl;
+    CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
+    handler->io->log("Successfully detected a caretaker device: " + std::string(device->get_name(device)));
+    handler->io->log("Attempting to connect...");
     libct_stop_discovery(context);
     libct_connect(context, device);
 }
 
 void LIBCTAPI cb_on_discovery_timedout(libct_context_t* context){
-    std::cout << "Could not discover any caretaker devices before specified timeout" << std::endl;
+    CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
+    handler->io->log("Could not discover any caretaker devices before timeout");
 }
 
 void LIBCTAPI cb_on_discovery_failed(libct_context_t* context, int error){
-    std::cout << "Failed to search for any caretaker devices" << std::endl;
+    CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
+    handler->io->log("Failed to search for any caretaker devices");
 }
 
 void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_device_t* device){
@@ -90,13 +105,16 @@ void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_devic
         LIBCT_MONITOR_CUFF_PRESSURE |
         LIBCT_MONITOR_DEVICE_STATUS |
         LIBCT_MONITOR_BATTERY_INFO);
+    
     libct_start_monitoring(context, flags);
-    std::cout << "Successfully connected to caretaker device! " << device->get_name(device) << std::endl;
-    context2handler[context]->isConnected = true;
+    CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
+    handler->io->log("Successfully connected to caretaker device! " + std::string(device->get_name(device)));
+    handler->isConnected = true;
 }
 
 void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *device, libct_stream_data_t *data) {
-    std::cout << "Data received!" << std::endl;
-    context2handler[context]->hd.recentData["vitals"].timestamp = data->vitals.datapoints[data->vitals.count-1].timestamp;
-
+    CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
+    libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
+    handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
+    handler->hd.recentData["device_status"].timestamp = data->device_status.timestamp;
 }
