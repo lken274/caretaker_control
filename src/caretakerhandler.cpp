@@ -12,6 +12,7 @@ void LIBCTAPI cb_on_discovery_failed(libct_context_t* context, int error);
 void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_device_t* device);
 void LIBCTAPI cb_on_start_measuring(libct_context_t *context, libct_device_t *device, int status);
 void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *device, libct_stream_data_t *data);
+void LIBCTAPI cb_on_start_monitoring(libct_context_t *context, libct_device_t *device, int status);
 
 std::string GetCurrentTimeForFileName()
 {
@@ -33,6 +34,7 @@ CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fil
     hd.callbacks.on_device_connected_ready = cb_on_device_connected_ready;
     hd.callbacks.on_data_received = cb_on_data_received;
     hd.callbacks.on_start_measuring = cb_on_start_measuring;
+    hd.callbacks.on_start_monitoring = cb_on_start_monitoring;
     hd.context = NULL;
     hd.status = libct_init(&hd.context, &hd.init_data, &hd.callbacks);
     libct_set_app_specific_data(hd.context, this);
@@ -103,16 +105,25 @@ void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_devic
         LIBCT_MONITOR_PARAM_PULSE |
         LIBCT_MONITOR_VITALS |
         LIBCT_MONITOR_CUFF_PRESSURE |
-        LIBCT_MONITOR_DEVICE_STATUS |
-        LIBCT_MONITOR_BATTERY_INFO);
+        LIBCT_MONITOR_DEVICE_STATUS);
     
     libct_start_monitoring(context, flags);
     CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
     handler->io->log("Successfully connected to caretaker device! " + std::string(device->get_name(device)));
     handler->isConnected = true;
+    std::cout << "here connected" << std::endl;
+}
+
+void cb_on_start_monitoring(libct_context_t *context, libct_device_t *device, int status) {
+    CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
+    if (status == 0) {
+        handler->io->log("Device monitoring starting successfully");
+    }
+    else handler->io->log("Device monitoring failed to start!");
 }
 
 void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *device, libct_stream_data_t *data) {
+    std::cout << "here data" << std::endl;
     CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
     libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
     handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
