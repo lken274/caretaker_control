@@ -122,13 +122,13 @@ void cb_on_start_monitoring(libct_context_t *context, libct_device_t *device, in
 }
 
 void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *device, libct_stream_data_t *data) {
-    std::cout << "data received!" << std::endl;
+    //std::cout << "data received!" << std::endl;
     try {
         CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
         if (handler == 0) throw std::runtime_error(std::string("Couldn't find handler"));
-        //libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
-        //handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
-        //handler->hd.recentData["device_status"].timestamp = data->device_status.timestamp;
+        libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
+        handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
+        handler->hd.recentData["device_status"].timestamp = data->device_status.timestamp;
     } 
     catch(const std::exception& e) {
     }
