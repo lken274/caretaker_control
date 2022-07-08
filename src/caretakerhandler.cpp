@@ -133,6 +133,7 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
         if (handler->hd.started == false) return;
         if (data->device_status.valid == false) return;
         if (data->int_pulse.count >= 1)
+            std::cout << "num pulse measurements: " << data->int_pulse.count << std::endl;
             std::cout << "pulse:" << (unsigned long long) data->int_pulse.timestamps[data->int_pulse.count-1] << std::endl;
         std::cout << "data:" << (unsigned long long) data->device_status.timestamp << std::endl;
     } 
