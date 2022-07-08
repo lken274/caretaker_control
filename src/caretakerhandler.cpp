@@ -50,7 +50,7 @@ CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fil
     } else
     io->log("Caretaker Library Initialised Successfully");
     filename = GetCurrentTimeForFileName();
-    fileOut << "trigger" << "datatype" << "ct timestamp" << "computer timestamp";
+    fileOut << "trigger" << "datatype" << "recent value" << "ct timestamp" << "computer timestamp";
     fileOut.writeToFile(filename);
 }
 
@@ -77,7 +77,7 @@ void CaretakerHandler::stop_device_readings() {
 void CaretakerHandler::recordLastTimestamp(int triggerNum) {
     std::time_t localTime = std::time(nullptr);
     for (auto& datatype : hd.recentData) {
-        fileOut << triggerNum << datatype.first << datatype.second.timestamp << timeSinceEpochMillisec();
+        fileOut << triggerNum << datatype.first << datatype.second.data << datatype.second.timestamp << timeSinceEpochMillisec();
     }
     std::cout << "Writing " << hd.recentData.size() << " data readings to file" << std::endl;
     fileOut.writeToFile(filename);
@@ -136,8 +136,19 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
 
     if (data->int_pulse.count > 0) {
         handler->hd.recentData["int pulse"].timestamp = (unsigned long long) data->int_pulse.timestamps[data->int_pulse.count-1];
+        handler->hd.recentData["int pulse"].data = std::to_string(data->int_pulse.samples[data->int_pulse.count-1]);
     }
     if (data->device_status.valid) {
         handler->hd.recentData["status"].timestamp = (unsigned long long) data->device_status.timestamp;
+        handler->hd.recentData["status"].data = "n/a";
     }
+    if (data->cuff_pressure.count > 0) {
+        handler->hd.recentData["cuff"].timestamp = handler->hd.recentData["status"].timestamp;
+        handler->hd.recentData["cuff"].data = std::to_string(data->cuff_pressure.datapoints[data->cuff_pressure.count-1].value);
+    }
+    if (data->vitals.count > 0) {
+        handler->hd.recentData["vitals"].timestamp = handler->hd.recentData["status"].timestamp;
+        handler->hd.recentData["vitals"].data = "n/a";
+    }
+    
 }
