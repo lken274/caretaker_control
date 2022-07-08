@@ -135,8 +135,6 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
     CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
     if (handler == 0) throw std::runtime_error(std::string("Couldn't find handler"));
     if (handler->hd.started == false) return;
-    if (data->device_status.valid == false) return;
-    std::cout << "data received:" << std::endl;
     std::cout << "num int pulse measurements: " << data->int_pulse.count << std::endl;
     std::cout << "num param pulse measurements: " << data->param_pulse.count << std::endl;
     std::cout << "num cuff measurements: " << data->cuff_pressure.count << std::endl;
