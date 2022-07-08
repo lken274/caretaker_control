@@ -132,7 +132,8 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
         if (handler == 0) throw std::runtime_error(std::string("Couldn't find handler"));
         if (handler->hd.started == false) return;
         if (data->device_status.valid == false) return;
-        std::cout << "pulse:" << (unsigned long long) data->int_pulse.timestamps[data->int_pulse.count-1] << std::endl;
+        if (data->int_pulse.count >= 1)
+            std::cout << "pulse:" << (unsigned long long) data->int_pulse.timestamps[data->int_pulse.count-1] << std::endl;
         std::cout << "data:" << (unsigned long long) data->device_status.timestamp << std::endl;
     } 
     catch(const std::exception& e) {
