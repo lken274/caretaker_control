@@ -137,7 +137,7 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
         std::cout << "h4" << std::endl;
         if (data->device_status.valid == false) return;
         std::cout << "h5" << std::endl;
-        //std::cout << (unsigned long long) data->int_pulse.timestamps[0] << std::endl;
+        std::cout << (unsigned long long) data->int_pulse.timestamps[data->int_pulse.count-1] << std::endl;
         std::cout << (unsigned long long) data->device_status.timestamp << std::endl;
         std::cout << "h6" << std::endl;
     } 
