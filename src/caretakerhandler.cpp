@@ -110,11 +110,9 @@ void LIBCTAPI cb_on_discovery_failed(libct_context_t* context, int error){
 
 void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_device_t* device){
    int flags = (LIBCT_MONITOR_INT_PULSE |
-                LIBCT_MONITOR_PARAM_PULSE |
                 LIBCT_MONITOR_VITALS |
                 LIBCT_MONITOR_CUFF_PRESSURE |
-                LIBCT_MONITOR_DEVICE_STATUS |
-                LIBCT_MONITOR_BATTERY_INFO);
+                LIBCT_MONITOR_DEVICE_STATUS);
 
     
     libct_start_monitoring(context, flags);
@@ -135,9 +133,11 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
     CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
     if (handler == 0) throw std::runtime_error(std::string("Couldn't find handler"));
     if (handler->hd.started == false) return;
-    std::cout << "num int pulse measurements: " << data->int_pulse.count << std::endl;
-    std::cout << "num param pulse measurements: " << data->param_pulse.count << std::endl;
-    std::cout << "num cuff measurements: " << data->cuff_pressure.count << std::endl;
-    std::cout << "num pulse measurements: " << data->raw_pulse.count << std::endl;
-    std::cout << "status timestamp:" << (unsigned long long) data->device_status.timestamp << std::endl;
+
+    if (data->int_pulse.count > 0) {
+        handler->hd.recentData["int pulse"].timestamp = (unsigned long long) data->int_pulse.timestamps[data->int_pulse.count-1];
+    }
+    if (data->device_status.valid) {
+        handler->hd.recentData["status"].timestamp = (unsigned long long) data->device_status.timestamp;
+    }
 }
