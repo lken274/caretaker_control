@@ -73,6 +73,7 @@ void CaretakerHandler::recordLastTimestamp(int triggerNum) {
     for (auto& datatype : hd.recentData) {
         fileOut << triggerNum << datatype.first << datatype.second.timestamp << std::asctime(std::localtime(&localTime)) ;
     }
+    std::cout << "Writing " << hd.recentData.size() << " data readings to file" << std::endl;
     fileOut.writeToFile(filename);
 }
 ///CALLBACKS///
@@ -126,10 +127,11 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
     try {
         CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
         if (handler == 0) throw std::runtime_error(std::string("Couldn't find handler"));
-        //libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
-        //handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
+        libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
+        handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
         handler->hd.recentData["device_status"].timestamp = data->device_status.timestamp;
     } 
     catch(const std::exception& e) {
+        std::cout << e.what() << std::endl;
     }
 }
