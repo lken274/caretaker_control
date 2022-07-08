@@ -109,11 +109,7 @@ void LIBCTAPI cb_on_discovery_failed(libct_context_t* context, int error){
 }
 
 void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_device_t* device){
-   int flags = (LIBCT_MONITOR_INT_PULSE |
-        LIBCT_MONITOR_PARAM_PULSE |
-        LIBCT_MONITOR_VITALS |
-        LIBCT_MONITOR_CUFF_PRESSURE |
-        LIBCT_MONITOR_DEVICE_STATUS);
+   int flags = (LIBCT_MONITOR_INT_PULSE | LIBCT_MONITOR_DEVICE_STATUS);
     
     libct_start_monitoring(context, flags);
     CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
@@ -136,7 +132,7 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
         if (handler == 0) throw std::runtime_error(std::string("Couldn't find handler"));
         if (handler->hd.started == false) return;
 
-        handler->hd.recentData["vitals"].timestamp = data->vitals.datapoints[data->vitals.count-1].timestamp;
+        handler->hd.recentData["pulse"].timestamp = data->int_pulse.timestamps[data->int_pulse.count-1];
         handler->hd.recentData["device_status"].timestamp = data->device_status.timestamp;
     } 
     catch(const std::exception& e) {
