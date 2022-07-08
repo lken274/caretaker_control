@@ -123,7 +123,7 @@ void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_devic
     handler->isConnected = true;
 }
 
-void cb_on_start_monitoring(libct_context_t *context, libct_device_t *device, int status) {
+void LIBCTAPI cb_on_start_monitoring(libct_context_t *context, libct_device_t *device, int status) {
     CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
     if (status == 0) {
         handler->io->log("Device monitoring starting successfully");
@@ -137,17 +137,9 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
     if (handler->hd.started == false) return;
     if (data->device_status.valid == false) return;
     std::cout << "data received:" << std::endl;
-    if (data->int_pulse.count >= 1) {
-        std::cout << "num int pulse measurements: " << data->int_pulse.count << std::endl;
-    }
-    if (data->param_pulse.count >= 1) {
-        std::cout << "num param pulse measurements: " << data->param_pulse.count << std::endl;
-    }
-    if (data->cuff_pressure.count >= 1) {
-        std::cout << "num cuff measurements: " << data->cuff_pressure.count << std::endl;
-    }
-    if (data->raw_pulse.count >= 1) {
-        std::cout << "num pulse measurements: " << data->raw_pulse.count << std::endl;
-    }
+    std::cout << "num int pulse measurements: " << data->int_pulse.count << std::endl;
+    std::cout << "num param pulse measurements: " << data->param_pulse.count << std::endl;
+    std::cout << "num cuff measurements: " << data->cuff_pressure.count << std::endl;
+    std::cout << "num pulse measurements: " << data->raw_pulse.count << std::endl;
     std::cout << "status timestamp:" << (unsigned long long) data->device_status.timestamp << std::endl;
 }
