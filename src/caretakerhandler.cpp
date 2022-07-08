@@ -111,6 +111,7 @@ void LIBCTAPI cb_on_discovery_failed(libct_context_t* context, int error){
 void LIBCTAPI cb_on_device_connected_ready(libct_context_t* context, libct_device_t* device){
    int flags = (LIBCT_MONITOR_INT_PULSE |
                 LIBCT_MONITOR_VITALS |
+                LIBCT_MONITOR_VITALS2 |
                 LIBCT_MONITOR_CUFF_PRESSURE |
                 LIBCT_MONITOR_DEVICE_STATUS);
 
@@ -143,12 +144,30 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
         handler->hd.recentData["status"].data = "n/a";
     }
     if (data->cuff_pressure.count > 0) {
-        handler->hd.recentData["cuff"].timestamp = handler->hd.recentData["status"].timestamp;
+        handler->hd.recentData["cuff"].timestamp =  (unsigned long long) data->cuff_pressure.datapoints[data->cuff_pressure.count-1].timestamp;
         handler->hd.recentData["cuff"].data = std::to_string(data->cuff_pressure.datapoints[data->cuff_pressure.count-1].value);
     }
     if (data->vitals.count > 0) {
-        handler->hd.recentData["vitals"].timestamp = handler->hd.recentData["status"].timestamp;
-        handler->hd.recentData["vitals"].data = "n/a";
+        int num_vals = data->vitals.count;
+        unsigned long long timestamp = (unsigned long long) data->vitals.datapoints[num_vals-1].timestamp;
+        handler->hd.recentData["systolic"].timestamp = timestamp;
+        handler->hd.recentData["systolic"].data = std::to_string(data->vitals.datapoints[num_vals-1].systolic);
+        handler->hd.recentData["diastolic"].timestamp = timestamp;
+        handler->hd.recentData["diastolic"].data = std::to_string(data->vitals.datapoints[num_vals-1].diastolic);
+        handler->hd.recentData["heart_rate"].timestamp = timestamp;
+        handler->hd.recentData["heart_rate"].data = std::to_string(data->vitals.datapoints[num_vals-1].heart_rate);
+        handler->hd.recentData["map"].timestamp = timestamp;
+        handler->hd.recentData["map"].data = std::to_string(data->vitals.datapoints[num_vals-1].map);
+        handler->hd.recentData["respiration"].timestamp = timestamp;
+        handler->hd.recentData["respiration"].data = std::to_string(data->vitals.datapoints[num_vals-1].respiration);
+    }
+    if (data->vitals2.count > 0) {
+        int num_vals = data->vitals2.count;
+        unsigned long long timestamp = (unsigned long long) data->vitals2.datapoints[num_vals-1].timestamp;
+        handler->hd.recentData["stroke_volume"].timestamp = timestamp;
+        handler->hd.recentData["stroke_volume"].data = std::to_string(data->vitals2.datapoints[num_vals-1].strokeVolume);
+        handler->hd.recentData["cardiac_output"].timestamp = timestamp;
+        handler->hd.recentData["cardiac_output"].data = std::to_string(data->vitals2.datapoints[num_vals-1].cardiac_output);
     }
     
 }
