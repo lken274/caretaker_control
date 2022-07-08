@@ -30,7 +30,7 @@ uint64_t timeSinceEpochMillisec() {
   return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
-CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fileOut(",",4) /*trigger, label, timestamp, computer timestamp*/ {
+CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fileOut(",",5) /*trigger, label, value, timestamp, computer timestamp*/ {
     io->log("Initialising Caretaker Library...");
     memset(&hd.init_data, 0, sizeof(hd.init_data));
     hd.init_data.device_class = LIBCT_DEVICE_CLASS_USB;
