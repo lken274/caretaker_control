@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
+#include <chrono>
 #define DISCOVER_TIMEOUT 10000
 
 void LIBCTAPI cb_on_device_discovered(libct_context_t* context, libct_device_t* device);
@@ -22,6 +23,11 @@ std::string GetCurrentTimeForFileName()
     auto s = ss.str();
     std::replace(s.begin(), s.end(), ':', '-');
     return s;
+}
+
+uint64_t timeSinceEpochMillisec() {
+  using namespace std::chrono;
+  return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 CaretakerHandler::CaretakerHandler(std::shared_ptr<IInterface> io) : io(io), fileOut(",",4) /*trigger, label, timestamp, computer timestamp*/ {
@@ -71,7 +77,7 @@ void CaretakerHandler::stop_device_readings() {
 void CaretakerHandler::recordLastTimestamp(int triggerNum) {
     std::time_t localTime = std::time(nullptr);
     for (auto& datatype : hd.recentData) {
-        fileOut << triggerNum << datatype.first << datatype.second.timestamp << std::asctime(std::localtime(&localTime)) ;
+        fileOut << triggerNum << datatype.first << datatype.second.timestamp << timeSinceEpochMillisec();
     }
     std::cout << "Writing " << hd.recentData.size() << " data readings to file" << std::endl;
     fileOut.writeToFile(filename);
@@ -129,8 +135,8 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
         CaretakerHandler* handler = (CaretakerHandler*) libct_get_app_specific_data(context);
         if (handler == 0) throw std::runtime_error(std::string("Couldn't find handler"));
         if (handler->hd.started == false) return;
-        //libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
-        //handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
+        libct_vitals_t* vitals = libct_get_last_dp(data,vitals);
+        handler->hd.recentData["vitals"].timestamp = vitals->timestamp;
         handler->hd.recentData["device_status"].timestamp = data->device_status.timestamp;
     } 
     catch(const std::exception& e) {
