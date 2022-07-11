@@ -25,7 +25,7 @@ private:
     bool stop_but_flag = false;
     std::pair<bool, unsigned char> trigger_flag = {false,0};
     char baud_input[64] = "192000";
-    char com_input[64] = "COM4";
+    char com_input[64] = "COM7";
     int com_size = 4;
     int baud_size = 6;
     const static int MAX_MEMORY = 4096;

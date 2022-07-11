@@ -60,8 +60,8 @@ int main(int argc, char **argv)
             case CONNECTED:
                 if(io->get_start_pressed()) {
                     if(USB_ENABLED) cth.start_device_readings();
-                    tb.sendTrigger(io->get_trigger_value());
-                    io->log("Send trigger " + std::to_string((int)io->get_trigger_value()));
+                    //tb.sendTrigger(io->get_trigger_value());
+                    //io->log("Send trigger " + std::to_string((int)io->get_trigger_value()));
                     next_state = RUNNING;
                 }
                 if(io->get_stop_pressed()) {
@@ -76,7 +76,6 @@ int main(int argc, char **argv)
                     io->log("Sent trigger " + std::to_string((int)io->get_trigger_value()));
                     cth.recordLastTimestamp(io->get_trigger_value());
                 }
-                
                 break;
         }
         //common logic
@@ -91,11 +90,9 @@ int main(int argc, char **argv)
            io->log("Moving state " + get_name(get_state()) + " to " + get_name(next_state));
         }
         set_state(next_state);
-        
         if(io->running == false) {
             set_state(QUIT);
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(20)); //prevent cpu spinning
     }
 
     return 0;

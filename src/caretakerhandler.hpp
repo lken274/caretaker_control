@@ -14,6 +14,7 @@ struct HandlerData{
     libct_app_callbacks_t callbacks = {};
     libct_context_t* context = NULL;
     std::map<std::string, DataRecord> recentData; //type, data;
+    bool started = false;
     int status;
 };
 
