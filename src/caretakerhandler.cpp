@@ -169,5 +169,18 @@ void LIBCTAPI cb_on_data_received(libct_context_t *context, libct_device_t *devi
         handler->hd.recentData["cardiac_output"].timestamp = timestamp;
         handler->hd.recentData["cardiac_output"].data = std::to_string(data->vitals2.datapoints[num_vals-1].cardiac_output);
     }
-    
+    if (data->pulse_ox.count > 0) {
+        int num_vals = data->pulse_ox.count;
+        unsigned long long timestamp = (unsigned long long) data->pulse_ox.datapoints[num_vals-1].timestamp;
+        handler->hd.recentData["pulse_ox"].timestamp = timestamp;
+        handler->hd.recentData["pulse_ox"].data = std::to_string(data->pulse_ox.datapoints[num_vals-1].sao2);
+        handler->hd.recentData["pulse_rate"].timestamp = timestamp;
+        handler->hd.recentData["pulse_rate"].data = std::to_string(data->pulse_ox.datapoints[num_vals-1].pulse_rate);
+    }
+    if (data->temperature.count > 0) {
+        int num_vals = data->temperature.count;
+        unsigned long long timestamp = (unsigned long long) data->temperature.datapoints[num_vals-1].timestamp;
+        handler->hd.recentData["temperature"].timestamp = timestamp;
+        handler->hd.recentData["temperature"].data = std::to_string(data->temperature.datapoints[num_vals-1].value);
+    }
 }
